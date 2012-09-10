@@ -1,0 +1,33 @@
+@(title: String, edition: String)(content: Html)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>@title</title>
+
+        <!-- TODO Favicon -->
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+
+        <link href='@routes.Assets.at("bootstrap/css/bootstrap.min.css")' rel="stylesheet">
+
+        <script src='@routes.Assets.at("javascripts/jquery-1.7.1.min.js")' type="text/javascript"></script>
+
+        <script src='@routes.Assets.at("bootstrap/js/bootstrap.min.js")' type="text/javascript"></script>
+
+
+        </head>
+    <body>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="brand">Tools</div>
+            <ul class="nav">
+                <li @if(edition == "US"){class="active"}><a href="/admin/edit/us">US</a></li>
+                <li @if(edition == "UK"){class="active"}><a href="/admin/edit/uk" >UK</a></li>
+            </ul>
+        </div>
+    </div>
+        @content
+    </body>
+</html>
