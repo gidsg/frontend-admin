@@ -1,7 +1,40 @@
 @(edition: String)
 
 @main("Front editor: " + edition, edition: String) {
-    
-    <h1>@edition</h1>
-    
+
+    <script>
+        var apiKey = '@conf.Configuration.api.key';
+    </script>
+    <script src='@routes.Assets.at("javascripts/tag-picker.min.js")'></script>
+
+    <div class="page-header">
+        <h3>Beta special event editor <small>@edition edition</small></h3>
+    </div>
+
+    <form class="well" method="POST">
+        <input type="hidden" name="edition" value="@edition"/>
+        <div>
+            <label for="tag">Tag
+                <input class="pickable-tag" id="tag" name="tag" />
+                <input id="tag-id" name="tag-id" readonly="readonly"/>
+            </label>
+            <label> Ed. picks
+                <input type="radio" name="source" value="ed-picks"/>
+            </label>
+            <label> Lead content
+                <input type="radio" name="source" value="lead"/>
+            </label>
+            <label> Latest
+                <input type="radio" name="source" value="latest"/>
+            </label>
+            <label> Num items
+            <select name="num-items">
+                <option>5</option>
+                <option>3</option>
+                <option>1</option>
+            </select>
+            </label>
+        </div>
+       <button type="submit" class="btn">Save</button>
+    </form>
 }

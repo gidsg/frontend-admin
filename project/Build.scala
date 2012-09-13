@@ -12,7 +12,12 @@ object ApplicationBuild extends Build {
     )
 
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
-      // Add your own project settings here      
+      resolvers := Seq(
+        "Guardian Github Releases" at "http://guardian.github.com/maven/repo-releases"
+      ),
+      libraryDependencies ++= Seq(
+        "com.gu" %% "configuration" % "3.6"
+      )
     )
 
 }
