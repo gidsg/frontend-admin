@@ -2,11 +2,6 @@
 
 @main("Front editor: " + edition, edition: String) {
 
-    <script>
-        var apiKey = '@conf.Configuration.api.key';
-    </script>
-    <script src='@routes.Assets.at("javascripts/tag-picker.min.js")'></script>
-
     <div class="page-header">
         <h3>Beta special event editor <small>@edition edition</small></h3>
     </div>
@@ -28,12 +23,8 @@
                 <input type="radio" name="source" value="latest"/>
             </label>
             <label> Num items
-            <select name="num-items">
-                <option>5</option>
-                <option>3</option>
-                <option>1</option>
-            </select>
             </label>
+            <input type="range" />
         </div>
        <button type="submit" class="btn">Save</button>
     </form>
