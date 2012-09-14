@@ -22,6 +22,7 @@
             }
         </script>
         <script src='@routes.Assets.at("javascripts/vendor/curl.js")' type="text/javascript"></script>
+        <script src='@routes.Assets.at("javascripts/vendor/underscore.js")' type="text/javascript"></script>
         <script>
             
             define('Config', function() {
@@ -34,9 +35,12 @@
                 
                     Common.mediator.emitEvent('go!');
 
-                    document.getElementById('tag').addEventListener('keyup', function(){
-                        Common.mediator.emitEvent('modules:oncomplete', [this.value])
-                    })
+                    var throttled = _.throttle(function () {
+                            console.log('** search for ' + this.value);
+                            Common.mediator.emitEvent('modules:oncomplete', [this.value])
+                        }, 2000); // 
+
+                    document.getElementById('tag').addEventListener('keyup', throttled);
 
                     window.mediator = Common.mediator; // DEBUG
 
