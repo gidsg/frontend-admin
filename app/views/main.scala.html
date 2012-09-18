@@ -1,4 +1,4 @@
-@(title: String, edition: String)(content: Html)
+@(title: String, isAuthed: Boolean = false)(content: Html)
 
 <!DOCTYPE html>
 
@@ -54,10 +54,11 @@
 
     <div class="navbar">
         <div class="navbar-inner">
-            <ul class="nav"> <!-- iOS switch - broadcast to swap form models -->
-                <li><a href="#/us">US</a></li>
-                <li><a href="#/uk">UK</a></li>
-            </ul>
+            @if(isAuthed){
+                <ul class="nav pull-right">
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            }
         </div>
     </div>
 
