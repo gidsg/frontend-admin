@@ -1,31 +1,22 @@
 @(edition: String)
-
+ 
 @main("Front editor: " + edition, edition: String) {
 
-    <div class="page-header">
-        <h3>Beta special event editor <small>@edition edition</small></h3>
-    </div>
+    <label for="tag">Tag</label>
+    <input type="text" class="typeahead" data-provide="typeahead" data-items="4" data-source="['abc', 'asd', 'asdf']">
 
-    <form class="well" method="POST">
-        <input type="hidden" name="edition" value="@edition"/>
+    <ul data-bind="foreach: editions">
+        <li data-bind="text: id">
         <div>
-            <label for="tag">Tag
-                <input class="pickable-tag" id="tag" name="tag" />
-                <input id="tag-id" name="tag-id" readonly="readonly"/>
-            </label>
-            <label> Ed. picks
-                <input type="radio" name="source" value="ed-picks"/>
-            </label>
-            <label> Lead content
-                <input type="radio" name="source" value="lead"/>
-            </label>
-            <label> Latest
-                <input type="radio" name="source" value="latest"/>
-            </label>
-            <label> Num items
-            </label>
-            <input type="range" />
+            <li data-bind="text: trailblock().type"></li>
+            <li data-bind="text: trailblock().id"></li>
+            <li data-bind="text: trailblock().title"></li>
+            <li data-bind="text: trailblock().items"></li>
+            <li data-bind="text: trailblock().lead"></li>
         </div>
-       <button type="submit" class="btn">Save</button>
-    </form>
+    </ul>
+    
+    <button data-bind="click: save">Save</button>
+
+    <script src="@routes.Assets.at("javascripts/models/edition.js")"></script>
 }

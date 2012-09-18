@@ -1,21 +1,22 @@
 define(["Config", "Common", "Reqwest"], function (Config, Common, Reqwest) {
 
-    var apiHost = 'http://content.guardianapis.com',
+    var apiEndPoint = 'http://content.guardianapis.com/tags',
         key = Config.apiKey;
 
-    Common.mediator.addListener('go!', function() {
-        console.log(1);
-    });
+    var foo = function () {
     
-    Common.mediator.addListener('modules:oncomplete', function(tag) {
+        // ....
         Reqwest({
-            url: apiHost + "/tags?q=" + encodeURIComponent(tag) + "&format=json&page-size=50&api-key=" + key,
+            url: apiEndPoint + "?q=" + encodeURIComponent(tag) + "&format=json&page-size=50&api-key=" + key,
             type: 'jsonp',
             success: function (json) {
                 Common.mediator.emitEvent('modules:tagsearch:success', [json.response])
             }
         })
-    });
+
+    } 
+
+    Common.mediator.addListener('modules:oncomplete', foo);
 
     return {}
 
