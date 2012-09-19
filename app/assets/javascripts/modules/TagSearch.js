@@ -1,24 +1,40 @@
 define(["Config", "Common", "Reqwest"], function (Config, Common, Reqwest) {
 
-    var apiEndPoint = 'http://content.guardianapis.com/tags',
-        key = Config.apiKey;
+    return {
+        // dependencies
+        _config: Config,
+        _common: Common,
+        _reqwest: Reqwest,
 
-    var foo = function () {
-    
-        // ....
-        Reqwest({
-            url: apiEndPoint + "?q=" + encodeURIComponent(tag) + "&format=json&page-size=50&api-key=" + key,
-            type: 'jsonp',
-            success: function (json) {
-                Common.mediator.emitEvent('modules:tagsearch:success', [json.response])
-            }
-        })
+        _apiEndPoint: 'http://content.guardianapis.com/tags',
 
-    } 
+        init: function(opts) {
 
-    Common.mediator.addListener('modules:oncomplete', foo);
+            // dependency injection
+            var opts = opts || {}
+            var config  = opts.config  || this._config;
+            var common  = opts.common  || this._common;
+            var reqwest = opts.reqwest || this._reqwest;
 
-    return {}
+            var apiEndPoint = opts.apiEndPoint || this._apiEndPoint;
+
+            common.mediator.addListener('modules:oncomplete', function () {
+
+                // ....
+                reqwest(
+                    {
+                        url: apiEndPoint + "?q=" + encodeURIComponent('tag') + "&format=json&page-size=50&api-key=" + config.apiKey,
+                        type: 'jsonp',
+                        success: function (json) {
+                           common.mediator.emitEvent('modules:tagsearch:success', [json.response])
+                        }
+                    }
+                )
+
+            });
+
+        }
+    }
 
 });
 
