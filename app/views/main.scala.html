@@ -29,26 +29,6 @@
         </script>
         <script src="@routes.Assets.at("javascripts/vendor/curl.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/vendor/underscore.js")" type="text/javascript"></script>
-        <script>
-            define('Config', function() {
-                return {
-                    apiKey: '@conf.Configuration.api.key'
-                }
-            });
-            
-            
-            /*curl(["Config", "Common"]).then(function 
-                        (Config, Common) {
-                
-                    Common.mediator.emitEvent('go!');
-
-                }, function(e) {
-                
-                    console.log('Something has gone wrong here with the curl.js loading', e);
-            
-                })*/
-            </script>
-
     </head>
     <body>
 
@@ -62,14 +42,10 @@
         </div>
     </div>
 
-        @content
+    <script src="@routes.Assets.at("jquery-ui-1.8.23.custom/js/jquery-1.7.2.min.js")"></script>
+    <script src="@routes.Assets.at("bootstrap/js/bootstrap.js")"></script>
 
-        <script src="@routes.Assets.at("jquery-ui-1.8.23.custom/js/jquery-1.7.2.min.js")"></script>
-        <script src="@routes.Assets.at("bootstrap/js/bootstrap.js")"></script>
-        <script>
-            $.ready(function() { 
-                console.log($('.typeahead')); //.typeahead()
-            });
-        </script>
+    @content
+
     </body>
 </html>

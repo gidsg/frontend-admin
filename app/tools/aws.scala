@@ -37,7 +37,6 @@ trait S3 {
     metadata.setContentType("application/json")
     val request = new PutObjectRequest(bucket, configKey, new StringInputStream(config), metadata)
       .withCannedAcl(PublicRead)
-
     val client = createClient
     client.putObject(request)
     client.shutdown()

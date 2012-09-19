@@ -1,22 +1,31 @@
-@(edition: String)
+@(config: String)
 
 @main("Front editor", isAuthed = true) {
+    <script>
+        var frontConfig = @Html(config)
+    </script>
 
-    <label for="tag">Tag</label>
-    <input type="text" class="typeahead" data-provide="typeahead" data-items="4" data-source="['abc', 'asd', 'asdf']">
+    <input id="name"/>
+    <button id="trigger">Save</button>
 
-    <ul data-bind="foreach: editions">
-        <li data-bind="text: id">
-        <div>
-            <li data-bind="text: trailblock().type"></li>
-            <li data-bind="text: trailblock().id"></li>
-            <li data-bind="text: trailblock().title"></li>
-            <li data-bind="text: trailblock().items"></li>
-            <li data-bind="text: trailblock().lead"></li>
-        </div>
-    </ul>
 
-    <button data-bind="click: save">Save</button>
+    <script type="text/javascript">
 
-    <script src="@routes.Assets.at("javascripts/models/edition.js")"></script>
+        $("#trigger").click(function(){
+            $.ajax({
+                contentType: 'application/json',
+                type: "POST",
+                url: '/json/save',
+                dataType: 'json',
+                data: '{"name" : "' + $("#name").val() + '"}',
+                success: function (response) {
+                    alert(response.status);
+                },
+                error: function(response){
+                    var details = JSON.parse(response.responseText);
+                    alert(details.status);
+                }
+            })
+        });
+    </script>
 }

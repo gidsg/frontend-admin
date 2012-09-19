@@ -13,10 +13,9 @@ GET     /logout                     controllers.Login.logout
 
 
 # Admin endpoints
-GET     /admin/edit/:edition        controllers.AdminController.edit(edition)
+GET     /admin/edit        controllers.FeatureTrailblockController.edit()
 
-GET     /save                       controllers.AdminController.save()
-GET     /get                        controllers.AdminController.get()
+POST    /json/save         controllers.FeatureTrailblockController.save()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
