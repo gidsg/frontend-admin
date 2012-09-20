@@ -8,13 +8,17 @@
     <form id="network-front">
         <fieldset id="uk-trailblocks">
             <legend>UK Edition</legend>
-            <label for="tag">Tag</label>
-            <input data-bind="value: id" type="text" class="typeahead" data-provide="typeahead" data-items="4" data-source='["abc", "asd", "asdf"]' name="tag" />
-        <fieldset>
+            <label for="tag-id">Tag ID</label>
+            <input data-bind="value: id" type="text" class="typeahead" data-provide="typeahead" data-items="4" data-source='["abc", "asd", "asdf"]' name="tag-id" />
+            <label for="tag-title">Tag title</label>
+            <input data-bind="value: title" type="text"name="tag-title" />
+        </fieldset>
         <fieldset id="us-trailblocks">
             <legend>US Edition</legend>
-            <label for="tag">Tag</label>
-            <input data-bind="value: id" type="text" class="typeahead" data-provide="typeahead" data-items="4" data-source='["abc", "asd", "asdf"]' name="tag" />
+            <label for="tag-id">Tag ID</label>
+            <input data-bind="value: id" type="text" class="typeahead" data-provide="typeahead" data-items="4" data-source='["abc", "asd", "asdf"]' name="tag-id" />
+            <label for="tag-title">Tag title</label>
+            <input data-bind="value: title" type="text"name="tag-title" />
         </fieldset>
         <input type="submit" value="Save" />
     </form>

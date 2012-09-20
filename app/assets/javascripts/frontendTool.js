@@ -1,8 +1,8 @@
 curl(['models/trailblockViewModel']).then(function(TrailblockViewModel) {
 
 	var trailblocks = {
-		'us': new TrailblockViewModel,
-		'uk': new TrailblockViewModel
+		'uk': new TrailblockViewModel,
+		'us': new TrailblockViewModel
 	}
 
 	for (edition in trailblocks) {
@@ -23,8 +23,9 @@ curl(['models/trailblockViewModel']).then(function(TrailblockViewModel) {
 
             // turn trailblock models into json
             var data = {
-            	'us': ko.toJS(trailblocks.us),
-            	'uk': ko.toJS(trailblocks.uk)
+            	'uk': ko.toJS(trailblocks.uk),
+            	'us': ko.toJS(trailblocks.us)
+
             };
 
             $.ajax({
