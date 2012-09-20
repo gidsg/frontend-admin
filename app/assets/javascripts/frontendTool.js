@@ -1,4 +1,4 @@
-curl(['models/trailblockViewModel', 'knockout']).then(function(TrailblockViewModel, Knockout) {
+curl(['models/trailblockViewModel', 'Knockout']).then(function(TrailblockViewModel, Knockout) {
 
 	var trailblocks = {
 		'uk': new TrailblockViewModel,
@@ -12,14 +12,29 @@ curl(['models/trailblockViewModel', 'knockout']).then(function(TrailblockViewMod
 
         // update with values from server
 		var editionConfig = frontConfig[edition];
+
         if (editionConfig) {
-        	 for (prop in trailblock) {
-        	 	// TODO - use knockout's mapping plugin
-        	 	if (typeof trailblock[prop] === 'function') {
-             		trailblock[prop](editionConfig[prop]);
-        	 	}
-           	}
+        	updateModel(trailblock, editionConfig);
         }
+    }
+
+    function updateModel(model, data)
+    {
+       	for (prop in model) {
+        	if (typeof model[prop] === 'function') {
+        		console.log(model[prop]);
+            	model[prop](data[prop]);
+        	}
+        }
+    }
+
+    function clearModel(model)
+    {
+    	var data = {};
+   		for (prop in model) {
+   			data.prop = '';
+    	}
+    	updateModel(model, data);
     }
 
     $('#network-front').submit(function(e) {
@@ -43,13 +58,7 @@ curl(['models/trailblockViewModel', 'knockout']).then(function(TrailblockViewMod
     // can't use standard reset type, doesn't fire change event on form
     $('#network-front #clear-form').click(function(e) {
     	$.each(['us', 'uk'], function(index, edition) {
-    		var trailblock = trailblocks[edition];
-    		for (prop in trailblock) {
-        	 	// TODO - use knockout's mapping plugin
-        	 	if (typeof trailblock[prop] === 'function') {
-             		trailblock[prop]('');
-        	 	}
-    		}
+    		clearModel(trailblocks[edition]);
     	});
     });
 

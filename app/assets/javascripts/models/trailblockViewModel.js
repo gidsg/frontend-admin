@@ -1,4 +1,4 @@
-define(['knockout'], function (Knockout) {
+define(['Knockout'], function (Knockout) {
 
 	return function() {
 		this.type     = 'tag';
