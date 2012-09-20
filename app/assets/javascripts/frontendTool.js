@@ -12,35 +12,15 @@ curl(['models/trailblockViewModel', 'Knockout']).then(function(TrailblockViewMod
 
         // update with values from server
 		var editionConfig = frontConfig[edition];
-
         if (editionConfig) {
-        	updateModel(trailblock, editionConfig);
+        	trailblock.update(editionConfig);
         }
-    }
-
-    function updateModel(model, data)
-    {
-       	for (prop in model) {
-        	if (typeof model[prop] === 'function') {
-        		console.log(model[prop]);
-            	model[prop](data[prop]);
-        	}
-        }
-    }
-
-    function clearModel(model)
-    {
-    	var data = {};
-   		for (prop in model) {
-   			data.prop = '';
-    	}
-    	updateModel(model, data);
     }
 
     $('#network-front').submit(function(e) {
     	e.preventDefault();
 
-        // turn trailblock models into json
+        // turn trailblock models into js obj
         var data = {
         	'uk': Knockout.toJS(trailblocks.uk),
             'us': Knockout.toJS(trailblocks.us)
@@ -58,7 +38,7 @@ curl(['models/trailblockViewModel', 'Knockout']).then(function(TrailblockViewMod
     // can't use standard reset type, doesn't fire change event on form
     $('#network-front #clear-form').click(function(e) {
     	$.each(['us', 'uk'], function(index, edition) {
-    		clearModel(trailblocks[edition]);
+    		trailblocks[edition].clear();
     	});
     });
 
