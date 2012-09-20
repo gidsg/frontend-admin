@@ -6,7 +6,8 @@
     </script>
 
     <form id="network-front">
-        <!-- <fieldset class="trailblocks">
+        <!--
+        <fieldset class="trailblocks">
             <legend>UK Edition</legend>
             <label for="tag">Tag</label>
             <input type="text" class="typeahead" data-provide="typeahead" data-items="4" data-source='["abc", "asd", "asdf"]' name="tag" />
@@ -22,47 +23,38 @@
         <input type="submit" value="Save" />
     </form>
 
-
     <script>
-        curl(['controllers/trailblocks', 'Config', 'Common', 'AutoComplete', 'TagSearch']).then(
-                function(Trailblocks, Config, Common, AutoComplete, TagSearch) {
+    /*
+
+        Auto-complete with mediator pattern
+        
+        - tagentry : Manages keyboard input & broadcasts a message when it's been received.
+                    It also listens for autocomplete events to populate itself.   
+        - autocomplete: Listens for tagentry messages and queries the auto-complete API
+                    and presents a list of valid options from the returned resultss
+
+    */
+    
+        curl([
+                'controllers/trailblocks',
+                'Config',
+                'Common',
+                'TagEntry',
+                'AutoComplete',
+                'TagSearch',
+                'ItemSearch']).then(
+            function(
+                Trailblocks,
+                Config,
+                Common,
+                TagEntry,
+                AutoComplete,
+                TagSearch,
+                ItemSearch) {
             
             new Trailblocks({el: $("body")})
-
             new TagSearch.init( { apiEndPoint: 'http://content.guardianapis.com/tags', config: Config } );
-
-            // http://stackoverflow.com/questions/1909441/jquery-keyup-delay
-            var delay = (function(){
-                 var timer = 0;
-                 return function(callback, ms){
-                    clearTimeout (timer);
-                    timer = setTimeout(callback, ms);
-                    };
-                 })();
-
-            $('.typeahead').keyup(function (e) {
-                
-                Common.mediator.emitEvent('ui:autocomplete:keydown', [this.value]);
-                
-                var that = this;
-
-                if (this.value.length <= 3) {
-                    return false; 
-                }
-                
-                delay(function () {
-                    Common.mediator.emitEvent('modules:oncomplete', [that.value]);
-                }, 1000)
-            });
-
-            Common.mediator.addListener('modules:autocomplete:selected', function (tag) {
-                $('.typeahead').val(tag);
-            });
-            
-            Common.mediator.addListener('modules:tagsearch:success', function (results) {
-                console.log('yay!', results);
-            });
-
+            new TagEntry.init( { nodeList: $('.typeahead') } );
         });
 
     </script>
