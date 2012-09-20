@@ -11,8 +11,8 @@ define(['models/trailblock'], function (Trailblock) {
   		},
 
   		init: function() {
-    		Trailblock.fetch()
-    		Trailblock.bind("refresh change", this.proxy(this.render));
+    		//Trailblock.fetch()
+    		//Trailblock.bind("refresh change", this.proxy(this.render));
   		},
 
   		save: function(e) {
