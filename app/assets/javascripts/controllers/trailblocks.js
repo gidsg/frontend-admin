@@ -3,7 +3,7 @@ define(['models/trailblock'], function (Trailblock) {
 	var Trailblocks = Spine.Controller.sub({
 
 		elements: {
-			".trailblock": "trailblocks"
+			".trailblocks": "trailblocks"
 		},
 
   		events: {
@@ -11,14 +11,22 @@ define(['models/trailblock'], function (Trailblock) {
   		},
 
   		init: function() {
-    		//Trailblock.fetch()
-    		//Trailblock.bind("refresh change", this.proxy(this.render));
+  			Trailblock.bind("create", this.proxy(this.foo));
+    		var trailblocks = Trailblock.all();
+  		},
+
+  		foo: function() {
+  			console.log('bar');
   		},
 
   		save: function(e) {
   			e.preventDefault();
-  			var trailblock = Trailblock.fromForm(e.target)
-  			trailblock.save();
+  			var trailblock = Trailblock.fromForm(e.target);
+  			if (!trailblock.save()) {
+  				return;
+  			}
+  			// now save trailblocks to s3
+  			Trailblock.save();
   		}
 
 	});

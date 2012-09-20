@@ -5,15 +5,16 @@ define(function () {
 	// properties
 	Trailblock.configure('Trailblock', 'tag', 'edition');
 
-	// add ajax functionality
-	Trailblock.extend(Spine.Model.Ajax);
-	// url to post to - NOTE, probably change
-	Trailblock.extend({url: '/json/save'});
-
 	Trailblock.extend(
 		{
-			fetch: function(){
-				return new Trailblock(frontConfig);
+			all: function() {
+				// get trailblocks from data
+				return [new Trailblock(frontConfig).save()];
+			},
+			save: function() {
+				// validate each trailblock
+				console.log('foo');
+				// convert to correct json
 			}
 		}
 	);
