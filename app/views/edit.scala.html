@@ -5,13 +5,33 @@
         var frontConfig = @Html(config)
     </script>
 
-    <input id="name"/>
-    <button id="trigger">Save</button>
+    <form id="network-front">
+        <!-- <fieldset class="trailblocks">
+            <legend>UK Edition</legend>
+            <label for="tag">Tag</label>
+            <input type="text" class="typeahead" data-provide="typeahead" data-items="4" data-source='["abc", "asd", "asdf"]' name="tag" />
+            <input type="hidden" name="edition" value="uk" />
+        <fieldset> -->
+        <fieldset class="trailblocks">
+            <legend>US Edition</legend>
+            <label for="tag">Tag</label>
+            <input type="text" class="typeahead" data-provide="typeahead" data-items="4" data-source='["abc", "asd", "asdf"]' name="tag" />
+            <input type="hidden" name="edition" value="us" />
+        <fieldset>
+        <input type="submit" value="Save" />
+    </form>
+
+    <script>
+        curl(['controllers/trailblocks']).then(function(Trailblocks) {
+            // trailblocks controller
+            new Trailblocks({el: $("body")})
+        });
+    </script>
 
 
     <script type="text/javascript">
 
-        $("#trigger").click(function(){
+        /*$("#trigger").click(function(){
             $.ajax({
                 contentType: 'application/json',
                 type: "POST",
@@ -26,6 +46,6 @@
                     alert(details.status);
                 }
             })
-        });
+        });*/
     </script>
 }

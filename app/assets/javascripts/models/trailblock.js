@@ -3,11 +3,20 @@ define(function () {
 	Trailblock = Spine.Model.sub();
 
 	// properties
-	Trailblock.configure('Trailblock', 'tagId', 'tagName', 'edition');
+	Trailblock.configure('Trailblock', 'tag', 'edition');
 
 	// add ajax functionality
 	Trailblock.extend(Spine.Model.Ajax);
-	Trailblock.extend({url: '/admin/foo'});
+	// url to post to - NOTE, probably change
+	Trailblock.extend({url: '/json/save'});
+
+	Trailblock.extend(
+		{
+			fetch: function(){
+				return new Trailblock(frontConfig);
+			}
+		}
+	);
 
 	// extend
 	Trailblock.include({

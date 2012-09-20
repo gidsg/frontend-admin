@@ -2,13 +2,17 @@ define(['models/trailblock'], function (Trailblock) {
 
 	var Trailblocks = Spine.Controller.sub({
 
+		elements: {
+			".trailblock": "trailblocks"
+		},
+
   		events: {
-    		"submit #special": "save"
+    		"submit #network-front": "save"
   		},
 
-  		init: function(){
-   			// Instantiate other controllers..
-    		//Trailblock.fetch()
+  		init: function() {
+    		Trailblock.fetch()
+    		Trailblock.bind("refresh change", this.proxy(this.render));
   		},
 
   		save: function(e) {
