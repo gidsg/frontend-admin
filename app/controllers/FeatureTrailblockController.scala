@@ -10,17 +10,14 @@ import play.api.libs.json.Json.toJson
 
 object FeatureTrailblockController extends Controller {
 
-
-
   def edit() = AuthAction{
     val promiseOfConfig = Akka.future(S3.getConfig)
     Async{
-      promiseOfConfig.map(config => Ok(views.html.edit(config)))
+      promiseOfConfig.map(config => Ok(views.html.edit(config.getOrElse("{}"))))
     }
   }
 
   def save() = AuthAction{ request =>
-
     request.body.asJson.map { json =>
       Akka.future{
         try {
