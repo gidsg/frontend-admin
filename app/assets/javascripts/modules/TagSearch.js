@@ -17,16 +17,20 @@ define(["Config", "Common", "Reqwest"], function (Config, Common, Reqwest) {
             var reqwest = opts.reqwest || this._reqwest;
 
             var apiEndPoint = opts.apiEndPoint || this._apiEndPoint;
+            
+            console.log('foo', config);
 
-            common.mediator.addListener('modules:oncomplete', function () {
+            Common.mediator.addListener('modules:oncomplete', function (tag) {
+
+                console.log('on complete found', tag);
 
                 // ....
-                reqwest(
+                Reqwest(
                     {
-                        url: apiEndPoint + "?q=" + encodeURIComponent('tag') + "&format=json&page-size=50&api-key=" + config.apiKey,
+                        url: apiEndPoint + "?q=" + encodeURIComponent(tag) + "&format=json&page-size=50&api-key=" + config.apiKey,
                         type: 'jsonp',
                         success: function (json) {
-                           common.mediator.emitEvent('modules:tagsearch:success', [json.response])
+                           Common.mediator.emitEvent('modules:tagsearch:success', [json.response])
                         }
                     }
                 )
