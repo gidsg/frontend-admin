@@ -9,3 +9,10 @@ dist
 *.idea
 
 .idea_modules
+*.class
+*.png
+.settings
+*/.classpath
+.project
+.metadata
+*.iml
