@@ -2,8 +2,22 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page
-GET     /admin/edit/:edition        controllers.AdminController.edit(edition)
+
+# authentication endpoints
+#GET     /profile                    controllers.Login.profile
+GET     /login                      controllers.Login.login
+POST    /login                      controllers.Login.loginPost
+GET     /openIDCallback             controllers.Login.openIDCallback
+GET     /logout                     controllers.Login.logout
+
+
+
+# Admin endpoints
+GET     /admin/edit        controllers.FeatureTrailblockController.edit()
+
+POST    /json/save         controllers.FeatureTrailblockController.save()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+
