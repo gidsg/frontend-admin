@@ -64,8 +64,8 @@ define(['models/edition', 'models/trailblock', 'Knockout', 'Common'], function (
             self.editions.push(edition);
         });
 
-        Common.mediator.addListener('frontend:clear', this.clear);
-        Common.mediator.addListener('frontend:save', this.save);
+        Common.mediator.addListener('ui:frontendtool:clear', this.clear);
+        Common.mediator.addListener('ui:frontendtool:save', this.save);
 
 	};
 

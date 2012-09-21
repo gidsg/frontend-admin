@@ -22,12 +22,18 @@ curl([
 
     $('#frontend-tool').submit(function(e) {
     	e.preventDefault();
-    	Common.mediator.emitEvent('frontend:save');
+    	Common.mediator.emitEvent('ui:frontendtool:save');
+    });
+
+    $('#frontend-tool .typeahead').blur(function(e) {
+    	if ($(e.currentTarget).val()) {
+    		Common.mediator.emitEvent('ui:frontendtool:tagid:selected', [{}, e.currentTarget]);
+    	}
     });
 
     // can't use standard reset type, doesn't fire change event on form
     $('#frontend-tool #clear-form').click(function(e) {
-    	Common.mediator.emitEvent('frontend:clear')
+    	Common.mediator.emitEvent('ui:frontendtool:clear')
     });
 
     new TagSearch.init( { apiEndPoint: 'http://content.guardianapis.com/tags', config: Config } );

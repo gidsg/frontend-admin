@@ -34,8 +34,17 @@ define(["Config", "Common"], function (Config, Common) {
             })
 
             // populate input when autocomplete is selected
-            Common.mediator.addListener('modules:autocomplete:selected', function (tag, inputElement) {
-                inputElement.val(tag);
+            Common.mediator.addListener('modules:autocomplete:selected', function (tag, element) {
+                element.val(tag).change();
+                Common.mediator.emitEvent('ui:frontendtool:tagid:selected', [{}, element]);
+            });
+
+            // style tag input element on success/error
+            Common.mediator.addListener('modules:tagvalidation:success', function(element) {
+                $(element).css({'border-color': 'green'});
+            });
+            Common.mediator.addListener('modules:tagvalidation:failure', function(element) {
+                $(element).css({'border-color': 'red'});
             });
 
         }
