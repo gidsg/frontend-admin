@@ -59,7 +59,9 @@ curl([
 
     // success alert when saved
     Common.mediator.addListener('models:networkfront:save:success', function(networkFront) {
-    	successAlert.insertBefore($('#network-front-tool'));
+    	errorAlert.alert('close');
+    	successAlert.addClass('fade in').insertBefore($('#network-front-tool'));
+    	setTimeout(function(){ successAlert.alert('close'); }, 2000);
     });
 
     new TagSearch.init( { apiEndPoint: 'http://content.guardianapis.com/tags', config: Config } );
