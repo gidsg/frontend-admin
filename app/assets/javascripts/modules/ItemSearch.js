@@ -23,7 +23,7 @@ define(["Config", "Common", "Reqwest"], function (Config, Common, Reqwest) {
     }
 
     Common.mediator.addListener('modules:tagsearch:success', search);
-    Common.mediator.addListener('ui:frontendtool:tagid:selected', search);
+    Common.mediator.addListener('ui:networkfronttool:tagid:selected', search);
     Common.mediator.addListener('modules:autocomplete:selected', search);
     Common.mediator.addListener('modules:itemsearch:success', validateTag);
 

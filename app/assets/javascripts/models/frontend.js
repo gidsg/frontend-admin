@@ -1,6 +1,6 @@
 define(['models/edition', 'models/trailblock', 'Knockout', 'Common'], function (Edition, Trailblock, Knockout, Common) {
 
-	return function() {
+	return function(data) {
 
         var self = this;
 
@@ -37,8 +37,16 @@ define(['models/edition', 'models/trailblock', 'Knockout', 'Common'], function (
                 type: 'POST',
                 url: '/json/save',
                 dataType: 'json',
-                data: self.toJSON()
+                data: self.toJSON(),
+                success: function() {
+                    Common.mediator.emitEvent('models:networkfront:save:success', [self]);
+                },
+                error: function() {
+                    Common.mediator.emitEvent('models:networkfront:save:error', [self]);
+                }
             });
+
+
         }
 
         // create editions, and associated trailblocks
@@ -46,7 +54,7 @@ define(['models/edition', 'models/trailblock', 'Knockout', 'Common'], function (
             var edition = new Edition;
             edition.id = editionId;
 
-            var editionConfig = frontConfig[editionId];
+            var editionConfig = data[editionId];
             if (editionConfig && editionConfig.blocks) {
                 editionConfig.blocks.forEach(function (block) {
                     var trailblock = new Trailblock;
@@ -64,8 +72,8 @@ define(['models/edition', 'models/trailblock', 'Knockout', 'Common'], function (
             self.editions.push(edition);
         });
 
-        Common.mediator.addListener('ui:frontendtool:clear', this.clear);
-        Common.mediator.addListener('ui:frontendtool:save', this.save);
+        Common.mediator.addListener('ui:networkfronttool:clear', this.clear);
+        Common.mediator.addListener('ui:networkfronttool:save', this.save);
 
 	};
 

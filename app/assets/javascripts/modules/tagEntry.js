@@ -36,7 +36,7 @@ define(["Config", "Common"], function (Config, Common) {
             // populate input when autocomplete is selected
             Common.mediator.addListener('modules:autocomplete:selected', function (tag, element) {
                 element.val(tag).change();
-                Common.mediator.emitEvent('ui:frontendtool:tagid:selected', [{}, element]);
+                Common.mediator.emitEvent('ui:networkfronttool:tagid:selected', [{}, element]);
             });
 
             // style tag input element on success/error
