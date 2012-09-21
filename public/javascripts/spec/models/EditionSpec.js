@@ -14,7 +14,7 @@ curl(['models/edition', 'Knockout']).then(
             });
 
             it('id property should be empty initially', function() {
-                expect(edition.id).toBe('');
+                expect(edition.id).toEqual('');
             });
 
             it('should have a trailblocks property', function() {
@@ -22,11 +22,11 @@ curl(['models/edition', 'Knockout']).then(
             });
 
             it('trailblocks property should be an observable', function() {
-                expect(Knockout.isObservable(edition.trailblocks)).toBe(true);
+                expect(Knockout.isObservable(edition.trailblocks)).toEqual(true);
             });
 
             it('trailblocks property should be empty initially', function() {
-                expect(edition.trailblocks().length).toBe(0);
+                expect(edition.trailblocks().length).toEqual(0);
             });
 
         });
