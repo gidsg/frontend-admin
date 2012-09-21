@@ -1,5 +1,5 @@
 curl([
-	'models/network-front',
+	'models/networkFront',
 	'Knockout',
 	'Config',
     'Common',
