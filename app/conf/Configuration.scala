@@ -14,7 +14,7 @@ object Configuration {
     lazy val bucket = configuration.getStringProperty("aws.bucket").getOrElse(throw new RuntimeException("AWS bucket is not setup"))
   }
 
-  lazy val configFile = configuration.getStringProperty("config.file").getOrElse(throw new RuntimeException("Config file name is not setup"))
+  lazy val configKey = configuration.getStringProperty("config.file").getOrElse(throw new RuntimeException("Config file name is not setup"))
 
   object api {
     lazy val key = configuration.getStringProperty("content.api.key").getOrElse(throw new RuntimeException("needs an api key"))

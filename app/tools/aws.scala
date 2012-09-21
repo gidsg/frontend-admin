@@ -7,13 +7,13 @@ import io.Source
 import com.amazonaws.util.StringInputStream
 import com.amazonaws.services.s3.model.CannedAccessControlList.PublicRead
 import conf.Configuration
+import controllers.Logging
 
 
-trait S3 {
+trait S3 extends Logging {
 
   lazy val bucket = Configuration.aws.bucket
-
-  val configKey = Configuration.configFile
+  lazy val configKey = Configuration.configKey
 
   lazy val accessKey = Configuration.aws.accessKey
 
@@ -29,8 +29,7 @@ trait S3 {
       val s3object = client.getObject(request)
       Some(Source.fromInputStream(s3object.getObjectContent).mkString)
     } catch { case e: AmazonS3Exception if e.getStatusCode == 404 =>
-      //TODO log creating new
-      //http://stackoverflow.com/questions/9429127/aws-s3-file-search-using-java
+      log.warn("no config found at %s - %s" format(bucket, configKey))
       None
     } finally {
       client.shutdown()
