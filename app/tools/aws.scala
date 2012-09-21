@@ -2,7 +2,7 @@ package tools
 
 import com.amazonaws.services.s3.AmazonS3Client
 import com.amazonaws.auth.BasicAWSCredentials
-import com.amazonaws.services.s3.model.{ObjectMetadata, PutObjectRequest, GetObjectRequest}
+import com.amazonaws.services.s3.model._
 import io.Source
 import com.amazonaws.util.StringInputStream
 import com.amazonaws.services.s3.model.CannedAccessControlList.PublicRead
@@ -25,9 +25,16 @@ trait S3 {
   def getConfig = {
     val client = createClient
     val request = new GetObjectRequest(bucket, configKey)
-    val config = Source.fromInputStream(client.getObject(request).getObjectContent).mkString
-    client.shutdown()
-    config
+    try{
+      val s3object = client.getObject(request)
+      Some(Source.fromInputStream(s3object.getObjectContent).mkString)
+    } catch { case e: AmazonS3Exception if e.getStatusCode == 404 =>
+      //TODO log creating new
+      //http://stackoverflow.com/questions/9429127/aws-s3-file-search-using-java
+      None
+    } finally {
+      client.shutdown()
+    }
   }
 
   def putConfig(config: String) {
