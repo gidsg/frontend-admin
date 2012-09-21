@@ -18,9 +18,12 @@ curl(['models/frontend', 'Knockout']).then(function(Frontend, Knockout) {
     // can't use standard reset type, doesn't fire change event on form
     $('#network-front #clear-form').click(function(e) {
 
-    	$.each(['us', 'uk'], function(index, edition) {
-    		trailblocks[edition].clear();
+    	frontend.editions().forEach(function(edition) {
+    		edition.trailblocks().forEach(function(trailblock) {
+    			trailblock.clear();
+    		});
     	});
+
     });
 
 });
