@@ -2,10 +2,10 @@ define(["Config", "Common", "Reqwest"], function (Config, Common, Reqwest) {
 
     var apiEndPoint = 'http://content.guardianapis.com/',
         key = Config.apiKey;
-   
-    var search = function(response, tag) {
+
+    var search = function(response, inputElement) {
             Reqwest({
-                url: apiEndPoint + tag + "?format=json&page-size=1&api-key=" + key,
+                url: apiEndPoint + inputElement.value + "?format=json&page-size=1&api-key=" + key,
                 type: 'jsonp',
                 success: function (json) {
                     Common.mediator.emitEvent('modules:itemsearch:success', [json.response])
@@ -13,7 +13,7 @@ define(["Config", "Common", "Reqwest"], function (Config, Common, Reqwest) {
         })
     }
 
-    // evaluate a response 
+    // evaluate a response
     var validateTag = function(response) {
         if (response.hasOwnProperty('tag')) {
             Common.mediator.emitEvent('modules:tagvalidation:success');

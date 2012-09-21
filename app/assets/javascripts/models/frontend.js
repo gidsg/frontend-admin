@@ -1,4 +1,4 @@
-define(['models/edition', 'models/trailblock', 'Knockout'], function (Edition, Trailblock, Knockout) {
+define(['models/edition', 'models/trailblock', 'Knockout', 'Common'], function (Edition, Trailblock, Knockout, Common) {
 
 	return function() {
 
@@ -23,8 +23,26 @@ define(['models/edition', 'models/trailblock', 'Knockout'], function (Edition, T
             return JSON.stringify(data);
         }
 
+        this.clear = function() {
+            self.editions().forEach(function(edition) {
+                edition.trailblocks().forEach(function(trailblock) {
+                    trailblock.clear();
+                });
+            });
+        }
+
+        this.save =  function() {
+            $.ajax({
+                contentType: 'application/json',
+                type: 'POST',
+                url: '/json/save',
+                dataType: 'json',
+                data: self.toJSON()
+            });
+        }
+
         // create editions, and associated trailblocks
-        $.each(['us', 'uk'], function(index, editionId) {
+        $.each(['uk', 'us'], function(index, editionId) {
             var edition = new Edition;
             edition.id = editionId;
 
@@ -45,6 +63,9 @@ define(['models/edition', 'models/trailblock', 'Knockout'], function (Edition, T
 
             self.editions.push(edition);
         });
+
+        Common.mediator.addListener('frontend:clear', this.clear);
+        Common.mediator.addListener('frontend:save', this.save);
 
 	};
 

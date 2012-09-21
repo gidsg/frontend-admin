@@ -33,8 +33,6 @@ define(["Common"], function (Common) {
     // autocomplete item selected
     autocomplete.click(function (e) {
         var id = e.target.getAttribute('data-id');
-        console.log(autocomplete);
-        console.log(autocomplete.prev());
         Common.mediator.emitEvent('modules:autocomplete:selected', [id, autocomplete.prev()]);
         e.preventDefault();
     })
