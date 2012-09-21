@@ -7,12 +7,10 @@
         <title>@title</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <meta charset="utf-8"/>
-        
+
         <!-- bootstrap -->
         <link href="@routes.Assets.at("bootstrap/css/bootstrap.min.css")" rel="stylesheet">
-        
-        <script src="@routes.Assets.at("knockout-2.1.0.debug.js")"></script>
-        
+
         <!-- custom css -->
         <link href="@routes.Assets.at("css/style.css")" rel="stylesheet">
 
@@ -23,12 +21,36 @@
                     Common: '@routes.Assets.at("javascripts/common")',
                     Reqwest: '@routes.Assets.at("javascripts/vendor/reqwest")',
                     TagSearch: '@routes.Assets.at("javascripts/modules/TagSearch")',
-                    ItemSearch: '@routes.Assets.at("javascripts/modules/ItemSearch")'
+                    ItemSearch: '@routes.Assets.at("javascripts/modules/ItemSearch")',
+                    Knockout: '@routes.Assets.at("knockout-2.1.0.debug")',
+                    controllers: '@routes.Assets.at("javascripts/controllers")',
+                    models: '@routes.Assets.at("javascripts/models")',
                 }
             }
         </script>
         <script src="@routes.Assets.at("javascripts/vendor/curl.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/vendor/underscore.js")" type="text/javascript"></script>
+
+        <script>
+            define('Config', function() {
+                return {
+                    apiKey: '@conf.Configuration.api.key'
+                }
+            });
+
+
+            /*curl(["Config", "Common"]).then(function
+                        (Config, Common) {
+
+                    Common.mediator.emitEvent('go!');
+
+                }, function(e) {
+
+                    console.log('Something has gone wrong here with the curl.js loading', e);
+
+                })*/
+            </script>
+
     </head>
     <body>
 
@@ -42,10 +64,19 @@
         </div>
     </div>
 
-    <script src="@routes.Assets.at("jquery-ui-1.8.23.custom/js/jquery-1.7.2.min.js")"></script>
-    <script src="@routes.Assets.at("bootstrap/js/bootstrap.js")"></script>
+        <script src="@routes.Assets.at("jquery-ui-1.8.23.custom/js/jquery-1.7.2.min.js")"></script>
+        <script src="@routes.Assets.at("javascripts/vendor/zepto-1.0rc1.min.js")"></script>
+        <script src="@routes.Assets.at("bootstrap/js/bootstrap.js")"></script>
+        <script>
+            $.ready(function() {
+                $('.typeahead'); //.typeahead()
+            });
+        </script>
 
-    @content
+        <script src="@routes.Assets.at("javascripts/vendor/spine-1.0.8/spine.js")"></script>
+        <script src="@routes.Assets.at("javascripts/vendor/spine-1.0.8/ajax.js")"></script>
+
+        @content
 
     </body>
 </html>

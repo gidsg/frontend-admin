@@ -2,30 +2,28 @@
 
 @main("Front editor", isAuthed = true) {
     <script>
-        var frontConfig = @Html(config)
+        var frontConfig = @Html(config);
     </script>
 
-    <input id="name"/>
-    <button id="trigger">Save</button>
+    <form id="network-front"  data-bind="template: { name: 'edition-template', foreach: editions }">
+        <input type="button" value="Clear" id="clear-form" />
+        <input type="submit" value="Save" />
+    </form>
 
-
-    <script type="text/javascript">
-
-        $("#trigger").click(function(){
-            $.ajax({
-                contentType: 'application/json',
-                type: "POST",
-                url: '/json/save',
-                dataType: 'json',
-                data: '{"name" : "' + $("#name").val() + '"}',
-                success: function (response) {
-                    alert(response.status);
-                },
-                error: function(response){
-                    var details = JSON.parse(response.responseText);
-                    alert(details.status);
-                }
-            })
-        });
+    <script type="text/html" id="edition-template">
+        <fieldset>
+            <legend><span data-bind="text: id.toUpperCase()"></span> Edition</legend>
+            <div data-bind="template: { name: 'trailblock-template', foreach: trailblocks }" />
+        <fieldset>
     </script>
+
+    <script type="text/html" id="trailblock-template">
+        <label for="tag-id">Tag ID</label>
+        <input data-bind="value: id" type="text" class="typeahead" data-provide="typeahead" data-items="4" data-source='["abc", "asd", "asdf"]' name="tag-id" />
+        <label for="tag-title">Tag Title</label>
+        <input data-bind="value: title" type="text"name="tag-title" />
+    </script>
+
+    <script src="@routes.Assets.at("javascripts/frontendTool.js")" type="text/javascript"></script>
+
 }
