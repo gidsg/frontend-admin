@@ -25,7 +25,7 @@ curl(["TagSearch", 'Common']).then(
                 // get the handler
                 var modulesOnCompleteHandler = common.mediator.addListener.mostRecentCall.args[1]
                 // call the handler
-                modulesOnCompleteHandler();
+                modulesOnCompleteHandler({value: 'foo'});
                 // confirm spy was called
                 expect(mockReqwest).toHaveBeenCalled();
             });
@@ -34,7 +34,9 @@ curl(["TagSearch", 'Common']).then(
 
                 var mockReqwest,
                     apiEndPoint = 'http://www.foo.com/bar',
-                    apiKey      = '12345';
+                    tag         = 'example/tag',
+                    apiKey      = '12345',
+                    expectedUrl = 'http://www.foo.com/bar?q=example%2Ftag&format=json&page-size=50&api-key=12345'
 
 
                 beforeEach(function() {
@@ -46,7 +48,7 @@ curl(["TagSearch", 'Common']).then(
                         }
                     );
                     // call handler
-                    common.mediator.addListener.mostRecentCall.args[1]();
+                    common.mediator.addListener.mostRecentCall.args[1]({value: tag});
                 });
 
                 it('should have type jsonp', function() {
@@ -54,9 +56,7 @@ curl(["TagSearch", 'Common']).then(
                 });
 
                 it('should have correct url', function() {
-                    expect(mockReqwest.mostRecentCall.args[0]['url']).toEqual(apiEndPoint +
-                        "?q=tag&format=json&page-size=50&api-key=" + apiKey
-                    );
+                    expect(mockReqwest.mostRecentCall.args[0]['url']).toEqual(expectedUrl);
                 });
 
                 it('should have a success callback', function() {
@@ -77,7 +77,7 @@ curl(["TagSearch", 'Common']).then(
                         // ... with correct params
                         var emitEventParams = common.mediator.emitEvent.mostRecentCall.args
                         expect(emitEventParams[0]).toBe('modules:tagsearch:success');
-                        expect(emitEventParams[1]).toEqual([response]);
+                        expect(emitEventParams[1]).toEqual([response, {value: tag}]);
                     });
 
                 });

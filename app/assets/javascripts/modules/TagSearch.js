@@ -18,7 +18,7 @@ define(["Config", "Common", "Reqwest"], function (Config, Common, Reqwest) {
 
             Common.mediator.addListener('modules:oncomplete', function (inputElement) {
 
-                Reqwest(
+                reqwest(
                     {
                         url: apiEndPoint + "?q=" + encodeURIComponent(inputElement.value) + "&format=json&page-size=50&api-key=" + config.apiKey,
                         type: 'jsonp',
