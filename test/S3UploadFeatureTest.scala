@@ -13,7 +13,7 @@ class S3UploadFeatureTest extends FeatureSpec with GivenWhenThen with ShouldMatc
     scenario("upload config to S3"){
 
       val s3 = new S3 {
-        override val configKey = "TESTING/config/front.json"
+        override lazy val configKey = "TESTING/config/front.json"
       }
 
       given("I save the config")
@@ -29,7 +29,7 @@ class S3UploadFeatureTest extends FeatureSpec with GivenWhenThen with ShouldMatc
       given("I attempt to get the config from S3")
       and("no config is available")
       val s3 = new S3 {
-        override val configKey = "TESTING/config/dummy.json"
+        override lazy val configKey = "TESTING/config/dummy.json"
       }
 
       then("I should not see an error")
