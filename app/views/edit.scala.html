@@ -7,9 +7,9 @@
     </script>
 
     <form id="frontend-tool"  data-bind="template: { name: 'edition-template', foreach: editions }">
-        <div id="autocomplete" style="position:absolute"></div>
-        <input type="button" value="Clear" id="clear-form" />
-        <input type="submit" value="Save" />
+        <div id="autocomplete"></div>
+        <input type="button" value="Clear" id="clear-frontend" />
+        <input type="submit" value="Save" id="save-frontend" />
     </form>
 
     <script type="text/html" id="edition-template">

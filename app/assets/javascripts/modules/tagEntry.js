@@ -41,10 +41,10 @@ define(["Config", "Common"], function (Config, Common) {
 
             // style tag input element on success/error
             Common.mediator.addListener('modules:tagvalidation:success', function(element) {
-                $(element).css({'border-color': 'green'});
+                $(element).removeClass('invalid');
             });
             Common.mediator.addListener('modules:tagvalidation:failure', function(element) {
-                $(element).css({'border-color': 'red'});
+                $(element).addClass('invalid');
             });
 
         }
