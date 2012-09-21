@@ -1,38 +1,29 @@
-define(function () {
+define(['Knockout'], function (Knockout) {
 
-	Trailblock = Spine.Model.sub();
+	return function() {
+		this.type     = 'tag';
+    	this.id       = Knockout.observable('');
+    	this.title 	  = Knockout.observable('');
+    	this.numItems = Knockout.observable('3');
+    	this.lead 	  = Knockout.observable(true);
 
-	// properties
-	Trailblock.configure('Trailblock', 'tag', 'edition');
+        this.update = function(data)
+        {
+            for (prop in data) {
+                if (this[prop] && Knockout.isObservable(this[prop])) {
+                    this[prop](data[prop]);
+                }
+            }
+        }
 
-	Trailblock.extend(
-		{
-			all: function() {
-				// get trailblocks from data
-				return [new Trailblock(frontConfig).save()];
-			},
-			save: function() {
-				// validate each trailblock
-				console.log('foo');
-				// convert to correct json
-			}
-		}
-	);
-
-	// extend
-	Trailblock.include({
-		validate: function () {
-			if (!this.tag) {
-				return 'Tag required';
-			}
-		}
-	});
-
-	// bind events
-	Trailblock.bind("error", function(rec, msg) {
-  		return alert("Contact failed to save - " + msg);
-	});
-
-	return Trailblock;
+        this.clear = function()
+        {
+            for (prop in this) {
+                if (Knockout.isObservable(this[prop])) {
+                    this[prop]('');
+                }
+            }
+        }
+	};
 
 });
