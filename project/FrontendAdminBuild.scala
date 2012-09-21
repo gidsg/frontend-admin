@@ -1,6 +1,9 @@
 import sbt._
 import Keys._
 import PlayProject._
+import com.gu.deploy.PlayArtifact.playArtifactDistSettings
+import sbtassembly.Plugin.AssemblyKeys._
+import sbtassembly.Plugin.MergeStrategy
 
 object FrontendAdminBuild extends Build {
 
@@ -18,11 +21,18 @@ object FrontendAdminBuild extends Build {
     "org.scalatest" %% "scalatest" % "1.8" % "test"
   )
 
-  val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
+  val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA)
+    .settings(playArtifactDistSettings: _*)
+    .settings(
     resolvers := Seq(
       "Guardian Github Releases" at "http://guardian.github.com/maven/repo-releases"
     ),
     // Use ScalaTest https://groups.google.com/d/topic/play-framework/rZBfNoGtC0M/discussion
-    testOptions in Test := Nil
+    testOptions in Test := Nil,
+    mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) => {
+        case s: String if s.contains("org/apache/commons/logging/") => MergeStrategy.first
+        case x => old(x)
+      }
+    }
   )
 }
