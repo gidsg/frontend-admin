@@ -1,11 +1,13 @@
 @(config: String)
 
 @main("Front editor", isAuthed = true) {
+
     <script>
         var frontConfig = @Html(config);
     </script>
 
-    <form id="network-front"  data-bind="template: { name: 'edition-template', foreach: editions }">
+    <form id="frontend-tool"  data-bind="template: { name: 'edition-template', foreach: editions }">
+        <div id="autocomplete" style="position:absolute"></div>
         <input type="button" value="Clear" id="clear-form" />
         <input type="submit" value="Save" />
     </form>
@@ -19,7 +21,7 @@
 
     <script type="text/html" id="trailblock-template">
         <label for="tag-id">Tag ID</label>
-        <input data-bind="value: id" type="text" class="typeahead" data-provide="typeahead" data-items="4" data-source='["abc", "asd", "asdf"]' name="tag-id" />
+        <input data-bind="value: id" type="text" class="typeahead" autocomplete="off" name="tag-id" />
         <label for="tag-title">Tag Title</label>
         <input data-bind="value: title" type="text"name="tag-title" />
     </script>

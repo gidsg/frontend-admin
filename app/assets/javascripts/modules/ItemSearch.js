@@ -2,34 +2,26 @@ define(["Config", "Common", "Reqwest"], function (Config, Common, Reqwest) {
 
     var apiEndPoint = 'http://content.guardianapis.com/',
         key = Config.apiKey;
-
    
-    // view
-    
-
-    // model
-    
-    var foo = {
-
-        search: function(tag) {
-        
-            var tag = search.results[0].id;
-            
+    var search = function(response, tag) {
             Reqwest({
-                url: apiEndPoint + tag + "?format=json&page-size=50&api-key=" + key,
+                url: apiEndPoint + tag + "?format=json&page-size=1&api-key=" + key,
                 type: 'jsonp',
                 success: function (json) {
                     Common.mediator.emitEvent('modules:itemsearch:success', [json.response])
                 }
-            })
-        }
+        })
+    }
 
+    // evaluate a response 
+    var validateTag = function(response) {
+        if (response.hasOwnProperty('tag')) {
+            Common.mediator.emitEvent('modules:tagvalidation:success');
+        }
     }
 
     Common.mediator.addListener('modules:tagsearch:success', search);
-    Common.mediator.addListener('modules:itemsearch:success', function (results) {
-        console.log(results);
-        });
+    Common.mediator.addListener('modules:itemsearch:success', validateTag);
 
     return {}
 

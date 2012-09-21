@@ -1,14 +1,31 @@
-curl(['models/frontend', 'Knockout']).then(function(Frontend, Knockout) {
-
+curl([
+	'models/frontend',
+	'Knockout',
+	'Config',
+    'Common',
+    'TagEntry',
+    'AutoComplete',
+    'TagSearch',
+    'ItemSearch'
+]).then(function(
+	Frontend,
+	Knockout,
+	Config,
+    Common,
+    TagEntry,
+    AutoComplete,
+    TagSearch,
+    ItemSearch
+) {
  	var frontend = new Frontend;
- 	Knockout.applyBindings(frontend, document.getElementById('network-front'));
+ 	Knockout.applyBindings(frontend, document.getElementById('frontend-tool'));
 
     $('#network-front').submit(function(e) {
     	e.preventDefault();
 
         $.ajax({
             contentType: 'application/json',
-            type: "POST",
+            type: 'POST',
             url: '/json/save',
             dataType: 'json',
             data: frontend.toJSON()
@@ -25,5 +42,8 @@ curl(['models/frontend', 'Knockout']).then(function(Frontend, Knockout) {
     	});
 
     });
+
+    new TagSearch.init( { apiEndPoint: 'http://content.guardianapis.com/tags', config: Config } );
+    new TagEntry.init( { nodeList: $('.typeahead') } );
 
 });

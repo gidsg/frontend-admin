@@ -14,6 +14,21 @@
         <!-- custom css -->
         <link href="@routes.Assets.at("css/style.css")" rel="stylesheet">
 
+        <style>
+            .dropdown-menu {
+                position: absolute;
+                display: block;
+                top: auto;
+                margin-top: -10px;
+            }
+            .row, .dropdown-menu {
+                margin-left: 20px;
+            }
+            .row {
+                margin: 20px;
+            }
+        </style>
+
         <script>
             var curl = {
                 paths: {
@@ -21,8 +36,10 @@
                     Common: '@routes.Assets.at("javascripts/common")',
                     Reqwest: '@routes.Assets.at("javascripts/vendor/reqwest")',
                     TagSearch: '@routes.Assets.at("javascripts/modules/TagSearch")',
+                    TagEntry: '@routes.Assets.at("javascripts/modules/TagEntry")',
                     ItemSearch: '@routes.Assets.at("javascripts/modules/ItemSearch")',
                     Knockout: '@routes.Assets.at("knockout-2.1.0.debug")',
+                    AutoComplete: '@routes.Assets.at("javascripts/modules/AutoComplete")',
                     controllers: '@routes.Assets.at("javascripts/controllers")',
                     models: '@routes.Assets.at("javascripts/models")',
                 }
@@ -37,19 +54,7 @@
                     apiKey: '@conf.Configuration.api.key'
                 }
             });
-
-
-            /*curl(["Config", "Common"]).then(function
-                        (Config, Common) {
-
-                    Common.mediator.emitEvent('go!');
-
-                }, function(e) {
-
-                    console.log('Something has gone wrong here with the curl.js loading', e);
-
-                })*/
-            </script>
+        </script>
 
     </head>
     <body>
@@ -64,6 +69,7 @@
         </div>
     </div>
 
+
         <script src="@routes.Assets.at("jquery-ui-1.8.23.custom/js/jquery-1.7.2.min.js")"></script>
         <script src="@routes.Assets.at("javascripts/vendor/zepto-1.0rc1.min.js")"></script>
         <script src="@routes.Assets.at("bootstrap/js/bootstrap.js")"></script>
@@ -76,7 +82,11 @@
         <script src="@routes.Assets.at("javascripts/vendor/spine-1.0.8/spine.js")"></script>
         <script src="@routes.Assets.at("javascripts/vendor/spine-1.0.8/ajax.js")"></script>
 
-        @content
+        <div class="row">
+            @content
+        </div>
 
     </body>
 </html>
+
+
