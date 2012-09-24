@@ -25,11 +25,10 @@ curl(["ItemSearch", 'Common']).then(
 
             it("should determine if the tag is valid", function() {
 
-                 var mockReqwest = jasmine.createSpy('reqwest');
                  var mockResponse = { 'tag': 1 };
                  var mockEmptyResponse = { };
                  
-                 itemSearch.init({reqwest: mockReqwest})
+                 itemSearch.init()
                  itemSearch.validateTag(mockResponse, $('<input/>'));
                 
                  expect(common.mediator.emitEvent.mostRecentCall.args[0]).toEqual('modules:tagvalidation:success');
