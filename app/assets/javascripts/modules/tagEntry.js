@@ -44,7 +44,6 @@ define(["Config", "Common"], function (Config, Common) {
                 $(element).removeClass('invalid');
                 // populate title input field
                 // TODO - better to split this into a seperate module?
-                console.log(tagData);
                 if (tagData && tagData.webTitle) {
                     $(element).siblings('[name=tag-title]').val(tagData.webTitle);
                 }
