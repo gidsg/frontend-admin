@@ -73,6 +73,7 @@ curl([
     });
 
     new TagSearch.init();
+    new ItemSearch.init();
     new TagEntry.init( { nodeList: $('.typeahead') } );
 
 });

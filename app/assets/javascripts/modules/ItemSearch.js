@@ -1,33 +1,40 @@
 define(["Config", "Common", "Reqwest"], function (Config, Common, Reqwest) {
 
-    var apiEndPoint = 'http://content.guardianapis.com/',
-        key = Config.apiKey;
-
-    var search = function(response, tagInputElement) {
-            Reqwest({
+    var reqwest = Reqwest
+      , apiEndPoint = 'http://content.guardianapis.com/'
+      , key = Config.apiKey
+      , search = function(response, tagInputElement) {
+            reqwest({
                 url: apiEndPoint + $(tagInputElement).val() + "?format=json&page-size=1&api-key=" + key,
                 type: 'jsonp',
                 success: function (json) {
                     Common.mediator.emitEvent('modules:itemsearch:success', [json.response, tagInputElement])
                 }
-        })
-    }
-
-    // evaluate a response
-    var validateTag = function(response, tagInputElement) {
-        if (response.hasOwnProperty('tag')) {
-            Common.mediator.emitEvent('modules:tagvalidation:success', [tagInputElement]);
-        } else {
-            Common.mediator.emitEvent('modules:tagvalidation:failure', [tagInputElement]);
+            })
         }
-    }
+      , validateTag = function(response, tagInputElement) {
+            if (response.hasOwnProperty('tag')) {
+                Common.mediator.emitEvent('modules:tagvalidation:success', [tagInputElement]);
+            } else {
+                Common.mediator.emitEvent('modules:tagvalidation:failure', [tagInputElement]);
+            }
+        }
+      , init = function(opts) {
+            
+            var opts = opts || {};
+            reqwest = opts.reqwest || Reqwest;
 
-    Common.mediator.addListener('modules:tagsearch:success', search);
-    Common.mediator.addListener('ui:networkfronttool:tagid:selected', search);
-    Common.mediator.addListener('modules:autocomplete:selected', search);
-    Common.mediator.addListener('modules:itemsearch:success', validateTag);
+            Common.mediator.addListener('modules:tagsearch:success', search);
+            Common.mediator.addListener('ui:networkfronttool:tagid:selected', search);
+            Common.mediator.addListener('modules:autocomplete:selected', search);
+            Common.mediator.addListener('modules:itemsearch:success', validateTag);
+      } 
 
-    return {}
+    return {
+        search: search,
+        validateTag: validateTag,
+        init: init
+    };
 
 });
 
