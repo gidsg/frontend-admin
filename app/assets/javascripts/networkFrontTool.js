@@ -42,8 +42,16 @@ curl([
     	if (form.find('.invalid').length) {
     		errorAlert.insertBefore(form);
     	} else {
+            $('body').addClass('saving');
+            // disable save button
+            form.find('#save-frontend').attr('disabled', 'disabled');
     		Common.mediator.emitEvent('ui:networkfronttool:save');
     	}
+    });
+
+    Common.mediator.addListener('models:networkfront:save:complete', function() {
+        $('body').removeClass('saving');
+        $('#save-frontend').removeAttr('disabled');
     });
 
     $('#network-front-tool .typeahead').blur(function(e) {

@@ -6,6 +6,8 @@ define(['models/edition', 'models/trailblock', 'Knockout', 'Common'], function (
 
         this.editions = Knockout.observableArray();
 
+        this._endpoint = '/json/save';
+
         this.toJSON = function() {
             var data = {};
             self.editions().forEach(function(edition){
@@ -35,7 +37,7 @@ define(['models/edition', 'models/trailblock', 'Knockout', 'Common'], function (
             $.ajax({
                 contentType: 'application/json',
                 type: 'POST',
-                url: '/json/save',
+                url: self._endpoint,
                 dataType: 'json',
                 data: self.toJSON(),
                 success: function() {
@@ -43,6 +45,9 @@ define(['models/edition', 'models/trailblock', 'Knockout', 'Common'], function (
                 },
                 error: function() {
                     Common.mediator.emitEvent('models:networkfront:save:error', [self]);
+                },
+                complete: function() {
+                    Common.mediator.emitEvent('models:networkfront:save:complete', [self]);
                 }
             });
 
