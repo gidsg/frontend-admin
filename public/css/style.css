@@ -1,1 +1,33 @@
 
+.dropdown-menu {
+    position: absolute;
+    display: block;
+    top: auto;
+    margin-top: -10px;
+}
+
+.row, .dropdown-menu {
+    margin-left: 20px;
+}
+
+.row {
+    margin: 20px;
+}
+
+input.invalid {
+    border: 3px solid red;
+}
+
+.saving{
+    cursor:wait;
+}
+
+fieldset, 
+input[type=text] {
+    box-sizing:border-box;
+    width: 99%;
+}
+
+input[type=text] {
+    padding: 20px 6px;
+}
