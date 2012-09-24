@@ -43,6 +43,7 @@ define(["Config", "Common"], function (Config, Common) {
             Common.mediator.addListener('modules:tagvalidation:success', function(element) {
                 $(element).removeClass('invalid');
             });
+
             Common.mediator.addListener('modules:tagvalidation:failure', function(element) {
                 $(element).addClass('invalid');
             });

@@ -8,8 +8,10 @@
 
     <form id="network-front-tool"  data-bind="template: { name: 'edition-template', foreach: editions }">
         <div id="autocomplete"></div>
-        <input type="button" value="Clear" id="clear-frontend" />
-        <input type="submit" value="Save" id="save-frontend" />
+        <fieldset id="controls">
+            <input type="submit" value="Save" id="save-frontend" class="btn btn-success"/>
+            <input type="button" value="Clear" id="clear-frontend" class="btn btn-danger"/>
+        </fieldset>    
     </form>
 
     <script type="text/html" id="edition-template">
