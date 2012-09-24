@@ -74,6 +74,7 @@ curl([
 
     new TagSearch.init();
     new ItemSearch.init();
+    new AutoComplete.init();
     new TagEntry.init( { nodeList: $('.typeahead') } );
 
 });
