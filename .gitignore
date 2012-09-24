@@ -1,13 +1,4 @@
+.idea
 logs
-project/project
-project/target
-target
-tmp
 .history
-dist
-
-*.idea
-
-.idea_modules
-
-.DS_Store
+.idea*
