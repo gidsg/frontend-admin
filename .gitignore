@@ -3,3 +3,4 @@ logs
 .history
 target
 .idea*
+*.sublime-*

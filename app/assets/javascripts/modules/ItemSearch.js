@@ -14,7 +14,7 @@ define(["Config", "Common", "Reqwest"], function (Config, Common, Reqwest) {
         }
       , validateTag = function(response, tagInputElement) {
             if (response.hasOwnProperty('tag')) {
-                Common.mediator.emitEvent('modules:tagvalidation:success', [tagInputElement]);
+                Common.mediator.emitEvent('modules:tagvalidation:success', [tagInputElement, response.tag]);
             } else {
                 Common.mediator.emitEvent('modules:tagvalidation:failure', [tagInputElement]);
             }
