@@ -35,7 +35,7 @@ define(['models/edition', 'models/trailblock', 'Knockout', 'Common'], function (
             $.ajax({
                 contentType: 'application/json',
                 type: 'POST',
-                url: '/json/save',
+                url: '/admin/feature-trailblock',
                 dataType: 'json',
                 data: self.toJSON(),
                 success: function() {
