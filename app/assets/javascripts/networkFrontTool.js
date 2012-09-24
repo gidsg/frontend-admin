@@ -72,7 +72,7 @@ curl([
     	setTimeout(function(){ successAlert.alert('close'); }, 2000);
     });
 
-    new TagSearch.init( { apiEndPoint: 'http://content.guardianapis.com/tags', config: Config } );
+    new TagSearch.init();
     new TagEntry.init( { nodeList: $('.typeahead') } );
 
 });
