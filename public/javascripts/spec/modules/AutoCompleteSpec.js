@@ -12,6 +12,10 @@ curl(["AutoComplete", 'Common']).then(
                         { id: 1 }, { id: 2 }
                     ] 
                 }
+                
+                mockEmptySearchResult = {
+                    results: [ ] 
+                }
             
                 $('#autocomplete').remove();
                 $('<div>').attr({id: 'autocomplete'}).insertBefore('body')
@@ -31,6 +35,12 @@ curl(["AutoComplete", 'Common']).then(
                 autoComplete.render(mockSearchResult, $('<div>'));
                 $('#autocomplete li:nth-child(2) a').trigger('click');
                 expect(common.mediator.emitEvent.mostRecentCall.args[0]).toEqual('modules:autocomplete:selected');
+           });
+           
+           it("should hide the auto-complete prompt when there is no search results", function () {
+                autoComplete.init();
+                autoComplete.render(mockEmptySearchResult, $('<div>'));
+                expect($('#autocomplete').is(":visible")).toBeFalsy();
            });
            
            it("should insert the auto-complete prompt *after* a given tag entry input", function () {
