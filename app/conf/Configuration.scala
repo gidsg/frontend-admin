@@ -32,7 +32,7 @@ object HealthCheck extends ManagementPage {
   val path = "/management/healthcheck"
 
   def get(req: com.gu.management.HttpRequest) = {
-    val connectionToFront = new URL("http://localhost:9000/admin/edit").openConnection().asInstanceOf[HttpURLConnection]
+    val connectionToFront = new URL("http://localhost:9000/login").openConnection().asInstanceOf[HttpURLConnection]
     try {
       connectionToFront.getResponseCode match {
         case 200 => PlainTextResponse("Ok")
