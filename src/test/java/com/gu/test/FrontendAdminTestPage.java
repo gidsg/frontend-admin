@@ -7,18 +7,22 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 public class FrontendAdminTestPage {
 	private WebDriver driver;
 
-	public FrontendAdminTestPage() {        
+	public FrontendAdminTestPage() {
 		if (driver == null) {
 			driver = new FirefoxDriver();
 		}
 	}
 
-	public void open(String string) {
-		driver.get("http://www.google.co.uk");
+	public void open(String url) {
+		driver.get(url);
 	}
 
 	public void close() {
 		driver.close();
 	}
-	
+
+	public WebDriver getDriver() {
+		return driver;
+	}
+
 }
