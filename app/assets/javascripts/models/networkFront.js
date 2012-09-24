@@ -54,14 +54,16 @@ define(['models/edition', 'models/trailblock', 'Knockout', 'Common'], function (
             var edition = new Edition;
             edition.id = editionId;
 
-            var editionConfig = data[editionId];
-            if (editionConfig && editionConfig.blocks) {
-                editionConfig.blocks.forEach(function (block) {
-                    var trailblock = new Trailblock;
-                    trailblock.update(block);
-                    edition.trailblocks.push(trailblock);
+            if (data) {
+                var editionConfig = data[editionId];
+                if (editionConfig && editionConfig.blocks) {
+                    editionConfig.blocks.forEach(function (block) {
+                        var trailblock = new Trailblock;
+                        trailblock.update(block);
+                        edition.trailblocks.push(trailblock);
 
-                });
+                    });
+                }
             }
 
             // need at least one trailblock
