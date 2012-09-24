@@ -6,7 +6,7 @@ define(['models/edition', 'models/trailblock', 'Knockout', 'Common'], function (
 
         this.editions = Knockout.observableArray();
 
-        this._endpoint = '/json/save';
+        this._endpoint = '/admin/feature-trailblock';
 
         this.toJSON = function() {
             var data = {};

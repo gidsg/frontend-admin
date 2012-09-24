@@ -29,6 +29,7 @@ object FrontendAdminBuild extends Build {
     ),
     // Use ScalaTest https://groups.google.com/d/topic/play-framework/rZBfNoGtC0M/discussion
     testOptions in Test := Nil,
+    jarName in assembly := "frontend-admin.jar",
     mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) => {
         case s: String if s.contains("org/apache/commons/logging/") => MergeStrategy.first
         case x => old(x)
