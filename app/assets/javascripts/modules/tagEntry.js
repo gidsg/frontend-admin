@@ -40,8 +40,14 @@ define(["Config", "Common"], function (Config, Common) {
             });
 
             // style tag input element on success/error
-            Common.mediator.addListener('modules:tagvalidation:success', function(element) {
+            Common.mediator.addListener('modules:tagvalidation:success', function(element, tagData) {
                 $(element).removeClass('invalid');
+                // populate title input field
+                // TODO - better to split this into a seperate module?
+                console.log(tagData);
+                if (tagData && tagData.webTitle) {
+                    $(element).siblings('[name=tag-title]').val(tagData.webTitle);
+                }
             });
 
             Common.mediator.addListener('modules:tagvalidation:failure', function(element) {
