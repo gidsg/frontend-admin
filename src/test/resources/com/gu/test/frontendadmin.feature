@@ -1,4 +1,4 @@
-@frontendadmintest 
+@frontendadmintest
 
 Feature: Network-front tool
 	As an editor
@@ -8,11 +8,11 @@ Feature: Network-front tool
 
   	Background:
     	Given I visit a page
-    	
+
   	Scenario: Authentication
     	When I am not logged in
     	Then I should be prompted to log in
-    
+
 	Scenario: Logout
 		Given I am logged in
 		When I click the logged out button
@@ -36,14 +36,14 @@ Feature: Network-front tool
 		When I enter an non-existant tag
 		And click 'save'
 		Then then configuraiton should not be saved
-		
+
 	Scenario: Errors saving
 		Given I am logged in
 		When I enter a tag id 'sport/triathlon'
 		And click 'save'
 		And the was an error saving
 		Then the user should be told the configuration has not been saved
-		
+
 	Scenario: Clearing the event
 		Given I am logged in
 		And there is an existing event called 'sport/triathlon'

@@ -1,5 +1,8 @@
 package com.gu.test;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
 import cucumber.annotation.After;
 
 import cucumber.annotation.en.Given;
@@ -13,11 +16,11 @@ public class FrontendAdminTestSteps {
 
 	private FrontendAdminTestPage fendadmin;
 
-	
+
 	@Given("^I visit a page$")
-	public void I_visit_a_page() throws Throwable {		
+	public void I_visit_a_page() throws Throwable {
 		fendadmin = new FrontendAdminTestPage();
-		fendadmin.open("http://www.google.co.uk");
+		fendadmin.open("localhost:9002/admin");
 	}
 
 	@When("^I am not logged in$")
@@ -26,6 +29,12 @@ public class FrontendAdminTestSteps {
 
 	@Then("^I should be prompted to log in$")
 	public void I_should_be_prompted_to_log_in() throws Throwable {
+		// get the h1
+		WebElement h1 = fendadmin.getDriver().findElement(By.tagName("h1"));
+		Assert.assertEquals("Login", h1.getText());
+		// check prompt text
+		WebElement loginPrompt = fendadmin.getDriver().findElement(By.id("login-prompt"));
+		Assert.assertEquals("Please click the button to login with your google account.", loginPrompt.getText());
 	}
 
 	@Given("^I am logged in$")
@@ -107,9 +116,9 @@ public class FrontendAdminTestSteps {
 	public void the_event_should_be_removed() throws Throwable {
 		new PendingException();
 	}
-	
+
 	@After
-	public void tearDown(){	
+	public void tearDown(){
 		fendadmin.close();
 	}
 
