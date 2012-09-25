@@ -1,4 +1,4 @@
-@(title: String, isAuthed: Boolean = false)(content: Html)
+@(title: String, env: String, isAuthed: Boolean = false)(content: Html)
 
 <!DOCTYPE html>
 
@@ -38,7 +38,7 @@
 
     </head>
     <body>
-
+        
     <div class="navbar">
         <div class="navbar-inner">
             @if(isAuthed){
@@ -52,10 +52,14 @@
             }
         </div>
     </div>
+    
 
     <div class="row">
         <p class="muted">
             This is a tool for adding special event trailblocks to the network front.
+        </p>
+        <p>
+            <span class="label label-warning">Environment: @env</span>
         </p>
     </div>
     <div class="row">

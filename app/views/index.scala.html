@@ -1,6 +1,6 @@
-@()
+@(env: String)
 
-@main("Front editor", isAuthed = true) {
+@main("Front editor", env, isAuthed = true) {
     <ul>
         <li><a href="/admin/feature-trailblock">Feature trailblock editor</a></li>
     </ul>

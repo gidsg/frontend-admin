@@ -4,7 +4,7 @@ import play.api.mvc._
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import tools.S3
-
+import tools.Props
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.json.Json.toJson
 import conf.{ConfigUpdateCounter, ConfigUpdateErrorCounter}
@@ -14,8 +14,11 @@ object FeatureTrailblockController extends Controller with Logging {
   def edit() = AuthAction{ request: AuthenticatedRequest[AnyContent] =>
     request.identity.foreach( id => log.info(id.email +  " loaded Feature Trailblock editor"))
     val promiseOfConfig = Akka.future(S3.getConfig)
+
+    val env = new Props("/etc/gu/install_vars").getProperty("STAGE", "PROD")
+    
     Async{
-      promiseOfConfig.map(config => Ok(views.html.edit(config.getOrElse("{}"))))
+      promiseOfConfig.map(config => Ok(views.html.edit(config.getOrElse("{}"), env)))
     }
   }
 

@@ -1,6 +1,6 @@
-@(request: controllers.AuthenticatedRequest[AnyContent], error: Option[String] = None)
+@(request: controllers.AuthenticatedRequest[AnyContent], error: Option[String] = None, env: String)
 
-@main("Login") {
+@main("Login", env) {
         @if(error.isDefined) {
             <div class="alert alert-error">
                 <p>@error.get</p>
