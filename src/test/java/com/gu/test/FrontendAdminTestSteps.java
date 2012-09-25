@@ -1,5 +1,7 @@
 package com.gu.test;
 
+import java.util.*;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -38,8 +40,7 @@ public class FrontendAdminTestSteps {
 	}
 
 	@Given("^I am logged in$")
-	public void I_am_logged_in() throws Throwable {
-		
+	public void I_am_logged_in() throws Throwable {	
 		new PendingException();
 	}
 
