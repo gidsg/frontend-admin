@@ -27,6 +27,8 @@ define(["Config", "Common"], function (Config, Common) {
        , valid = function(element, tagData) {
                 $(element).removeClass('invalid');
                 if (tagData && tagData.webTitle) {
+                    // firing change event explicitly, not fire when calling val (needed for knockout to register model
+                    // change)
                     $(element).siblings('[name=tag-title]').val(tagData.webTitle).change();
                 }
           }
