@@ -6,13 +6,13 @@ curl(["tagEntry", 'Common']).then(
         
             var i
               , simulateKeyPress = function(str, target) {
-                target.val(str);
-                str.split("").forEach(function (c) {
-                    var p = jQuery.Event("keyup")
-                    p.which = c.charCodeAt()
-                    target.trigger(p);
-                })
-            }
+                    target.val(str);
+                    str.split("").forEach(function (c) {
+                        var p = jQuery.Event("keyup")
+                        p.which = c.charCodeAt()
+                        target.trigger(p);
+                    })
+                }
 
             beforeEach(function() {
                 i = $('#i');
@@ -26,6 +26,7 @@ curl(["tagEntry", 'Common']).then(
            it("should listen for keystrokes on a given input field", function () {
                 simulateKeyPress('hello', i);
                 expect(common.mediator.emitEvent.mostRecentCall.args[0]).toEqual('ui:autocomplete:keydown');
+                expect(common.mediator.emitEvent.mostRecentCall.args[1].toString()).toBe('hello');
                 jasmine.Clock.tick(701);
                 expect(common.mediator.emitEvent.mostRecentCall.args[0]).toEqual('modules:oncomplete');
            });
