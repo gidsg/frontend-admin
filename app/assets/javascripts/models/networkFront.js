@@ -14,7 +14,10 @@ define(['models/edition', 'models/trailblock', 'Knockout', 'Common'], function (
 
                 var blocks = [];
                 edition.trailblocks().forEach(function(trailblock) {
-                    blocks.push(Knockout.toJS(trailblock));
+                    // only include blocks with an id
+                    if (trailblock.id()) {
+                        blocks.push(Knockout.toJS(trailblock));
+                    }
                 });
 
                 data[edition.id] = {
