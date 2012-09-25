@@ -1,58 +1,58 @@
 define(["Config", "Common"], function (Config, Common) {
 
-    // http://stackoverflow.com/questions/1909441/jquery-keyup-delay
-    var delay = (function(){
+    var nodeList
+      , delay = (function () { // http://stackoverflow.com/questions/1909441/jquery-keyup-delay
          var timer = 0;
          return function(callback, ms){
             clearTimeout (timer);
             timer = setTimeout(callback, ms);
             };
-         })();
-
-    return {
-
-        init: function(opts) {
-
-            // add keyhandler to entry form
-            opts.nodeList.keyup(function (e) {
-
+         })()
+      , keyHandler = function () {
+            nodeList.keyup(function (e) {
                 var that = this;
-
                 Common.mediator.emitEvent('ui:autocomplete:keydown', [this.value]);
-
-                if (this.value.length <= 2)
+                if (this.value.length <= 2) {
                     return false;
-
+                }
                 delay(function () {
                     Common.mediator.emitEvent('modules:oncomplete', [that]);
                 }, 700)
-
-            });
-
-            opts.nodeList.change(function () {
-                Common.mediator.emitEvent('modules:tagentry:onchange', [this.value]);
             })
-
-            // populate input when autocomplete is selected
-            Common.mediator.addListener('modules:autocomplete:selected', function (tag, element) {
+          }
+       , populate = function (tag, element) {
                 element.val(tag).change();
                 Common.mediator.emitEvent('ui:networkfronttool:tagid:selected', [{}, element]);
-            });
-
-            // style tag input element on success/error
-            Common.mediator.addListener('modules:tagvalidation:success', function(element, tagData) {
+          }
+       , valid = function(element, tagData) {
                 $(element).removeClass('invalid');
-                // populate title input field
-                // TODO - better to split this into a seperate module?
                 if (tagData && tagData.webTitle) {
                     $(element).siblings('[name=tag-title]').val(tagData.webTitle);
                 }
-            });
+          }
+       , invalid = function(element) {
+            $(element).addClass('invalid');
+       }
+       , init = function(opts) {
 
-            Common.mediator.addListener('modules:tagvalidation:failure', function(element) {
-                $(element).addClass('invalid');
-            });
+            var opts = opts || {}; 
+            nodeList = opts.nodeList || null;
 
-        }
-    }
+            keyHandler();
+
+            nodeList.change(function () {
+                Common.mediator.emitEvent('modules:tagentry:onchange', [this.value]);
+            })
+
+            Common.mediator.addListener('modules:autocomplete:selected', populate); 
+            Common.mediator.addListener('modules:tagvalidation:success', valid) 
+            Common.mediator.addListener('modules:tagvalidation:failure', invalid)
+         };
+    
+      return {
+        populate: populate,
+        keyHandler: keyHandler,
+        init: init
+      }
+
 });
