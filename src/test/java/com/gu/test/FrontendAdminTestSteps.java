@@ -1,8 +1,10 @@
 package com.gu.test;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import cucumber.annotation.After;
@@ -15,12 +17,14 @@ import junit.framework.Assert;
 public class FrontendAdminTestSteps {
 
 	private FrontendAdminTestPage fendadmin;
+	
+	private String host = "localhost:9000";
 
 
 	@Given("^I visit a page$")
 	public void I_visit_a_page() throws Throwable {
 		fendadmin = new FrontendAdminTestPage();
-		fendadmin.open("localhost:9000/admin");
+		fendadmin.open(host + "/admin");
 	}
 
 	@When("^I am not logged in$")
@@ -70,17 +74,34 @@ public class FrontendAdminTestSteps {
 
 	@Given("^are no configured special events$")
 	public void are_no_configured_special_events() throws Throwable {
-		new PendingException();
+		fendadmin.open(host + "/admin/feature-trailblock");
+		// TODO - how do we clear the db?
+		WebDriver driver = fendadmin.getDriver(); 
+		driver.findElement(By.id("clear-frontend")).click();
+		driver.findElement(By.id("save-frontend")).click();
+		// wait for save success alert
+		driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+		driver.findElement(By.className("alert-success"));
+		// reload the page
+		driver.navigate().refresh();
+		// confirm data is empty, look at json in source
+		if (driver.getPageSource().indexOf("var frontConfig = {\"uk\":{\"blocks\":[]},\"us\":{\"blocks\":[]}};") == -1) {
+			Assert.fail("Unable to clear data");
+		}
 	}
 
 	@When("^I am on the editor page$")
 	public void I_am_on_the_editor_page() throws Throwable {
-		new PendingException();
+		fendadmin.open(host + "/admin/feature-trailblock");
 	}
 
 	@Then("^I should see an empty form$")
 	public void I_should_see_an_empty_form() throws Throwable {
-		new PendingException();
+		WebElement form = fendadmin.getDriver().findElement(By.id("network-front-tool"));
+		// check each input element is empty
+		for (WebElement textInput : form.findElements(By.cssSelector("input[type='text']"))) {
+			Assert.assertEquals("", textInput.getText());
+		}
 	}
 
 	@When("^I enter a tag id 'sport/triathlon'$")
