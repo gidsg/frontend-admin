@@ -4,13 +4,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import cucumber.annotation.After;
-
 import cucumber.annotation.en.Given;
 import cucumber.annotation.en.Then;
 import cucumber.annotation.en.When;
 import cucumber.runtime.PendingException;
 import junit.framework.Assert;
-
 
 public class FrontendAdminTestSteps {
 
@@ -20,25 +18,28 @@ public class FrontendAdminTestSteps {
 	@Given("^I visit a page$")
 	public void I_visit_a_page() throws Throwable {
 		fendadmin = new FrontendAdminTestPage();
-		fendadmin.open("localhost:9002/admin");
+		fendadmin.open("localhost:9000/admin");
 	}
 
 	@When("^I am not logged in$")
 	public void I_am_not_logged_in() throws Throwable {
+		// delete PLAY_SESSION cookie
+		fendadmin.getDriver().manage().deleteCookieNamed("PLAY_SESSION");
 	}
 
 	@Then("^I should be prompted to log in$")
 	public void I_should_be_prompted_to_log_in() throws Throwable {
-		// get the h1
-		WebElement h1 = fendadmin.getDriver().findElement(By.tagName("h1"));
-		Assert.assertEquals("Login", h1.getText());
-		// check prompt text
-		WebElement loginPrompt = fendadmin.getDriver().findElement(By.id("login-prompt"));
-		Assert.assertEquals("Please click the button to login with your google account.", loginPrompt.getText());
+		// confirm there is a login button
+		List<WebElement> loginButtons = fendadmin.getDriver().findElements(By.id("login-button"));
+		// should exist
+		Assert.assertEquals("Login button not present", 1, loginButtons.size());
+		// confirm the value of the button is 'Log In'
+		Assert.assertEquals("Value of login button incorrect", "Log In", loginButtons.get(0).getAttribute("value"));
 	}
 
 	@Given("^I am logged in$")
 	public void I_am_logged_in() throws Throwable {
+		
 		new PendingException();
 	}
 
