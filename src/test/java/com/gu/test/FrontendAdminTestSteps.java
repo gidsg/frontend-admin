@@ -32,26 +32,40 @@ public class FrontendAdminTestSteps {
 	@Then("^I should be prompted to log in$")
 	public void I_should_be_prompted_to_log_in() throws Throwable {
 		// confirm there is a login button
-		List<WebElement> loginButtons = fendadmin.getDriver().findElements(By.id("login-button"));
-		// should exist
-		Assert.assertEquals("Login button not present", 1, loginButtons.size());
-		// confirm the value of the button is 'Log In'
-		Assert.assertEquals("Value of login button incorrect", "Log In", loginButtons.get(0).getAttribute("value"));
+		WebElement loginButton = fendadmin.getDriver().findElement(By.id("login-button"));
 	}
 
 	@Given("^I am logged in$")
-	public void I_am_logged_in() throws Throwable {	
-		new PendingException();
+	public void I_am_logged_in() throws Throwable {
+		// checked we're not already logged in - is there a login button
+		List<WebElement> loginButtons = fendadmin.getDriver().findElements(By.id("login-button"));
+		if (loginButtons.size() > 0) {
+			// click login button
+			loginButtons.get(0).click();
+			// get the login form
+			WebElement form = fendadmin.getDriver().findElement(By.id("gaia_loginform"));
+			// enter the user's details
+			form.findElement(By.name("Email")).sendKeys(System.getProperty("google.username"));
+			form.findElement(By.name("Passwd")).sendKeys(System.getProperty("google.password"));
+			// submit the form
+			form.submit();
+			
+			// confirm there are no error messages
+			List<WebElement> errorMessages = fendadmin.getDriver().findElements(By.className("errormsg"));
+			if (errorMessages.size() > 0) {
+				Assert.fail("Unable to log in - '" + errorMessages.get(0).getText() + "'");
+			}
+		}
 	}
 
 	@When("^I click the logged out button$")
 	public void I_click_the_logged_out_button() throws Throwable {
-		new PendingException();
+		fendadmin.getDriver().findElement(By.id("logout-button")).click();
 	}
 
 	@Then("^I should be logged out$")
 	public void I_should_be_logged_out() throws Throwable {
-		new PendingException();
+		fendadmin.getDriver().findElement(By.id("login-button"));
 	}
 
 	@Given("^are no configured special events$")
