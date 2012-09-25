@@ -45,6 +45,10 @@
                 <ul class="nav pull-right">
                     <li><a href="/logout">Logout</a></li>
                 </ul>
+            } else {
+                <form action="@routes.Login.loginPost()" method="post" class="pull-right" style="margin:0px;">
+                    <input value="Log In" class="btn btn-primary" type="submit">
+                </form>
             }
         </div>
     </div>
