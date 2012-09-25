@@ -1,26 +1,26 @@
 define(["Common"], function (Common) {
 
-    var autocomplete = $('#autocomplete')
+    var items = 10
+      , autocomplete
       , hide = function () {
-            autocomplete.hide();
-            autocomplete.empty();
+            autocomplete.hide().empty();
             }
       , container = '<ul class="dropdown-menu">%s</ul>'
       , item = '<li><a href="#" data-id="%s">%s</a></li>'
       , render = function(search, inputElement) {
 
-             var results = search.results.splice(0,10).map(function (result) {
+             var results = search.results.splice(0, items).map(function (result) {
                  return item.replace(/\%s/gi, result.id);
              })
 
              if (results.length > 0) {
-                $('#autocomplete').insertAfter(inputElement).show(); // move under the correct input
+                autocomplete.insertAfter(inputElement).show(); // move under the correct input
              } else {
-                $('#autocomplete').hide();
+                autocomplete.hide();
              }
 
              var html = container.replace("%s", results.join(''), "gm");
-             $('#autocomplete').html(html);
+             autocomplete.html(html);
         }
       , selected = function (e) {
                 var id = e.target.getAttribute('data-id');
@@ -29,8 +29,10 @@ define(["Common"], function (Common) {
             }
       , init = function () {
 
+            autocomplete = $('#autocomplete');
+
             hide();
-            $('#autocomplete').click(selected);
+            autocomplete.click(selected);
             
             Common.mediator.addListener('ui:autocomplete:keydown', hide);
             Common.mediator.addListener('modules:autocomplete:selected', hide);
