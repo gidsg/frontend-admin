@@ -1,70 +1,107 @@
 package com.gu.test;
 
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import cucumber.annotation.After;
-
 import cucumber.annotation.en.Given;
 import cucumber.annotation.en.Then;
 import cucumber.annotation.en.When;
 import cucumber.runtime.PendingException;
 import junit.framework.Assert;
 
-
 public class FrontendAdminTestSteps {
 
 	private FrontendAdminTestPage fendadmin;
+	
+	private String host = "localhost:9000";
 
 
 	@Given("^I visit a page$")
 	public void I_visit_a_page() throws Throwable {
 		fendadmin = new FrontendAdminTestPage();
-		fendadmin.open("localhost:9002/admin");
+		fendadmin.open(host + "/admin");
 	}
 
 	@When("^I am not logged in$")
 	public void I_am_not_logged_in() throws Throwable {
+		// delete PLAY_SESSION cookie
+		fendadmin.getDriver().manage().deleteCookieNamed("PLAY_SESSION");
 	}
 
 	@Then("^I should be prompted to log in$")
 	public void I_should_be_prompted_to_log_in() throws Throwable {
-		// get the h1
-		WebElement h1 = fendadmin.getDriver().findElement(By.tagName("h1"));
-		Assert.assertEquals("Login", h1.getText());
-		// check prompt text
-		WebElement loginPrompt = fendadmin.getDriver().findElement(By.id("login-prompt"));
-		Assert.assertEquals("Please click the button to login with your google account.", loginPrompt.getText());
+		// confirm there is a login button
+		WebElement loginButton = fendadmin.getDriver().findElement(By.id("login-button"));
 	}
 
 	@Given("^I am logged in$")
 	public void I_am_logged_in() throws Throwable {
-		new PendingException();
+		// checked we're not already logged in - is there a login button
+		List<WebElement> loginButtons = fendadmin.getDriver().findElements(By.id("login-button"));
+		if (loginButtons.size() > 0) {
+			// click login button
+			loginButtons.get(0).click();
+			// get the login form
+			WebElement form = fendadmin.getDriver().findElement(By.id("gaia_loginform"));
+			// enter the user's details
+			form.findElement(By.name("Email")).sendKeys(System.getProperty("google.username"));
+			form.findElement(By.name("Passwd")).sendKeys(System.getProperty("google.password"));
+			// submit the form
+			form.submit();
+			
+			// confirm there are no error messages
+			List<WebElement> errorMessages = fendadmin.getDriver().findElements(By.className("errormsg"));
+			if (errorMessages.size() > 0) {
+				Assert.fail("Unable to log in - '" + errorMessages.get(0).getText() + "'");
+			}
+		}
 	}
 
 	@When("^I click the logged out button$")
 	public void I_click_the_logged_out_button() throws Throwable {
-		new PendingException();
+		fendadmin.getDriver().findElement(By.id("logout-button")).click();
 	}
 
 	@Then("^I should be logged out$")
 	public void I_should_be_logged_out() throws Throwable {
-		new PendingException();
+		fendadmin.getDriver().findElement(By.id("login-button"));
 	}
 
 	@Given("^are no configured special events$")
 	public void are_no_configured_special_events() throws Throwable {
-		new PendingException();
+		fendadmin.open(host + "/admin/feature-trailblock");
+		// TODO - how do we clear the db?
+		WebDriver driver = fendadmin.getDriver(); 
+		driver.findElement(By.id("clear-frontend")).click();
+		driver.findElement(By.id("save-frontend")).click();
+		// wait for save success alert
+		driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+		driver.findElement(By.className("alert-success"));
+		// reload the page
+		driver.navigate().refresh();
+		// confirm data is empty, look at json in source
+		if (driver.getPageSource().indexOf("var frontConfig = {\"uk\":{\"blocks\":[]},\"us\":{\"blocks\":[]}};") == -1) {
+			Assert.fail("Unable to clear data");
+		}
 	}
 
 	@When("^I am on the editor page$")
 	public void I_am_on_the_editor_page() throws Throwable {
-		new PendingException();
+		fendadmin.open(host + "/admin/feature-trailblock");
 	}
 
 	@Then("^I should see an empty form$")
 	public void I_should_see_an_empty_form() throws Throwable {
-		new PendingException();
+		WebElement form = fendadmin.getDriver().findElement(By.id("network-front-tool"));
+		// check each input element is empty
+		for (WebElement textInput : form.findElements(By.cssSelector("input[type='text']"))) {
+			Assert.assertEquals("", textInput.getText());
+		}
 	}
 
 	@When("^I enter a tag id 'sport/triathlon'$")

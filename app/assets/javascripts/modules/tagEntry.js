@@ -27,7 +27,9 @@ define(["Config", "Common"], function (Config, Common) {
        , valid = function(element, tagData) {
                 $(element).removeClass('invalid');
                 if (tagData && tagData.webTitle) {
-                    $(element).siblings('[name=tag-title]').val(tagData.webTitle);
+                    // firing change event explicitly, not fire when calling val (needed for knockout to register model
+                    // change)
+                    $(element).siblings('[name=tag-title]').val(tagData.webTitle).change();
                 }
           }
        , invalid = function(element) {
@@ -35,7 +37,7 @@ define(["Config", "Common"], function (Config, Common) {
        }
        , init = function(opts) {
 
-            var opts = opts || {}; 
+            var opts = opts || {};
             nodeList = opts.nodeList || null;
 
             keyHandler();
@@ -44,11 +46,11 @@ define(["Config", "Common"], function (Config, Common) {
                 Common.mediator.emitEvent('modules:tagentry:onchange', [this.value]);
             })
 
-            Common.mediator.addListener('modules:autocomplete:selected', populate); 
-            Common.mediator.addListener('modules:tagvalidation:success', valid) 
+            Common.mediator.addListener('modules:autocomplete:selected', populate);
+            Common.mediator.addListener('modules:tagvalidation:success', valid)
             Common.mediator.addListener('modules:tagvalidation:failure', invalid)
          };
-    
+
       return {
         populate: populate,
         keyHandler: keyHandler,

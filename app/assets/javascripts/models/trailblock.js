@@ -4,7 +4,7 @@ define(['Knockout'], function (Knockout) {
 		this.type     = 'tag';
     	this.id       = Knockout.observable('');
     	this.title 	  = Knockout.observable('');
-    	this.numItems = Knockout.observable('3');
+    	this.numItems = Knockout.observable(3);
     	this.lead 	  = Knockout.observable(true);
 
         this.update = function(data)
