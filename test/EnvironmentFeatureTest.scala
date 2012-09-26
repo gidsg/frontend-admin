@@ -4,6 +4,7 @@ import org.scalatest.{GivenWhenThen, FeatureSpec}
 
 import tools.Environment
 import org.scalatest.matchers.ShouldMatchers
+import java.io.File
 
 class EnvironmentFeatureTest extends FeatureSpec with GivenWhenThen with ShouldMatchers {
 
@@ -12,16 +13,16 @@ class EnvironmentFeatureTest extends FeatureSpec with GivenWhenThen with ShouldM
     scenario("Reading the STAGE property"){
 
       given("I load the Guardian environment properties")
-      val env = new Environment("/etc/gu/install_vars")
+      val env = new Environment("test/resources/etc/gu/install_vars")
 
       then("the 'stage' configuration should be set to the current environment")
-      env.getProperty("STAGE", "unknown") should be ("dev")
+      env.getProperty("STAGE", "unknown") should be ("foo")
     }
 
     scenario("Missing properties"){
 
       given("I load the Guardian environment properties")
-      val env = new Environment("/etc/gu/missing_conf")
+      val env = new Environment("missing_conf")
       
       and("the desired configuration is missing")
       
