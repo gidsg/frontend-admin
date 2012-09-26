@@ -7,7 +7,7 @@ import net.liftweb.json.{ Serialization, NoTypeHints }
 import net.liftweb.json.Serialization.{ read, write }
 import play.api.libs.openid.OpenID
 import play.api.libs.concurrent.{ Thrown, Redeemed }
-import tools.Props
+import conf.Configuration 
 
 case class Identity(openid: String, email: String, firstName: String, lastName: String) {
   implicit val formats = Serialization.formats(NoTypeHints)
@@ -84,8 +84,7 @@ object Login extends Controller {
 
   def login = NonAuthAction { request =>
     val error = request.flash.get("error")
-    val env = new Props("/etc/gu/install_vars").getProperty("STAGE", "PROD")
-    Ok(views.html.auth.login(request, error, env))
+    Ok(views.html.auth.login(request, error, Configuration.stage))
   }
 
   def loginPost = Action { implicit request =>

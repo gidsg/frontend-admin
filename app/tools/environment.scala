@@ -3,7 +3,7 @@ package tools
 import java.util.Properties
 import java.io.{File, FileInputStream}
 
-class Props(path: String) {
+class Environment(path: String) {
   
   private val props = new java.util.Properties()
   

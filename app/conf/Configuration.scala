@@ -5,11 +5,13 @@ import com.gu.management._
 import logback.LogbackLevelPage
 import play.{Management => GuManagement}
 import java.net.{HttpURLConnection, URL}
-
+import tools.Environment
 
 object Configuration {
 
   val configuration = ConfigurationFactory.getConfiguration("frontend-admin", "env")
+
+  val stage = new Environment("/etc/gu/install_vars").getProperty("STAGE", "unknown")
 
   object aws {
     lazy val accessKey = configuration.getStringProperty("aws.access.key").getOrElse(throw new RuntimeException("AWS access key not set"))
