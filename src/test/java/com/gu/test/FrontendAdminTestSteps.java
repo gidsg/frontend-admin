@@ -74,7 +74,6 @@ public class FrontendAdminTestSteps {
 
 	@Given("^are no configured special events$")
 	public void are_no_configured_special_events() throws Throwable {
-		fendadmin.open(host + "/admin/feature-trailblock");
 		// TODO - how do we clear the db?
 		WebDriver driver = fendadmin.getDriver(); 
 		driver.findElement(By.id("clear-frontend")).click();
@@ -104,29 +103,39 @@ public class FrontendAdminTestSteps {
 		}
 	}
 
-	@When("^I enter a tag id 'sport/triathlon'$")
-	public void I_enter_a_tag_id_sport_triathlon() throws Throwable {
-		new PendingException();
+	@When("^I enter a tag id '(.*)'$")
+	public void I_enter_a_tag_id_sport_tagId(String tagId) throws Throwable {
+		WebElement tagIdElement = fendadmin.getDriver().findElement(By.name("tag-id"));
+		// clear element first
+		tagIdElement.clear();
+		tagIdElement.sendKeys(tagId);
 	}
 
 	@When("^click 'save'$")
 	public void click_save() throws Throwable {
-		new PendingException();
+		fendadmin.getDriver().findElement(By.id("save-frontend")).click();
 	}
 
 	@Then("^the configuration should be saved$")
 	public void the_configuration_should_be_saved() throws Throwable {
-		new PendingException();
+		// wait for save success alert
+		fendadmin.getDriver().manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+		fendadmin.getDriver().findElement(By.className("alert-success"));
 	}
 
 	@When("^I enter an non-existant tag$")
 	public void I_enter_an_non_existant_tag() throws Throwable {
-		new PendingException();
+		this.I_enter_a_tag_id_sport_tagId("foo/bar");
+		// TODO - need to re-run validation on save - how with events?
+		fendadmin.getDriver().manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+		fendadmin.getDriver().findElement(By.className("invalid"));
 	}
 
 	@Then("^then configuraiton should not be saved$")
 	public void then_configuraiton_should_not_be_saved() throws Throwable {
-		new PendingException();
+		// wait for save success alert
+		fendadmin.getDriver().manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+		fendadmin.getDriver().findElement(By.className("alert-error"));
 	}
 
 	@When("^the was an error saving$")
@@ -139,19 +148,27 @@ public class FrontendAdminTestSteps {
 		new PendingException();
 	}
 
-	@Given("^there is an existing event called 'sport/triathlon'$")
-	public void there_is_an_existing_event_called_sport_triathlon() throws Throwable {
-		new PendingException();
+	@Given("^there is an existing event called '(.*)'$")
+	public void there_is_an_existing_event_called_tagId(String tagId) throws Throwable {
+		this.I_enter_a_tag_id_sport_tagId(tagId);
+		this.click_save();
+		this.the_configuration_should_be_saved();
 	}
 
 	@When("^I click 'clear'$")
 	public void I_click_clear() throws Throwable {
-		new PendingException();
+		fendadmin.getDriver().findElement(By.id("clear-frontend")).click();
 	}
 
 	@Then("^the event should be removed$")
 	public void the_event_should_be_removed() throws Throwable {
-		new PendingException();
+		this.I_should_see_an_empty_form();
+		// reload the page
+		fendadmin.getDriver().navigate().refresh();
+		// confirm data is empty, look at json in source
+		if (fendadmin.getDriver().getPageSource().indexOf("var frontConfig = {\"uk\":{\"blocks\":[]},\"us\":{\"blocks\":[]}};") == -1) {
+			Assert.fail("Unable to clear data");
+		}
 	}
 
 	@After
