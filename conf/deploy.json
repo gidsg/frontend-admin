@@ -1,0 +1,34 @@
+{
+    "packages":{
+        "frontend-admin":{
+            "type":"executable-jar-webapp",
+            "apps":[ "frontend::admin" ],
+            "data":{
+                "port":"9000",
+                "bucket":"artifacts-83445s",
+                "healthcheck_paths":[
+                    "/login"
+                ]
+            }
+        },
+        "frontend-static":{
+            "type":"aws-s3",
+            "apps":[ "aws-s3" ],
+            "data":{
+                "bucket":"artifacts-83445s",
+                "cacheControl":"public, max-age=2592000"
+            }
+        }
+    },
+    "recipes":{
+        "default":{
+            "depends" : ["artifactUpload", "deploy"]
+        },
+        "deploy":{
+            "actionsPerHost": ["frontend-admin.deploy"]
+        },
+        "artifactUpload":{
+            "actionsBeforeApp": ["frontend-admin.uploadArtifacts"]
+        }
+    }
+}

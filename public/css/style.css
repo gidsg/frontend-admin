@@ -1,1 +1,48 @@
+.dropdown-menu {
+    position: absolute;
+    display: block;
+    top: auto;
+    margin-top: -10px;
+}
+
+.row, .dropdown-menu {
+    margin-left: 20px;
+}
+
+.row {
+    margin: 20px;
+}
+
+input[type="text"] {
+    background-color: #DFF0D8;
+}
+
+input.invalid {
+    background-color: #F2DEDE;
+}
+
+.saving{
+    cursor:wait;
+}
+
+fieldset, 
+input[type=text] {
+    box-sizing:border-box;
+    width: 100%;
+}
+
+input[type=text] {
+    padding: 20px 6px;
+}
+
+fieldset#controls { 
+    margin-top: 30px;
+    position: relative;
+}
+
+#clear-frontend { 
+    position: absolute; 
+    right: 0;
+}
+
 

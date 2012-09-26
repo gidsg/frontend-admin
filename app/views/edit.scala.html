@@ -1,22 +1,33 @@
-@(edition: String)
- 
-@main("Front editor: " + edition, edition: String) {
+@(config: String)
 
-    <label for="tag">Tag</label>
-    <input type="text" class="typeahead" data-provide="typeahead" data-items="4" data-source="['abc', 'asd', 'asdf']">
+@main("Front editor", isAuthed = true) {
 
-    <ul data-bind="foreach: editions">
-        <li data-bind="text: id">
-        <div>
-            <li data-bind="text: trailblock().type"></li>
-            <li data-bind="text: trailblock().id"></li>
-            <li data-bind="text: trailblock().title"></li>
-            <li data-bind="text: trailblock().items"></li>
-            <li data-bind="text: trailblock().lead"></li>
-        </div>
-    </ul>
-    
-    <button data-bind="click: save">Save</button>
+    <script>
+        var frontConfig = @Html(config);
+    </script>
 
-    <script src="@routes.Assets.at("javascripts/models/edition.js")"></script>
+    <form id="network-front-tool"  data-bind="template: { name: 'edition-template', foreach: editions }">
+        <div id="autocomplete"></div>
+        <fieldset id="controls">
+            <input type="submit" value="Save" id="save-frontend" class="btn btn-success"/>
+            <input type="button" value="Clear" id="clear-frontend" class="btn btn-danger"/>
+        </fieldset>    
+    </form>
+
+    <script type="text/html" id="edition-template">
+        <fieldset>
+            <legend><span data-bind="text: id.toUpperCase()"></span> Edition</legend>
+            <div data-bind="template: { name: 'trailblock-template', foreach: trailblocks }" />
+        <fieldset>
+    </script>
+
+    <script type="text/html" id="trailblock-template">
+        <label for="tag-id">Tag ID</label>
+        <input data-bind="value: id" type="text" class="typeahead" autocomplete="off" name="tag-id" placeholder="Eg, sport/traithlon" />
+        <label for="tag-title">Tag Title</label>
+        <input data-bind="value: title" type="text"name="tag-title" placeholder="Eg, Triathlon" />
+    </script>
+
+    <script src="@routes.Assets.at("javascripts/networkFrontTool.js")" type="text/javascript"></script>
+
 }
