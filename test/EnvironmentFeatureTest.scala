@@ -14,7 +14,7 @@ class EnvironmentFeatureTest extends FeatureSpec with GivenWhenThen with ShouldM
       given("I load the Guardian environment properties")
       val env = new Environment("/etc/gu/install_vars")
 
-      then("The 'stage' configuration should be set to the current environment")
+      then("the 'stage' configuration should be set to the current environment")
       env.getProperty("STAGE", "unknown") should be ("dev")
     }
 
@@ -25,7 +25,7 @@ class EnvironmentFeatureTest extends FeatureSpec with GivenWhenThen with ShouldM
       
       and("the desired configuration is missing")
       
-      then("The property  should be set to 'unknown'")
+      then("the property  should be set to 'unknown'")
       env.getProperty("foo", "unknown") should be ("unknown")
     }
 
