@@ -30,22 +30,21 @@ public class FrontendAdminTestSteps {
 	@When("^I am not logged in$")
 	public void I_am_not_logged_in() throws Throwable {
 		// delete PLAY_SESSION cookie
-		fendadmin.getDriver().manage().deleteCookieNamed("PLAY_SESSION");
+		fendadmin.deleteCookieNamed("PLAY_SESSION");
 	}
 
 	@Then("^I should be prompted to log in$")
 	public void I_should_be_prompted_to_log_in() throws Throwable {
 		// confirm there is a login button
-		WebElement loginButton = fendadmin.getDriver().findElement(By.id("login-button"));
+		Assert.fail("Login button does not exist " + fendadmin.isElementPresent(By.id("login-button")));
 	}
 
 	@Given("^I am logged in$")
 	public void I_am_logged_in() throws Throwable {
 		// checked we're not already logged in - is there a login button
-		List<WebElement> loginButtons = fendadmin.getDriver().findElements(By.id("login-button"));
-		if (loginButtons.size() > 0) {
+		if (fendadmin.isElementPresent(By.id("login-button"))) {
 			// click login button
-			loginButtons.get(0).click();
+			fendadmin.clickButton(By.id("login-button"));
 			// get the login form
 			WebElement form = fendadmin.getDriver().findElement(By.id("gaia_loginform"));
 			// enter the user's details
