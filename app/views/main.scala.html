@@ -41,6 +41,9 @@
         
     <div class="navbar">
         <div class="navbar-inner">
+            <div id="environment">
+                <span class="label label-warning">Environment: @env</span>
+            </div>
             @if(isAuthed){
                 <ul class="nav pull-right">
                     <li><a href="/logout">Logout</a></li>
@@ -57,9 +60,6 @@
     <div class="row">
         <p class="muted">
             This is a tool for adding special event trailblocks to the network front.
-        </p>
-        <p>
-            <span class="label label-warning">Environment: @env</span>
         </p>
     </div>
     <div class="row">

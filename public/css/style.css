@@ -45,4 +45,8 @@ fieldset#controls {
     right: 0;
 }
 
+#environment {
+    line-height: 40px;
+    position: absolute; 
+}
 
