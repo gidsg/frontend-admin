@@ -1,6 +1,6 @@
-@(config: String)
+@(config: String, env: String)
 
-@main("Front editor", isAuthed = true) {
+@main("Front editor", env, isAuthed = true) {
 
     <script>
         var frontConfig = @Html(config);

@@ -1,4 +1,4 @@
-@(title: String, isAuthed: Boolean = false)(content: Html)
+@(title: String, env: String, isAuthed: Boolean = false)(content: Html)
 
 <!DOCTYPE html>
 
@@ -38,9 +38,12 @@
 
     </head>
     <body>
-
+        
     <div class="navbar">
         <div class="navbar-inner">
+            <div id="environment">
+                <span class="label label-warning">Environment: @env</span>
+            </div>
             @if(isAuthed){
                 <ul class="nav pull-right">
                     <li><a href="/logout" id="logout-button">Logout</a></li>
@@ -52,6 +55,7 @@
             }
         </div>
     </div>
+    
 
     <div class="row">
         <p class="muted">
