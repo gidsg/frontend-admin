@@ -24,8 +24,10 @@ object FrontendAdminBuild extends Build {
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA)
     .settings(playArtifactDistSettings: _*)
     .settings(
-    resolvers := Seq(
-      "Guardian Github Releases" at "http://guardian.github.com/maven/repo-releases"
+    resolvers ++= Seq(
+      "Guardian Github Releases" at "http://guardian.github.com/maven/repo-releases",
+      "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
+      Classpaths.typesafeResolver
     ),
     // Use ScalaTest https://groups.google.com/d/topic/play-framework/rZBfNoGtC0M/discussion
     testOptions in Test := Nil,
