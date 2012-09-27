@@ -22,38 +22,40 @@ curl(['models/trailblock', 'Knockout']).then(
             beforeEach(function() {
                 trailblock = new Trailblock;
             });
-
-            it('should have a type property', function() {
-                expect(trailblock.type).toBeDefined();
-            });
-
-            it('type property should be set to "tag"', function() {
-                expect(trailblock.type).toEqual('tag');
-            });
-
-            var observableProps = {
-                'id': '',
-                'title': '',
+            
+            var props = {
+        		'type': 'tag', 
                 'numItems' : 3,
                 'lead': true
             };
-
-            for (var name in observableProps) {
-
-                it('should have property "' + name + '"', function() {
-                    expect(trailblock[name]).toBeDefined();
+            for (var propName in props) {
+                it('should have property "' + propName + '"', function() {
+                    expect(trailblock[propName]).toBeDefined();
                 });
 
-                it('"' + name + '" property should be an observable', function() {
-                    expect(Knockout.isObservable(trailblock[name])).toEqual(true);
+                var propValue = props[propName];
+                it('"' + propName + '" property should be set to "' + propValue + '"', function() {
+                    expect(trailblock[propName]).toEqual(propValue);
+                });
+            }
+
+            var observableProps = {
+                'id': '',
+                'title': ''
+            };
+            for (var observablePropName in observableProps) {
+                it('should have property "' + observablePropName + '"', function() {
+                    expect(trailblock[observablePropName]).toBeDefined();
                 });
 
-                var value = observableProps[name];
-
-                it('"' + name + '" property should be set to "' + value + '" initially', function() {
-                    expect(trailblock[name]()).toEqual(value);
+                it('"' + observablePropName + '" property should be an observable', function() {
+                    expect(Knockout.isObservable(trailblock[observablePropName])).toEqual(true);
                 });
 
+                var observablePropValue = observableProps[observablePropName];
+                it('"' + observablePropName + '" property should be set to "' + observablePropValue + '" initially', function() {
+                    expect(trailblock[observablePropName]()).toEqual(observablePropValue);
+                });
             }
 
             using('trailblock data', [{'title': 'foo'}], function(data) {
