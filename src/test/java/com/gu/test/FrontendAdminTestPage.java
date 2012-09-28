@@ -43,8 +43,26 @@ public class FrontendAdminTestPage {
 		getDriver().manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
+	public boolean isTextPresent(String textToSearch) {
+		return getDriver().findElement(By.tagName("body")).getText().contains(textToSearch);
+		}
+
+
 	public WebDriver getDriver() {
 		return driver;
+	}
+
+	public void waitForTextPresent(String textToSearch) {
+		for (int second = 0;; second++) {
+			if (second >= 30) System.out.println("could not find " + textToSearch);
+			try { if (isTextPresent(textToSearch)) break; } catch (Exception e) {}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 
 }
