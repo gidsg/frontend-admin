@@ -18,9 +18,6 @@ public class FrontendAdminTestSteps {
 	private FrontendAdminTestPage fendadmin;
 	
 	private String host = "localhost:9000";
-	
-	String email = "shahid.bukhari@guardian.co.uk";
-	String password = "xxx";
 
 	@Given("^I visit a page$")
 	public void I_visit_a_page() throws Throwable {
@@ -49,10 +46,6 @@ public class FrontendAdminTestSteps {
 			// enter the user's details
 			fendadmin.getDriver().findElement(By.name("Email")).sendKeys(System.getProperty("google.username"));
 			fendadmin.getDriver().findElement(By.name("Passwd")).sendKeys(System.getProperty("google.password"));
-			
-			//REMOVE
-			//fendadmin.getDriver().findElement(By.name("Email")).sendKeys(email);
-			//fendadmin.getDriver().findElement(By.name("Passwd")).sendKeys(password);
 			
 			// submit the form
 			fendadmin.getDriver().findElement(By.id("gaia_loginform")).submit();
