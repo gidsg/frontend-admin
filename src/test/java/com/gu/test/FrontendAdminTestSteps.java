@@ -17,8 +17,8 @@ public class FrontendAdminTestSteps {
 
 	private FrontendAdminTestPage fendadmin;
 
-	//private String host = System.getProperty("host");
-	private String host = "http://tools-cod-adminloa-1nnts8ynet3db-1257217998.eu-west-1.elb.amazonaws.com";
+	private String host = System.getProperty("host");
+
 
 	@Given("^I visit a page$")
 	public void I_visit_a_page() throws Throwable {
