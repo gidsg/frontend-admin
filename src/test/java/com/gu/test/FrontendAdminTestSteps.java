@@ -22,7 +22,6 @@ public class FrontendAdminTestSteps {
 	@Given("^I visit a page$")
 	public void I_visit_a_page() throws Throwable {
 		fendadmin = new FrontendAdminTestPage();
-		System.out.println(host);
 		fendadmin.open(host + "/admin");
 	}
 
