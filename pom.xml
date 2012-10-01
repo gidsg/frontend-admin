@@ -78,7 +78,16 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                                         </systemProperties>
                                 </configuration>
                         </plugin>
-            </plugins>
+                        <plugin>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <version>2.3.2</version>
+                            <configuration>
+                                <source>1.6</source>
+                                <target>1.6</target>
+                                <compilerArgument></compilerArgument>
+                            </configuration>
+                        </plugin>
+                </plugins>
         </build>
        <repositories>
                 <repository>
