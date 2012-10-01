@@ -26,7 +26,7 @@ public class FrontendAdminTestPage {
 
 	private static void initialiseBrowser() {
 		//teamcity box requires a proxy to run the host url
-		if ((System.getProperty("proxyname") != null & !System.getProperty("proxyname").isEmpty())) {
+		if (System.getProperty("proxyname") != null) {
 			FirefoxProfile profile = new FirefoxProfile();
 			profile.setPreference("network.proxy.http", System.getProperty("proxyname"));
 			profile.setPreference("network.proxy.http_port", System.getProperty("proxyport"));
@@ -53,11 +53,14 @@ public class FrontendAdminTestPage {
 	}
 
 	public boolean isElementPresent(By elementName){
+		getDriver().manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
 		boolean exists=false;
 		try{
 			exists = getDriver().findElements(elementName).size() != 0;
 		}catch(NoSuchElementException e){
 		}
+		
+		getDriver().manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		return exists;
 	}
 

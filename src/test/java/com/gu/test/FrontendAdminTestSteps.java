@@ -16,8 +16,9 @@ import junit.framework.Assert;
 public class FrontendAdminTestSteps {
 
 	private FrontendAdminTestPage fendadmin;
-	
-	private String host = System.getProperty("host");
+
+	//private String host = System.getProperty("host");
+	private String host = "http://tools-cod-adminloa-1nnts8ynet3db-1257217998.eu-west-1.elb.amazonaws.com";
 
 	@Given("^I visit a page$")
 	public void I_visit_a_page() throws Throwable {
@@ -43,13 +44,19 @@ public class FrontendAdminTestSteps {
 		if (fendadmin.isElementPresent(By.id("login-button"))) {
 			// click login button
 			fendadmin.clickButton(By.id("login-button"));
+			//1st time google asks to approve the url for the email account
+			if (fendadmin.isElementPresent(By.id("approve_button"))) {
+				fendadmin.clickButton(By.id("approve_button"));	
+				fendadmin.getDriver().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			}
+
 			// enter the user's details
 			fendadmin.type(By.name("Email"), System.getProperty("google.username"));
 			fendadmin.type(By.name("Passwd"), System.getProperty("google.password"));
-			
+
 			// submit the form
 			fendadmin.submit(By.id("gaia_loginform"));
-			
+
 			// confirm there are no error messages
 			List<WebElement> errorMessages = fendadmin.getDriver().findElements(By.className("errormsg"));
 			if (errorMessages.size() > 0) {
@@ -71,11 +78,11 @@ public class FrontendAdminTestSteps {
 	@Given("^are no configured special events$")
 	public void are_no_configured_special_events() throws Throwable {
 		// TODO - how do we clear the db?
-		
+
 		fendadmin.waitForTextPresent("UK Edition");
 		fendadmin.clickButton(By.id("clear-frontend"));
 		fendadmin.clickButton(By.id("save-frontend"));
-		
+
 		// wait for save success alert
 		fendadmin.getDriver().manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
 		fendadmin.getDriver().findElement(By.className("alert-success"));
