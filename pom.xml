@@ -76,8 +76,8 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                                                         <value>${google.password}</value>
                                                 </property>
                                                 <property>
-                                                        <name>url</name>
-                                                        <value>${url}</value>
+                                                        <name>host</name>
+                                                        <value>${host}</value>
                                                 </property>
                                         </systemProperties>
                                 </configuration>
