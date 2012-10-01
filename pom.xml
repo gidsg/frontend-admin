@@ -61,7 +61,6 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
         </dependencies>
 
         <build>
-        <pluginManagement>
                 <plugins>
                         <plugin>
                                 <groupId>org.apache.maven.plugins</groupId>
@@ -79,18 +78,19 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                                         </systemProperties>
                                 </configuration>
                         </plugin>
-                <plugin>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.3.2</version>
-                    <configuration>
-                        <source>1.6</source>
-                        <target>1.6</target>
-                        <compilerArgument></compilerArgument>
-                    </configuration>
-                </plugin>
             </plugins>
-
-                </pluginManagement>
         </build>
+       <repositories>
+                <repository>
+                        <id>guardian-nexus</id>
+                        <url>http://nexus.gudev.gnl:8081/nexus/content/groups/public</url>
+                </repository>
+        </repositories>
 
+        <pluginRepositories>
+                <pluginRepository>
+                    <id>guardian-nexus</id>
+                    <url>http://nexus.gudev.gnl:8081/nexus/content/groups/public</url>
+                </pluginRepository>
+        </pluginRepositories>
 </project>
