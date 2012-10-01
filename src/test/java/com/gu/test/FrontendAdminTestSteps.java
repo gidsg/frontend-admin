@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import cucumber.annotation.After;
@@ -19,7 +18,6 @@ public class FrontendAdminTestSteps {
 	private FrontendAdminTestPage fendadmin;
 	
 	private String host = "localhost:9000";
-
 
 	@Given("^I visit a page$")
 	public void I_visit_a_page() throws Throwable {
@@ -36,7 +34,7 @@ public class FrontendAdminTestSteps {
 	@Then("^I should be prompted to log in$")
 	public void I_should_be_prompted_to_log_in() throws Throwable {
 		// confirm there is a login button
-		Assert.fail("Login button does not exist " + fendadmin.isElementPresent(By.id("login-button")));
+		Assert.assertTrue("Login button does not exist", fendadmin.isElementPresent(By.id("login-button")));
 	}
 
 	@Given("^I am logged in$")
@@ -45,13 +43,12 @@ public class FrontendAdminTestSteps {
 		if (fendadmin.isElementPresent(By.id("login-button"))) {
 			// click login button
 			fendadmin.clickButton(By.id("login-button"));
-			// get the login form
-			WebElement form = fendadmin.getDriver().findElement(By.id("gaia_loginform"));
 			// enter the user's details
-			form.findElement(By.name("Email")).sendKeys(System.getProperty("google.username"));
-			form.findElement(By.name("Passwd")).sendKeys(System.getProperty("google.password"));
+			fendadmin.getDriver().findElement(By.name("Email")).sendKeys(System.getProperty("google.username"));
+			fendadmin.getDriver().findElement(By.name("Passwd")).sendKeys(System.getProperty("google.password"));
+			
 			// submit the form
-			form.submit();
+			fendadmin.getDriver().findElement(By.id("gaia_loginform")).submit();
 			
 			// confirm there are no error messages
 			List<WebElement> errorMessages = fendadmin.getDriver().findElements(By.className("errormsg"));
@@ -74,16 +71,19 @@ public class FrontendAdminTestSteps {
 	@Given("^are no configured special events$")
 	public void are_no_configured_special_events() throws Throwable {
 		// TODO - how do we clear the db?
-		WebDriver driver = fendadmin.getDriver(); 
-		driver.findElement(By.id("clear-frontend")).click();
-		driver.findElement(By.id("save-frontend")).click();
+		
+		fendadmin.waitForTextPresent("UK Edition");
+		
+		fendadmin.getDriver().findElement(By.id("clear-frontend")).click();
+		fendadmin.getDriver().findElement(By.id("save-frontend")).click();
+		
 		// wait for save success alert
-		driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
-		driver.findElement(By.className("alert-success"));
+		fendadmin.getDriver().manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+		fendadmin.getDriver().findElement(By.className("alert-success"));
 		// reload the page
-		driver.navigate().refresh();
+		fendadmin.getDriver().navigate().refresh();
 		// confirm data is empty, look at json in source
-		if (driver.getPageSource().indexOf("var frontConfig = {\"uk\":{\"blocks\":[]},\"us\":{\"blocks\":[]}};") == -1) {
+		if (fendadmin.getDriver().getPageSource().indexOf("var frontConfig = {\"uk\":{\"blocks\":[]},\"us\":{\"blocks\":[]}};") == -1) {
 			Assert.fail("Unable to clear data");
 		}
 	}
