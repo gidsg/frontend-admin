@@ -26,8 +26,6 @@ public class FrontendAdminTestPage {
 
 	private static void initialiseBrowser() {
 		//teamcity box requires a proxy to run the host url
-		System.out.println(System.getProperty("proxyname"));
-		System.out.println(System.getProperty("proxyport"));
 		if ((System.getProperty("proxyname") != null & !System.getProperty("proxyname").isEmpty())) {
 			FirefoxProfile profile = new FirefoxProfile();
 			profile.setPreference("network.proxy.http", System.getProperty("proxyname"));
