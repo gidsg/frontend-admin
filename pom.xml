@@ -75,6 +75,10 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                                                         <name>google.password</name>
                                                         <value>${google.password}</value>
                                                 </property>
+                                                <property>
+                                                        <name>url</name>
+                                                        <value>${url}</value>
+                                                </property>
                                         </systemProperties>
                                 </configuration>
                         </plugin>
