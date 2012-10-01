@@ -17,7 +17,7 @@ public class FrontendAdminTestSteps {
 
 	private FrontendAdminTestPage fendadmin;
 	
-	private String host = "localhost:9000";
+	private String host = System.getProperty("host");
 
 	@Given("^I visit a page$")
 	public void I_visit_a_page() throws Throwable {
