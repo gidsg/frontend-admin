@@ -79,6 +79,14 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                                                         <name>host</name>
                                                         <value>${host}</value>
                                                 </property>
+                                                <property>
+                                                        <name>proxyname</name>
+                                                        <value>${proxyname}</value>
+                                                </property>
+                                                <property>
+                                                        <name>proxyport</name>
+                                                        <value>${proxyport}</value>
+                                                </property>
                                         </systemProperties>
                                 </configuration>
                         </plugin>
