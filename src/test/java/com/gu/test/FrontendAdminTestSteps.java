@@ -44,11 +44,11 @@ public class FrontendAdminTestSteps {
 			// click login button
 			fendadmin.clickButton(By.id("login-button"));
 			// enter the user's details
-			fendadmin.getDriver().findElement(By.name("Email")).sendKeys(System.getProperty("google.username"));
-			fendadmin.getDriver().findElement(By.name("Passwd")).sendKeys(System.getProperty("google.password"));
+			fendadmin.type(By.name("Email"), System.getProperty("google.username"));
+			fendadmin.type(By.name("Passwd"), System.getProperty("google.password"));
 			
 			// submit the form
-			fendadmin.getDriver().findElement(By.id("gaia_loginform")).submit();
+			fendadmin.submit(By.id("gaia_loginform"));
 			
 			// confirm there are no error messages
 			List<WebElement> errorMessages = fendadmin.getDriver().findElements(By.className("errormsg"));
@@ -60,12 +60,12 @@ public class FrontendAdminTestSteps {
 
 	@When("^I click the logged out button$")
 	public void I_click_the_logged_out_button() throws Throwable {
-		fendadmin.getDriver().findElement(By.id("logout-button")).click();
+		fendadmin.clickButton(By.id("logout-button"));		
 	}
 
 	@Then("^I should be logged out$")
 	public void I_should_be_logged_out() throws Throwable {
-		fendadmin.getDriver().findElement(By.id("login-button"));
+		fendadmin.clickButton(By.id("login-button"));
 	}
 
 	@Given("^are no configured special events$")
@@ -73,9 +73,8 @@ public class FrontendAdminTestSteps {
 		// TODO - how do we clear the db?
 		
 		fendadmin.waitForTextPresent("UK Edition");
-		
-		fendadmin.getDriver().findElement(By.id("clear-frontend")).click();
-		fendadmin.getDriver().findElement(By.id("save-frontend")).click();
+		fendadmin.clickButton(By.id("clear-frontend"));
+		fendadmin.clickButton(By.id("save-frontend"));
 		
 		// wait for save success alert
 		fendadmin.getDriver().manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
@@ -112,7 +111,7 @@ public class FrontendAdminTestSteps {
 
 	@When("^click 'save'$")
 	public void click_save() throws Throwable {
-		fendadmin.getDriver().findElement(By.id("save-frontend")).click();
+		fendadmin.clickButton(By.id("save-frontend"));
 	}
 
 	@Then("^the configuration should be saved$")
@@ -156,14 +155,14 @@ public class FrontendAdminTestSteps {
 
 	@When("^I click 'clear'$")
 	public void I_click_clear() throws Throwable {
-		fendadmin.getDriver().findElement(By.id("clear-frontend")).click();
+		fendadmin.clickButton(By.id("clear-frontend"));
 	}
 
 	@Then("^the event should be removed$")
 	public void the_event_should_be_removed() throws Throwable {
 		this.I_should_see_an_empty_form();
 		// reload the page
-		fendadmin.getDriver().navigate().refresh();
+		fendadmin.refresh();
 		// confirm data is empty, look at json in source
 		if (fendadmin.getDriver().getPageSource().indexOf("var frontConfig = {\"uk\":{\"blocks\":[]},\"us\":{\"blocks\":[]}};") == -1) {
 			Assert.fail("Unable to clear data");

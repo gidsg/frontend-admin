@@ -6,23 +6,46 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 
 
 public class FrontendAdminTestPage {
-	private WebDriver driver;
 
+	static WebDriver driver;
+	
 	public FrontendAdminTestPage() {
-		if (driver == null) {
+		initialiseBrowser();
+	}
+
+	public WebDriver getDriver() {
+		return driver;
+	}
+	public static void setDriver(WebDriver driver) {
+		FrontendAdminTestPage.driver = driver;
+	}
+
+	private static void initialiseBrowser() {
+		//teamcity box requires a proxy to run the host url
+		if ((System.getProperty("proxyname") != null & !System.getProperty("proxyname").isEmpty())) {
+			FirefoxProfile profile = new FirefoxProfile();
+			profile.setPreference("network.proxy.http", System.getProperty("proxyname"));
+			profile.setPreference("network.proxy.http_port", System.getProperty("proxyport"));
+			driver = new FirefoxDriver(profile);
+			setDriver(driver);
+		}
+		else{
+			//windows
 			driver = new FirefoxDriver();
+			setDriver(driver);
 		}
 	}
 
 	public void open(String url) {
-		driver.get(url);
+		getDriver().get(url);
 	}
 
 	public void close() {
-		driver.close();
+		getDriver().close();
 	}
 
 	public void deleteCookieNamed(String cookieName) {
@@ -45,11 +68,6 @@ public class FrontendAdminTestPage {
 
 	public boolean isTextPresent(String textToSearch) {
 		return getDriver().findElement(By.tagName("body")).getText().contains(textToSearch);
-		}
-
-
-	public WebDriver getDriver() {
-		return driver;
 	}
 
 	public void waitForTextPresent(String textToSearch) {
@@ -62,7 +80,17 @@ public class FrontendAdminTestPage {
 				e.printStackTrace();
 			}
 		}
-		
 	}
 
+	public void type(By elementName, String elementValue) {
+		getDriver().findElement(elementName).sendKeys(elementValue);
+	}
+
+	public void submit(By elementName) {
+		getDriver().findElement(elementName).submit();
+	}
+
+	public void refresh() {
+		getDriver().navigate().refresh();
+	}
 }
