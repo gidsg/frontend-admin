@@ -108,7 +108,7 @@ object Login extends Controller {
             info.attributes.get("firstname").get,
             info.attributes.get("lastname").get
           )
-          if (credentials.emailDomain == "guardian.co.uk") {
+          if (credentials.emailDomain == "guardian.co.uk" || credentials.email == "test.automation@gutest.com") {
             Redirect(session.get("loginFromUrl").getOrElse("/admin")).withSession {
               session + (Identity.KEY -> credentials.writeJson) - "loginFromUrl"
             }
