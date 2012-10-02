@@ -3,8 +3,11 @@ package com.gu.test;
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
+import junit.framework.Assert;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 
@@ -12,7 +15,7 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 public class FrontendAdminTestPage {
 
 	static WebDriver driver;
-	
+
 	public FrontendAdminTestPage() {
 		initialiseBrowser();
 	}
@@ -60,7 +63,7 @@ public class FrontendAdminTestPage {
 			exists = getDriver().findElements(elementName).size() != 0;
 		}catch(NoSuchElementException e){
 		}
-		
+
 		getDriver().manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		return exists;
 	}
@@ -90,6 +93,7 @@ public class FrontendAdminTestPage {
 	}
 
 	public void type(By elementName, String elementValue) {
+		getDriver().findElement(elementName).clear();
 		getDriver().findElement(elementName).sendKeys(elementValue);
 	}
 
@@ -99,5 +103,41 @@ public class FrontendAdminTestPage {
 
 	public void refresh() {
 		getDriver().navigate().refresh();
+	}
+
+	public void checkApproveButton() {
+		if (isElementPresent(By.id("approve_button"))) {
+			clickButton(By.id("approve_button"));	
+			getDriver().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		}
+	}
+
+	public void waitForElementPresent(By elementName) {
+		for (int second = 0;; second++) {
+			if (second >= 30) {
+				System.out.println("could not find element " + elementName);
+				break;
+			}
+			try {
+				if (isElementPresent(elementName))
+					break;
+			} catch (Exception e) {}
+			try {
+				Thread.sleep(1000);
+			} catch (Exception e) {}
+		}
+	}
+
+	public int getPageSource(String value) {
+		return getDriver().getPageSource().indexOf(value);
+	}
+
+	public void checkFormIsEmpty() {
+		WebElement form = getDriver().findElement(By.id("network-front-tool"));
+		// check each input element is empty
+		for (WebElement textInput : form.findElements(By.cssSelector("input[type='text']"))) {
+			Assert.assertEquals("", textInput.getText());
+		}
+		
 	}
 }
