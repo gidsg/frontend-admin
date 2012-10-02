@@ -28,13 +28,14 @@ public class FrontendAdminTestPage {
 		//teamcity box requires a proxy to run the host url
 		if (System.getProperty("proxyname") != null) {
 			FirefoxProfile profile = new FirefoxProfile();
+			profile.setPreference("network.proxy.type", 1);
 			profile.setPreference("network.proxy.http", System.getProperty("proxyname"));
-			profile.setPreference("network.proxy.http_port", System.getProperty("proxyport"));
+			profile.setPreference("network.proxy.http_port", 3128);
+
 			driver = new FirefoxDriver(profile);
 			setDriver(driver);
 		}
 		else{
-			//windows
 			driver = new FirefoxDriver();
 			setDriver(driver);
 		}
@@ -75,13 +76,16 @@ public class FrontendAdminTestPage {
 
 	public void waitForTextPresent(String textToSearch) {
 		for (int second = 0;; second++) {
-			if (second >= 30) System.out.println("could not find " + textToSearch);
-			try { if (isTextPresent(textToSearch)) break; } catch (Exception e) {}
+			if (second >= 30) {
+				System.out.println("could not find " + textToSearch);
+				break;
+			}
+			try { if (isTextPresent(textToSearch)) 
+				break;
+			} catch (Exception e) {}
 			try {
 				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			} catch (Exception e) {}
 		}
 	}
 
