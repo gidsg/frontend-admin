@@ -108,7 +108,11 @@ object Login extends Controller {
             info.attributes.get("firstname").get,
             info.attributes.get("lastname").get
           )
-          if (credentials.emailDomain == "guardian.co.uk") {
+          
+          // allow test user access
+          val isTestUser = (credentials.email == "test.automation@gutest.com" && List("dev", "code", "gudev").contains(Configuration.stage))
+          
+          if (credentials.emailDomain == "guardian.co.uk" || isTestUser) {
             Redirect(session.get("loginFromUrl").getOrElse("/admin")).withSession {
               session + (Identity.KEY -> credentials.writeJson) - "loginFromUrl"
             }
