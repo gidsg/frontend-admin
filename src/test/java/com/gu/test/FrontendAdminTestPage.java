@@ -138,6 +138,16 @@ public class FrontendAdminTestPage {
 		for (WebElement textInput : form.findElements(By.cssSelector("input[type='text']"))) {
 			Assert.assertEquals("", textInput.getText());
 		}
-		
+
+	}
+
+	public String getHost() {
+		//defaults to localhost
+		String host = "http://localhost:9000";
+
+		if(System.getProperty("host") != null && !System.getProperty("host").isEmpty()) {
+			host = System.getProperty("host");
+		}
+		return host;
 	}
 }
