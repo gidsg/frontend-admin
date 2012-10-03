@@ -12,12 +12,10 @@ public class FrontendAdminTestSteps {
 
 	private FrontendAdminTestPage fendadmin;
 
-	private String host = System.getProperty("host");
-
 	@Given("^I visit a page$")
 	public void I_visit_a_page() throws Throwable {
 		fendadmin = new FrontendAdminTestPage();
-		fendadmin.open(host + "/admin");
+		fendadmin.open(fendadmin.getHost() + "/admin");
 	}
 
 	@When("^I am not logged in$")
@@ -88,7 +86,7 @@ public class FrontendAdminTestSteps {
 
 	@When("^I am on the editor page$")
 	public void I_am_on_the_editor_page() throws Throwable {
-		fendadmin.open(host + "/admin/feature-trailblock");
+		fendadmin.open(fendadmin.getHost() + "/admin/feature-trailblock");
 	}
 
 	@Then("^I should see an empty form$")
