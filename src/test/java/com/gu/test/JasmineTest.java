@@ -2,9 +2,6 @@ package com.gu.test;
 
 import static org.junit.Assert.*;
 
-import java.util.NoSuchElementException;
-import java.util.concurrent.TimeUnit;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
