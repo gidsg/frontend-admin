@@ -2,6 +2,10 @@ package com.gu.test;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+
+import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +22,14 @@ public class JasmineTest {
 	@Before
 	public void setUp() throws Exception {
 		driver = new FirefoxDriver();
-		host = "http://localhost:9000";
-		driver.get(host + "/assets/javascripts/spec/SpecRunner.html");	
+		
+		File dir1 = new File(".");
+
+		//locate current directory and open the url from file 
+		driver.get("file:///" + dir1.getCanonicalPath() + "/public/javascripts/spec/SpecRunner.html");	
+		
+		//check if are on the right page	
+		Assert.assertTrue("Error in opening Jasmine runner", driver.getTitle().contains("Jasmine"));
 	}
 
 	@Test
