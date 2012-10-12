@@ -5,10 +5,14 @@ import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import tools.S3
 import conf._
+import io.Source
 
 case class Switch(name: String, value: String)
 
 object SwitchboardController extends Controller with Logging {
+
+  val SwitchPattern = """([\w\d-]+)=(on|off)""".r
+
 
   def render() = AuthAction{ request: AuthenticatedRequest[AnyContent] =>
     request.identity.foreach( id => log.info(id.email +  " loaded Switchboard"))
@@ -16,10 +20,16 @@ object SwitchboardController extends Controller with Logging {
 
     Async{
       promiseOfSwitches.map{ switchesOption =>
-        Ok(views.html.switchboard(switchesOption.getOrElse(""), Configuration.stage))
+        val switches = Source.fromString(switchesOption.getOrElse("")).getLines.map{
+          case SwitchPattern(key, value) => Switch(key, value)
+        }
+        Ok(views.html.switchboard(switches.toSeq, Configuration.stage))
       }
     }
   }
+
+
+
 
   def save() = AuthAction{ request: AuthenticatedRequest[AnyContent] =>
     request.identity.foreach( id => log.info(id.email +  " saved config"))

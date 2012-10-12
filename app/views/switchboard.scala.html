@@ -1,13 +1,24 @@
-@(switches: String, env: String)
+@(switches: Seq[Switch], env: String)
 
 @main("Switchboard", env, isAuthed = true) {
 <div class="row">
     <h4>Switchboard</h4>
-    <form action="/dev/switchboard" method="POST">
-    <textarea name="switches" rows='@{switches.split("\n").size + 3}'>@switches</textarea>
-    <input type="submit" value="Save"/>
-    </form>
 
+
+
+    <form action="/dev/switchboard" method="POST">
+
+    @switches.map { switch =>
+
+        <div class="row">
+            <div class="input-prepend input-append span2">
+                <span class='label @if(switch.value == "on"){label-success} else {label-important}'>@switch.value</span>
+                <input type="text" name="switch-name" value="@switch.name"/>
+                <button class="btn" >Switch @if(switch.value == "on") { off } else { on }</button>
+            </div>
+        </div>
+    }
+    </form>
 </div>
 
 }
