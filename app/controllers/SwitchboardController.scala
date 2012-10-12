@@ -34,11 +34,14 @@ object SwitchboardController extends Controller with Logging {
   def save() = AuthAction{ request: AuthenticatedRequest[AnyContent] =>
     request.identity.foreach( id => log.info(id.email +  " saved config"))
 
-    //TODO really - this many hoops to jump through
-    val switches = request.body.asFormUrlEncoded.get.get("switches").get.head
+    val switches = request.body.asFormUrlEncoded.map{ params =>
+      params.get("switch-name").toList.flatten.map{ switchName =>
+        val value = params.get("value-" + switchName).flatMap(_.headOption).map(v => "on").getOrElse("off")
+        switchName + "=" + value
+      }
+    }.get
 
-    val promiseOfSavedSwitches = Akka.future(saveSwitchesOrError(switches))
-
+    val promiseOfSavedSwitches = Akka.future(saveSwitchesOrError(switches.mkString("\n")))
     Async{
       promiseOfSavedSwitches.map{ result =>
         result
