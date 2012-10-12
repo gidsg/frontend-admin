@@ -1,0 +1,13 @@
+@(switches: String, env: String)
+
+@main("Switchboard", env, isAuthed = true) {
+<div class="row">
+    <h4>Switchboard</h4>
+    <form action="/dev/switchboard" method="POST">
+    <textarea name="switches" rows='@{switches.split("\n").size + 3}'>@switches</textarea>
+    <input type="submit" value="Save"/>
+    </form>
+
+</div>
+
+}

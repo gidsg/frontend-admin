@@ -31,6 +31,11 @@ input[type=text] {
     width: 100%;
 }
 
+
+textarea {
+    width: 100%;
+}
+
 input[type=text] {
     padding: 20px 6px;
 }
@@ -50,3 +55,10 @@ fieldset#controls {
     position: absolute; 
 }
 
+fieldset, input .switchgroup {
+    width: 250px;
+}
+
+fieldset, input .switchgroup {
+    width: 250px;
+}

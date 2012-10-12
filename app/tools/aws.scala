@@ -8,12 +8,14 @@ import com.amazonaws.util.StringInputStream
 import com.amazonaws.services.s3.model.CannedAccessControlList.PublicRead
 import conf.Configuration
 import controllers.Logging
+import org.jaxen.function.ConcatFunction
 
 
 trait S3 extends Logging {
 
   lazy val bucket = Configuration.aws.bucket
   lazy val configKey = Configuration.configKey
+  lazy val switchesKey = Configuration.switchesKey
 
   lazy val accessKey = Configuration.aws.accessKey
 
@@ -22,26 +24,33 @@ trait S3 extends Logging {
   private def createClient = new AmazonS3Client(new BasicAWSCredentials(accessKey, secretKey))
 
 
-  def getConfig = {
+  def getConfig = get(configKey)
+ def putConfig(config: String) { put(configKey, config, "application/json") }
+
+
+  def getSwitches = get(switchesKey)
+  def putSwitches(config: String) { put(switchesKey, config, "text/plain") }
+
+
+  private def get(key: String): Option[String] = {
     val client = createClient
-    val request = new GetObjectRequest(bucket, configKey)
-    try{
-      val s3object = client.getObject(request)
-      Some(Source.fromInputStream(s3object.getObjectContent).mkString)
-    } catch { case e: AmazonS3Exception if e.getStatusCode == 404 =>
-      log.warn("no config found at %s - %s" format(bucket, configKey))
-      None
-    } finally {
-      client.shutdown()
-    }
+        val request = new GetObjectRequest(bucket, key)
+        try{
+          val s3object = client.getObject(request)
+          Some(Source.fromInputStream(s3object.getObjectContent).mkString)
+        } catch { case e: AmazonS3Exception if e.getStatusCode == 404 =>
+          log.warn("not found at %s - %s" format(bucket, key))
+          None
+        } finally {
+          client.shutdown()
+        }
   }
 
-  def putConfig(config: String) {
-
+  private def put(key: String, value: String, contentType: String) {
     val metadata = new ObjectMetadata()
     metadata.setCacheControl("no-cache,no-store")
-    metadata.setContentType("application/json")
-    val request = new PutObjectRequest(bucket, configKey, new StringInputStream(config), metadata)
+    metadata.setContentType(contentType)
+    val request = new PutObjectRequest(bucket, key, new StringInputStream(value), metadata)
       .withCannedAcl(PublicRead)
     val client = createClient
     client.putObject(request)
