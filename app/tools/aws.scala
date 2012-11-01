@@ -6,8 +6,7 @@ import com.amazonaws.services.s3.model._
 import io.Source
 import com.amazonaws.util.StringInputStream
 import com.amazonaws.services.s3.model.CannedAccessControlList.PublicRead
-import conf.Configuration
-import controllers.Logging
+import conf.{ Configuration, Logging }
 
 
 trait S3 extends Logging {

@@ -24,6 +24,16 @@ object Configuration {
   object api {
     lazy val key = configuration.getStringProperty("content.api.key").getOrElse(throw new RuntimeException("needs an api key"))
   }
+
+  object healthcheck {
+    lazy val properties = configuration.getPropertyNames filter {
+      _ matches """healthcheck\..*\.url"""
+    }
+
+    lazy val urls = properties map { property =>
+      configuration.getStringProperty(property).get
+    }
+  }
 }
 
 object ConfigUpdateCounter extends CountMetric("actions", "config_updates", "Config updates", "number of times config was updated")
@@ -52,7 +62,7 @@ object Management extends GuManagement {
 
   lazy val pages = List(
     new ManifestPage,
-    HealthCheck,
+    new UrlPagesHealthcheckManagementPage(Configuration.healthcheck.urls.toList),
     StatusPage(applicationName,
       Seq(ConfigUpdateCounter, ConfigUpdateErrorCounter)
     ),

@@ -1,4 +1,4 @@
-package controllers
+package conf
 
 import play.api.Logger
 
