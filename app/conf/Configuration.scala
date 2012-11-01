@@ -39,23 +39,6 @@ object Configuration {
 object ConfigUpdateCounter extends CountMetric("actions", "config_updates", "Config updates", "number of times config was updated")
 object ConfigUpdateErrorCounter extends CountMetric("actions", "config_update_errors", "Config update errors", "number of times config update failed")
 
-object HealthCheck extends ManagementPage {
-
-  val path = "/management/healthcheck"
-
-  def get(req: com.gu.management.HttpRequest) = {
-    val connectionToFront = new URL("http://localhost:9000/login").openConnection().asInstanceOf[HttpURLConnection]
-    try {
-      connectionToFront.getResponseCode match {
-        case 200 => PlainTextResponse("Ok")
-        case other => ErrorResponse(other, connectionToFront.getResponseMessage)
-      }
-    } finally {
-      connectionToFront.disconnect()
-    }
-  }
-}
-
 object Management extends GuManagement {
 
   val applicationName = "frontend-admin"
