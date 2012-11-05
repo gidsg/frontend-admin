@@ -26,6 +26,16 @@ object Configuration {
   object api {
     lazy val key = configuration.getStringProperty("content.api.key").getOrElse(throw new RuntimeException("needs an api key"))
   }
+
+  object healthcheck {
+      lazy val properties = configuration.getPropertyNames filter {
+        _ matches """healthcheck\..*\.url"""
+      }
+
+      lazy val urls = properties map { property =>
+        configuration.getStringProperty(property).get
+      }
+    }
 }
 
 object ConfigUpdateCounter extends CountMetric("actions", "config_updates", "Config updates", "number of times config was updated")
@@ -35,30 +45,13 @@ object SwitchesUpdateCounter extends CountMetric("actions", "switches_updates", 
 object SwitchesUpdateErrorCounter extends CountMetric("actions", "switches_update_errors", "Switches update errors", "number of times switches update failed")
 
 
-object HealthCheck extends ManagementPage {
-
-  val path = "/management/healthcheck"
-
-  def get(req: com.gu.management.HttpRequest) = {
-    val connectionToFront = new URL("http://localhost:9000/login").openConnection().asInstanceOf[HttpURLConnection]
-    try {
-      connectionToFront.getResponseCode match {
-        case 200 => PlainTextResponse("Ok")
-        case other => ErrorResponse(other, connectionToFront.getResponseMessage)
-      }
-    } finally {
-      connectionToFront.disconnect()
-    }
-  }
-}
-
 object Management extends GuManagement {
 
   val applicationName = "frontend-admin"
 
   lazy val pages = List(
     new ManifestPage,
-    HealthCheck,
+    new UrlPagesHealthcheckManagementPage(Configuration.healthcheck.urls.toList),
     StatusPage(applicationName,
       Seq(ConfigUpdateCounter, ConfigUpdateErrorCounter, SwitchesUpdateCounter, SwitchesUpdateErrorCounter)
     ),

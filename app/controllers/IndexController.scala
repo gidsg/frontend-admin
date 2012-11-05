@@ -5,8 +5,10 @@ import conf.Configuration
 
 object IndexController extends Controller {
 
-  def render() = AuthAction{
-    Ok(views.html.index(Configuration.stage))
+  def index() = Action { Redirect("/admin") }
+
+  def admin() = AuthAction{
+    Ok(views.html.admin(Configuration.stage))
   }
 
 }

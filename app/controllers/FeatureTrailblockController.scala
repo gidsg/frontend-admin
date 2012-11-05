@@ -6,7 +6,7 @@ import play.api.libs.concurrent.Akka
 import tools.S3
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.json.Json.toJson
-import conf.{Configuration, ConfigUpdateCounter, ConfigUpdateErrorCounter}
+import conf._
 
 object FeatureTrailblockController extends Controller with Logging {
 

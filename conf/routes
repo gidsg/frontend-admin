@@ -16,7 +16,8 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 #######################################################
 
 #Index page
-GET /admin                               controllers.IndexController.render()
+GET /                                    controllers.IndexController.index()
+GET /admin                               controllers.IndexController.admin()
 
 # Admin endpoints
 GET     /admin/feature-trailblock        controllers.FeatureTrailblockController.edit()
