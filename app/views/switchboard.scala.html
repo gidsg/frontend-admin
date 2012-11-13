@@ -3,7 +3,7 @@
 @main("Switchboard", env, isAuthed = true) {
 <div class="row">
     <h4>Switchboard</h4>
-    <form action="/dev/switchboard" method="POST">
+    <form id="switchboard" action="/dev/switchboard" method="POST">
         @switches.map { switch =>
             <div class="row">
                 <fieldset>

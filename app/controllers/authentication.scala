@@ -7,7 +7,7 @@ import net.liftweb.json.{ Serialization, NoTypeHints }
 import net.liftweb.json.Serialization.{ read, write }
 import play.api.libs.openid.OpenID
 import play.api.libs.concurrent.{ Thrown, Redeemed }
-import conf.Configuration 
+import conf.{Logging, Configuration}
 
 case class Identity(openid: String, email: String, firstName: String, lastName: String) {
   implicit val formats = Serialization.formats(NoTypeHints)
@@ -36,6 +36,16 @@ class AuthenticatedRequest[A](val identity: Option[Identity], request: Request[A
   lazy val isAuthenticated = identity.isDefined
 }
 
+trait AuthLogging {
+  self: Logging =>
+  def log(msg: String, request: Request[AnyContent]) {
+    request match {
+      case auth: AuthenticatedRequest[_] => auth.identity.foreach(id => log.info(id.email + ": " + msg))
+      case _ => throw new IllegalStateException("Expected an authenticated request")
+    }
+  }
+}
+
 object NonAuthAction {
 
   def apply[A](p: BodyParser[A])(f: AuthenticatedRequest[A] => Result) = {
@@ -53,25 +63,16 @@ object NonAuthAction {
 }
 
 object AuthAction {
-
-  def apply[A](p: BodyParser[A])(f: AuthenticatedRequest[A] => Result) = {
-    Action(p) { implicit request =>
-      Identity(request).map { identity =>
-        f(new AuthenticatedRequest(Some(identity), request))
-      }.getOrElse(Redirect(routes.Login.login).withSession {
-        request.session + ("loginFromUrl", request.uri)
-      })
+  def apply(f: Request[AnyContent] => Result): Action[AnyContent] = {
+    Action { request =>
+      request match {
+        case auth: AuthenticatedRequest[_] => f(auth)
+        case req => Identity(request).map{ identity =>
+          f(new AuthenticatedRequest(Some(identity), request))
+        }.getOrElse(Redirect(routes.Login.login).withSession(request.session + ("loginFromUrl", request.uri)))
+      }
     }
   }
-
-  def apply(f: AuthenticatedRequest[AnyContent] => Result): Action[AnyContent] = {
-    this.apply(parse.anyContent)(f)
-  }
-
-  def apply(block: => Result): Action[AnyContent] = {
-    this.apply(_ => block)
-  }
-
 }
 
 object Login extends Controller {

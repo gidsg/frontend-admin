@@ -9,7 +9,7 @@ import io.Source
 
 case class Switch(name: String, isOn: Boolean, description: String)
 
-object SwitchboardController extends Controller with Logging {
+object SwitchboardController extends Controller with AuthLogging with Logging {
 
   val SwitchPattern = """([a-z\d-]+)=(on|off)""".r
 
@@ -23,8 +23,8 @@ object SwitchboardController extends Controller with Logging {
     Switch("integration-test-switch", true, "Switch that is only used while running tests. You never need to change this switch")
   )
 
-  def render() = AuthAction{ request: AuthenticatedRequest[AnyContent] =>
-    request.identity.foreach( id => log.info(id.email +  " loaded Switchboard"))
+  def render() = AuthAction{ request =>
+   log("loaded Switchboard", request)
 
     val promiseOfSwitches = Akka.future(S3.getSwitches)
 
@@ -41,8 +41,8 @@ object SwitchboardController extends Controller with Logging {
     }
   }
 
-  def save() = AuthAction{ request: AuthenticatedRequest[AnyContent] =>
-    request.identity.foreach( id => log.info(id.email +  " saved config"))
+  def save() = AuthAction{ request =>
+    log("saved switchboard", request)
 
     val switchValues = request.body.asFormUrlEncoded.map{ params =>
       switches.map{ switch => switch.name + "=" + params.get(switch.name).map(v => "on").getOrElse("off") }
