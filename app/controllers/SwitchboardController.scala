@@ -7,41 +7,49 @@ import tools.S3
 import conf._
 import io.Source
 
-case class Switch(name: String, value: String)
+case class Switch(name: String, isOn: Boolean, description: String)
 
 object SwitchboardController extends Controller with Logging {
 
-  val SwitchPattern = """([\w\d-]+)=(on|off)""".r
+  val SwitchPattern = """([a-z\d-]+)=(on|off)""".r
 
+  //displays in the order they appear in this list
+  val switches = Seq(
+    //switch names can be letters numbers and hyphens only
+    Switch("auto-refresh", true, "Enables auto refresh in pages such as live blogs and live scores. Turn off to help handle exceptional load."),
+    Switch("double-cache-times", false, "Doubles the cache time of every endpoint. Turn on to help handle exceptional load."),
+    Switch("related-content", true, "Enables related content on content that does not have a story package. Turn off to help handle exceptional load, or to help if there is a Content API problem."),
+
+    Switch("integration-test-switch", true, "Switch that is only used while running tests. You never need to change this switch")
+  )
 
   def render() = AuthAction{ request: AuthenticatedRequest[AnyContent] =>
     request.identity.foreach( id => log.info(id.email +  " loaded Switchboard"))
+
     val promiseOfSwitches = Akka.future(S3.getSwitches)
 
     Async{
       promiseOfSwitches.map{ switchesOption =>
-        val switches = Source.fromString(switchesOption.getOrElse("")).getLines.map{
-          case SwitchPattern(key, value) => Switch(key, value)
-        }
-        Ok(views.html.switchboard(switches.toSeq, Configuration.stage))
+
+        val switchStates = Source.fromString(switchesOption.getOrElse("")).getLines.map{
+          case SwitchPattern(key, value) => (key, value == "on")
+        }.toMap
+
+        val switchesWithState = switches.map{ switch => switch.copy(isOn = switchStates.get(switch.name).getOrElse(switch.isOn)) }
+        Ok(views.html.switchboard(switchesWithState, Configuration.stage))
       }
     }
   }
 
-
-
-
   def save() = AuthAction{ request: AuthenticatedRequest[AnyContent] =>
     request.identity.foreach( id => log.info(id.email +  " saved config"))
 
-    val switches = request.body.asFormUrlEncoded.map{ params =>
-      params.get("switch-name").toList.flatten.map{ switchName =>
-        val value = params.get("value-" + switchName).flatMap(_.headOption).map(v => "on").getOrElse("off")
-        switchName + "=" + value
-      }
+    val switchValues = request.body.asFormUrlEncoded.map{ params =>
+      switches.map{ switch => switch.name + "=" + params.get(switch.name).map(v => "on").getOrElse("off") }
     }.get
 
-    val promiseOfSavedSwitches = Akka.future(saveSwitchesOrError(switches.mkString("\n")))
+    val promiseOfSavedSwitches = Akka.future(saveSwitchesOrError(switchValues.mkString("\n")))
+
     Async{
       promiseOfSavedSwitches.map{ result =>
         result

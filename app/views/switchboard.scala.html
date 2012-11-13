@@ -3,23 +3,17 @@
 @main("Switchboard", env, isAuthed = true) {
 <div class="row">
     <h4>Switchboard</h4>
-
-
-
     <form action="/dev/switchboard" method="POST">
-
-    @switches.map { switch =>
-
-        <div class="row">
-            <div class="input-prepend input-append span2">
-                <span class='on-off label @if(switch.value == "on"){label-success} else {label-important}'>@switch.value</span>
-                <input type="text" name="switch-name" value="@switch.name"/>
-                <input class="status" name="value-@switch.name" type="checkbox" @if(switch.value == "on") { checked="checked" }></input>
+        @switches.map { switch =>
+            <div class="row">
+                <fieldset>
+                <legend>@switch.name</legend>
+                    <input class="status" name="@switch.name" type="checkbox" @if(switch.isOn) { checked="checked" }/>
+                <small>@switch.description</small>
+                </fieldset>
             </div>
-        </div>
-    }
+        }
         <input type="submit" value="Save">
     </form>
 </div>
-
 }

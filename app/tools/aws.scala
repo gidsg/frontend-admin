@@ -8,8 +8,6 @@ import com.amazonaws.util.StringInputStream
 import com.amazonaws.services.s3.model.CannedAccessControlList.PublicRead
 import conf.{ Configuration, Logging }
 
-
-
 trait S3 extends Logging {
 
   lazy val bucket = Configuration.aws.bucket
@@ -24,25 +22,23 @@ trait S3 extends Logging {
 
 
   def getConfig = get(configKey)
- def putConfig(config: String) { put(configKey, config, "application/json") }
-
+  def putConfig(config: String) { put(configKey, config, "application/json") }
 
   def getSwitches = get(switchesKey)
   def putSwitches(config: String) { put(switchesKey, config, "text/plain") }
 
-
   private def get(key: String): Option[String] = {
     val client = createClient
-        val request = new GetObjectRequest(bucket, key)
-        try{
-          val s3object = client.getObject(request)
-          Some(Source.fromInputStream(s3object.getObjectContent).mkString)
-        } catch { case e: AmazonS3Exception if e.getStatusCode == 404 =>
-          log.warn("not found at %s - %s" format(bucket, key))
-          None
-        } finally {
-          client.shutdown()
-        }
+    val request = new GetObjectRequest(bucket, key)
+    try{
+      val s3object = client.getObject(request)
+      Some(Source.fromInputStream(s3object.getObjectContent).mkString)
+    } catch { case e: AmazonS3Exception if e.getStatusCode == 404 =>
+      log.warn("not found at %s - %s" format(bucket, key))
+      None
+    } finally {
+      client.shutdown()
+    }
   }
 
   private def put(key: String, value: String, contentType: String) {
