@@ -130,8 +130,6 @@ object Login extends Controller {
   }
 
   def logout = Action { implicit request =>
-    Redirect("/login").withSession {
-      session - Identity.KEY
-    }
+    Redirect("/login").withNewSession
   }
 }
