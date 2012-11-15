@@ -16,10 +16,10 @@ object SwitchboardController extends Controller with AuthLogging with Logging {
   //displays in the order they appear in this list
   val switches = Seq(
     //switch names can be letters numbers and hyphens only
-    Switch("audience-science", true, "If this switch is on the Audience Science will be enabled.")
+    Switch("audience-science", true, "If this switch is on the Audience Science will be enabled."),
     Switch("auto-refresh", true, "Enables auto refresh in pages such as live blogs and live scores. Turn off to help handle exceptional load."),
     Switch("double-cache-times", false, "Doubles the cache time of every endpoint. Turn on to help handle exceptional load."),
-    Switch("web-fonts", true, "If this is switched on then the custom Guardian web font will load.")
+    Switch("web-fonts", true, "If this is switched on then the custom Guardian web font will load."),
 
     Switch("integration-test-switch", true, "Switch that is only used while running tests. You never need to change this switch")
   )
