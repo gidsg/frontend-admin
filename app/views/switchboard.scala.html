@@ -1,0 +1,19 @@
+@(switches: Seq[Switch], env: String)
+
+@main("Switchboard", env, isAuthed = true) {
+<div class="row">
+    <h4>Switchboard</h4>
+    <form id="switchboard" action="/dev/switchboard" method="POST">
+        @switches.map { switch =>
+            <div class="row">
+                <fieldset>
+                <legend>@switch.name</legend>
+                    <input class="status" name="@switch.name" type="checkbox" @if(switch.isOn) { checked="checked" }/>
+                <small>@switch.description</small>
+                </fieldset>
+            </div>
+        }
+        <input type="submit" value="Save">
+    </form>
+</div>
+}

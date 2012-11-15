@@ -7,7 +7,7 @@ object IndexController extends Controller {
 
   def index() = Action { Redirect("/admin") }
 
-  def admin() = AuthAction{
+  def admin() = AuthAction{ request =>
     Ok(views.html.admin(Configuration.stage))
   }
 

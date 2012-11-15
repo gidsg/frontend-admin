@@ -8,10 +8,10 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.libs.json.Json.toJson
 import conf._
 
-object FeatureTrailblockController extends Controller with Logging {
+object FeatureTrailblockController extends Controller with Logging with AuthLogging {
 
-  def edit() = AuthAction{ request: AuthenticatedRequest[AnyContent] =>
-    request.identity.foreach( id => log.info(id.email +  " loaded Feature Trailblock editor"))
+  def edit() = AuthAction{ request =>
+    log("loaded config", request)
     val promiseOfConfig = Akka.future(S3.getConfig)
 
     Async{
@@ -19,8 +19,8 @@ object FeatureTrailblockController extends Controller with Logging {
     }
   }
 
-  def save() = AuthAction{ request: AuthenticatedRequest[AnyContent] =>
-    request.identity.foreach( id => log.info(id.email +  " saved config"))
+  def save() = AuthAction{ request =>
+    log("saved config", request)
     request.body.asJson match {
       case Some(json) =>
         val promiseOfSavedConfig = Akka.future{ saveConfigOrError(json) }

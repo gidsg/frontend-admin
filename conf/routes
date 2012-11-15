@@ -22,3 +22,8 @@ GET /admin                               controllers.IndexController.admin()
 # Admin endpoints
 GET     /admin/feature-trailblock        controllers.FeatureTrailblockController.edit()
 POST    /admin/feature-trailblock        controllers.FeatureTrailblockController.save()
+
+
+#Development endpoints
+GET     /dev/switchboard                 controllers.SwitchboardController.render()
+POST    /dev/switchboard                 controllers.SwitchboardController.save()
