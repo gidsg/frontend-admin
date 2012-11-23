@@ -91,7 +91,7 @@ object Login extends Controller {
   def loginPost = Action { implicit request =>
     AsyncResult(
       OpenID
-        .redirectURL(googleOpenIdUrl, routes.Login.openIDCallback.absoluteURL(), openIdAttributes)
+        .redirectURL(googleOpenIdUrl, routes.Login.openIDCallback.absoluteURL(secure = true), openIdAttributes)
         .extend(_.value match {
         case Redeemed(url) => Redirect(url)
         case Thrown(t) => Redirect(routes.Login.login).flashing(("error" -> "Unknown error: %s ".format(t.getMessage)))
