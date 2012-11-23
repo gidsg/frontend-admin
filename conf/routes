@@ -23,8 +23,9 @@ GET /admin                               controllers.IndexController.admin()
 GET     /admin/feature-trailblock        controllers.FeatureTrailblockController.edit()
 POST    /admin/feature-trailblock        controllers.FeatureTrailblockController.save()
 
-# Tag autocomplete endpoint
-GET     /autocomplete/tag                controllers.Autocomplete.tag(q, callback)
+# API endpoint proxying for https
+GET     /api/tag                         controllers.Api.tag(q, callback)
+GET     /api/item/*path                  controllers.Api.item(path, callback)
 
 
 #Development endpoints
