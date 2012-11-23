@@ -22,9 +22,14 @@ object Configuration {
   lazy val configKey = configuration.getStringProperty("config.file").getOrElse(throw new RuntimeException("Config file name is not setup"))
   lazy val switchesKey = configuration.getStringProperty("switches.file").getOrElse(throw new RuntimeException("Switches file name is not setup"))
 
-
   object api {
-    lazy val key = configuration.getStringProperty("content.api.key").getOrElse(throw new RuntimeException("needs an api key"))
+    lazy val host = configuration.getStringProperty("content.api.host") getOrElse {
+      throw new IllegalStateException("Content Api Host not configured")
+    }
+
+    lazy val key = configuration.getStringProperty("content.api.key") getOrElse {
+      throw new IllegalStateException("Content Api Key not configured")
+    }
   }
 
   object healthcheck {

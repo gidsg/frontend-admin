@@ -23,6 +23,9 @@ GET /admin                               controllers.IndexController.admin()
 GET     /admin/feature-trailblock        controllers.FeatureTrailblockController.edit()
 POST    /admin/feature-trailblock        controllers.FeatureTrailblockController.save()
 
+# Tag autocomplete endpoint
+GET     /autocomplete/tag                controllers.Autocomplete.tag(q, callback)
+
 
 #Development endpoints
 GET     /dev/switchboard                 controllers.SwitchboardController.render()
