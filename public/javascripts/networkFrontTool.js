@@ -72,7 +72,7 @@ curl([
     	setTimeout(function(){ successAlert.alert('close'); }, 2000);
     });
 
-    new TagSearch.init();
+    new TagSearch.init({ apiEndPoint: '/autocomplete/tag'});
     new ItemSearch.init();
     new AutoComplete.init();
     new TagEntry.init( { nodeList: $('.typeahead') } );
