@@ -20,9 +20,9 @@ define(["Config", "Common", "Reqwest"], function (Config, Common, Reqwest) {
             }
         }
       , init = function(opts) {
-            
             var opts = opts || {};
             reqwest = opts.reqwest || Reqwest;
+            apiEndPoint = opts.apiEndPoint || 'http://content.guardianapis.com/';
 
             Common.mediator.addListener('modules:tagsearch:success', search);
             Common.mediator.addListener('ui:networkfronttool:tagid:selected', search);
