@@ -21,6 +21,7 @@ object SwitchboardController extends Controller with AuthLogging with Logging {
     Switch("double-cache-times", false, "Doubles the cache time of every endpoint. Turn on to help handle exceptional load."),
     Switch("web-fonts", true, "If this is switched on then the custom Guardian web font will load."),
     Switch("related-content", true, "If this switch is turned on then related content will show. Turn off to help handle exceptional load."),
+    Switch("omniture-verification", false, "If this switch is turned on then a separate call to Omniture will be made to help verify our tracking."),
 
     Switch("integration-test-switch", true, "Switch that is only used while running tests. You never need to change this switch")
   )
