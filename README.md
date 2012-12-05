@@ -13,8 +13,9 @@ Testing
  * host: host to connect to, defaults to localhost:9000
  * google.username: google user to log in as
  * google.password: password for google account
- * http_proxy: proxy for broswer to user
+ * proxyname: host of proxy server
+ * proxyport: port of proxy server
  
 e.g.
 
-    $ -Dhost=http://host.co.uk -Dhttp_proxy=http://proxy.co.uk:1234 -Dgoogle.username=google.user@gmail.com -Dgoogle.password=password1234
+    $ -Dhost=http://host.co.uk -Dproxyname=proxy.co.uk -Dproxyport=1234 -Dgoogle.username=google.user@gmail.com -Dgoogle.password=password1234
