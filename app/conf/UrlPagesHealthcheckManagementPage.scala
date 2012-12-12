@@ -8,12 +8,14 @@ import com.gu.management.HttpRequest
 import com.gu.management.PlainTextResponse
 import com.gu.management.ErrorResponse
 
-class UrlPagesHealthcheckManagementPage(val urls: List[String]) extends ManagementPage with Logging {
+class UrlPagesHealthcheckManagementPage(val urls: String*) extends ManagementPage with Logging {
   val path = "/management/healthcheck"
 
   def get(req: HttpRequest) = {
     val checks = urls map { url =>
       log.info("Healthcheck: Checking " + url)
+
+      // if this is giving a 503 when running locally you want to run with no proxy ./sbt011 --no-proxy
       WS.url(url).get() map { response => url -> response }
     }
 
@@ -21,7 +23,7 @@ class UrlPagesHealthcheckManagementPage(val urls: List[String]) extends Manageme
     val failed = sequenced map { _ filter { _._2.status / 100 != 2 } }
 
     failed.await(10, TimeUnit.SECONDS).get match {
-      case List() =>
+      case Nil =>
         log.info("Healthcheck OK")
         PlainTextResponse("OK")
 

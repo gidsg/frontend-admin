@@ -9,13 +9,13 @@ import tools.Environment
 
 object Configuration {
 
-  val configuration = ConfigurationFactory.getConfiguration("frontend-admin", "env")
+  val configuration = ConfigurationFactory.getConfiguration("frontend", "env")
 
   val stage = new Environment("/etc/gu/install_vars").getProperty("STAGE", "unknown")
 
   object aws {
     lazy val accessKey = configuration.getStringProperty("aws.access.key").getOrElse(throw new RuntimeException("AWS access key not set"))
-    lazy val secretKey = configuration.getStringProperty("aws.secret.access.key").getOrElse(throw new RuntimeException("AWS secret key not set"))
+    lazy val secretKey = configuration.getStringProperty("aws.access.secret.key").getOrElse(throw new RuntimeException("AWS secret key not set"))
     lazy val bucket = configuration.getStringProperty("aws.bucket").getOrElse(throw new RuntimeException("AWS bucket is not setup"))
   }
 
@@ -56,7 +56,7 @@ object Management extends GuManagement {
 
   lazy val pages = List(
     new ManifestPage,
-    new UrlPagesHealthcheckManagementPage(Configuration.healthcheck.urls.toList),
+    new UrlPagesHealthcheckManagementPage("http://localhost:9000/login"),
     StatusPage(applicationName,
       Seq(ConfigUpdateCounter, ConfigUpdateErrorCounter, SwitchesUpdateCounter, SwitchesUpdateErrorCounter)
     ),
