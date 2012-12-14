@@ -22,6 +22,7 @@ object SwitchboardController extends Controller with AuthLogging with Logging {
     Switch("web-fonts", true, "If this is switched on then the custom Guardian web font will load."),
     Switch("related-content", true, "If this switch is turned on then related content will show. Turn off to help handle exceptional load."),
     Switch("omniture-verification", false, "If this switch is turned on then a separate call to Omniture will be made to help verify our tracking."),
+    Switch("square-images", false, "If this switch is turned on then square images willl be used for trailblock thumbnails."),
 
     Switch("integration-test-switch", true, "Switch that is only used while running tests. You never need to change this switch")
   )
