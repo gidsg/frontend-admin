@@ -8,3 +8,5 @@ target
 *.sublime-*
 bin
 .settings
+.cache
+.target

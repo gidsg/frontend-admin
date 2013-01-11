@@ -6,6 +6,7 @@ define(['Knockout'], function (Knockout) {
     	this.title 	  = Knockout.observable('');
     	this.numItems = Knockout.observable(3);
     	this.lead 	  = true;
+    	this.showMore = Knockout.observable(false);
 
         this.update = function(data)
         {
