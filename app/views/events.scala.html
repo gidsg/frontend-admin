@@ -3,7 +3,7 @@
 @main("Events editor", env, isAuthed = true) {
 
     <h4>Article</h4>
-    <input type="text" class="span3" placeholder="Article ID"  id="article" data-bind='value: events.article, valueUpdate: "afterkeydown"' />
+    <input type="text" class="span3" placeholder="Article ID" id="article"/>
 
     <h4>Events <button class="btn btn-mini btn-success" data-bind="event: {click: events.createEvent}">New</button></h4>
 

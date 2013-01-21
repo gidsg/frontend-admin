@@ -19,8 +19,6 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
         this._editing   = ko.observable(this._tentative()); // as editable
         this._slug      = ko.observable();
 
-        this._article   = ko.observable(Common.queryParams.article); 
-
         this.init = function (spec) {
             spec = spec || {};
             
