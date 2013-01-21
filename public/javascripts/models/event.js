@@ -21,8 +21,8 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
 
         this.init = function (spec) {
             spec = spec || {};
-            
-            self.content(spec.content || []);
+
+            this.content(spec.content || []);
             this.title(spec.title || '');
             this.section(spec.section || '');
             this.importance(spec.importance || '');
@@ -57,17 +57,17 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
 
             if (id) {
                 if (_.some(this.content(), hasId)) { // remove it
-                    self.content.remove(hasId)
+                    this.content.remove(hasId)
                 } else { // add it
-                    self.content.unshift({id: id});
+                    this.content.unshift({id: id});
                 }
-                self.saveEvent();
+                this.saveEvent();
             }
         };
 
-        self.removeArticle = function(article) {
-            self.content.remove(article);
-            self.saveEvent();
+        this.removeArticle = function(article) {
+            this.content.remove(article);
+            this.saveEvent();
         };
 
         this.saveEvent =  function() {
