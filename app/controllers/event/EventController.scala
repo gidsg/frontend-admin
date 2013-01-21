@@ -36,6 +36,10 @@ object EventController extends Controller with Logging with AuthLogging {
    Ok(com.codahale.jerkson.Json.generate(Map("event" -> properties)))
   }
 
+  def render() = Action{
+   Ok(views.html.events("{}", Configuration.stage))
+  }
+
   private def saveEvent(json: JsObject) {
     val properties = json.value.map {
       case (key, value) =>
