@@ -19,25 +19,25 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
         this._editing   = ko.observable(this._tentative()); // as editable
         this._slug      = ko.observable();
 
-        this.init = function (spec) {
-            spec = spec || {};
+        this.init = function (o) {
+            o = o || {};
 
-            this.content(spec.content || []);
-            this.title(spec.title || '');
-            this.section(spec.section || '');
-            this.importance(spec.importance || '');
+            this.content(o.content || []);
+            this.title(o.title || '');
+            this.section(o.section || '');
+            this.importance(o.importance || '');
 
-            if(spec.id) {
-                this.id(spec.id);
-                this._slug(_.last(spec.id.split('/')));
+            if(o.id) {
+                this.id(o.id);
+                this._slug(_.last(o.id.split('/')));
             }
 
             this.parent({
-                id: ko.observable(spec.parent ? spec.parent.id : '')
+                id: ko.observable(o.parent ? o.parent.id : '')
             });
 
-            if (spec.date) {
-                this.date(new Date(spec.date));
+            if (o.date) {
+                this.date(new Date(o.date));
             } else {
                 this.date(new Date());
             }
@@ -92,6 +92,8 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
                         self.init(resp.event);
                         // Mark it as real 
                         self._tentative(false);
+                        this._editing(false);
+                        this._viewing(true);
                     }
                     Common.mediator.emitEvent('models:events:save:success', [resp]);
                 },
@@ -99,13 +101,10 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
                     Common.mediator.emitEvent('models:events:save:error');
                 }
             });
-            this._viewing(true);
-            this._editing(false);
         };
         
         this.generateId = function () {
             var id,
-                slug = this._slug() || this.title(),
                 months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 
             id = '/' + [
@@ -114,7 +113,7 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
                 this.date().getFullYear(),
                 months[this.date().getMonth()],
                 this.date().getDate(),
-                slug.toLowerCase().replace(/[^a-z]+/g, '-')
+                slugify(this._slug() || this.title())
             ].join('/');
             return id;
         };
@@ -129,11 +128,6 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
         };
 
         this.init(opts);
-
-        // dummies
-        this.content.push({id: '/world/2013/jan/17/blah-blah'});
-        this.content.push({id: '/world/2013/jan/18/yadda-yadda'});
-
     };
 
     Event.prototype.toJSON = function() {
@@ -150,6 +144,15 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
         }
         return copy;
     };
+
+    function slugify (str) {
+        str = str
+            .replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'')
+            .replace(/\s+/g,' ')
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-');
+        return str;
+    }
 
     return Event;
 })
