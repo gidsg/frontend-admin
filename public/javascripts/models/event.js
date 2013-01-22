@@ -5,6 +5,7 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
         var self = this, 
             endpoint = '/stories/event'
 
+        // Event 'schema' poperties
         this.content    = ko.observableArray();
         this.title      = ko.observable();
         this.section    = ko.observable();
@@ -13,11 +14,14 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
         this.id         = ko.observable();
         this.parent     = ko.observable();
 
+        // Input values that get post processed
+        this._prettyDate = ko.observable(); 
+        this._slug      = ko.observable();
+
         // Administrative vars
         this._tentative = ko.observable(!opts || !opts.id); // No id means it's a new unpersisted event,
         this._viewing   = ko.observable(this._tentative()); // in which case view it 
         this._editing   = ko.observable(this._tentative()); // as editable
-        this._slug      = ko.observable();
 
         this.init = function (o) {
             o = o || {};
@@ -25,7 +29,7 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
             this.content(o.content || []);
             this.title(o.title || '');
             this.section(o.section || 'news');
-            this.importance(o.importance || '');
+            this.importance(o.importance || 50);
 
             if(o.id) {
                 this.id(o.id);
@@ -41,6 +45,7 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
             } else {
                 this.date(new Date());
             }
+            this._prettyDate(this.date().toISOString().match(/^\d{4}-\d{2}-\d{2}/)[0]); 
 
             this._isValid = ko.computed(function () {
                 return (
@@ -71,12 +76,15 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
         };
 
         this.saveEvent =  function() {
-            var body,
+            var body, url;
+
+                // Produce a proper date from the pretty (displayed, edited) date
+                this.date(new Date(this._prettyDate()));
 
                 // We post to the 'old' id
                 url = endpoint + (this._tentative() ? '' : this.id());
-                // but we regenerate a new id in the posted event, as the user may have edited the slug, date, etc.  
-                this.id(this.generateId()); 
+                // ..but we generate the posted id, as the user may have edited the slug, date, etc.  
+                this.id(this.generateId());
 
             Reqwest({
                 url: url,
