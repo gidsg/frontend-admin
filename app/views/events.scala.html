@@ -1,0 +1,82 @@
+@(config: String, env: String)
+
+@main("Events editor", env, isAuthed = true) {
+
+    <h4>Article</h4>
+    <input type="text" class="span3" placeholder="Article ID" id="article"/>
+
+    <h4>Events <button class="btn btn-mini btn-success" data-bind="event: {click: events.createEvent}">New</button></h4>
+
+    <div data-bind="foreach: events.events">
+        <div class="event" data-bind="css: { viewing: _viewing, editing: _editing}">
+            <h5>
+                <a class="event-title" href="javascript:void(0)" data-bind="
+                    text: title().length > 0 ? title : 'New Event',
+                    event: {click: toggleShowing}" ></a>
+                <small data-bind="text: '(' + content().length + ')'"></small>
+                <!-- ko if: parent().id -->
+                <div>
+                    <small>follows <strong data-bind="text: parent().id"></strong></small>
+                </div>
+                <!-- /ko -->
+            </h5>
+
+            <div class="event-wrapper">
+
+                <div class="event-detail">
+                    <dl>
+                        <dt>Articles [<a data-bind="click: addArticle" href="javascript:void(0)">attach?</a>]:</dt>
+                        <dd data-bind="foreach: content">
+                            <div>
+                                <span data-bind="text: id"></span>
+                                <button data-bind='click: $parent.removeArticle' class="close">&times;</button>
+                            </div>
+                        </dd>
+                        <dt>Section</dt><dd data-bind="text: section"></dd>
+                        <dt>Date</dt><dd data-bind="text: date"></dd>
+                        <dt>URL</dt><dd data-bind="text: id"></dd>
+                    </dl>
+
+                    <div class="event-form-toggler">
+                        <a data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit Event</a>
+                    </div>
+                </div>
+
+                <form class="event-form" data-bind="submit: saveEvent">
+                    <label>Title</label>
+                    <input type="text" placeholder="e.g. 'Prime minister's press conference"
+                        data-bind='value: title, valueUpdate: "afterkeydown"' />
+
+                    <label>This event follows</label>
+                    <select name="parent" data-bind='value: parent().id'>
+                        <option value=''>(nothing)</option>
+                        <optgroup label="another event:" data-bind="foreach: $root.events.events">
+                            <!-- ko if: id && id !== $parent.id -->
+                            <option data-bind="attr: {value: id}, text: title"></option>
+                            <!-- /ko -->
+                        </optgroup>
+                    </select>
+
+                    <label>Section</label>
+                    <select name="section" 
+                        data-bind='value: section, valueUpdate: "afterkeydown", foreach: $root.sections'>
+                        <option data-bind="attr: {value: id}, text: webTitle"></option>
+                    </select>
+
+                    <label>Date</label>
+                    <input type="date"
+                        data-bind='value: _prettyDate, valueUpdate: "afterkeydown"' />
+
+                    <label>Keyword Slug (optional)</label>
+                    <input type="text" placeholder="" 
+                        data-bind='value: _slug, valueUpdate: "afterkeydown"' />
+
+                    <button class="btn btn-success" type="submit" data-bind="enable: _isValid">Save event</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="@routes.Assets.at("javascripts/eventsEditor.js")" type="text/javascript"></script>
+}

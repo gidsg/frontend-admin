@@ -1,3 +1,7 @@
+body {
+    padding: 10px;
+}
+
 .dropdown-menu {
     position: absolute;
     display: block;
@@ -56,3 +60,48 @@ input[type=checkbox].status {
     float: left;
     margin-right: 10px;
 }
+
+/* Events Editor */
+
+.event {
+    border-top: 1px dotted #ccc;
+}
+
+.event-title {
+    min-height: 20px;
+    color: #000;
+}
+
+.event-wrapper {
+    display: none;
+}
+
+.viewing .event-wrapper {
+    display: block;
+}
+
+.event-detail {
+    display: block;
+}
+
+.editing .event-detail {
+    display: none;
+}
+
+.event-form {
+    display: none;
+}
+
+.editing .event-form {
+    display: block;
+}
+
+.event-form,
+.event-form-toggler {
+    margin: 8px 0;    
+}
+
+.editing .event-form-toggler {
+    display: none;
+}
+
