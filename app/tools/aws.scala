@@ -11,37 +11,35 @@ import com.amazonaws.services.dynamodb.AmazonDynamoDBClient
 import com.amazonaws.services.dynamodb.model._
 import collection.JavaConversions._
 import scala.Some
-
+import model.{Content, Event}
+import java.util.UUID
 
 trait Credentials {
   private lazy val accessKey = Configuration.aws.accessKey
   private lazy val secretKey = Configuration.aws.secretKey
 
   lazy val credentials = new BasicAWSCredentials(accessKey, secretKey)
-
 }
 
-
-object DbValue {
-  def apply(value: Any): AttributeValue = value match {
-    case s: String => new AttributeValue().withS(s)
-    case l: Long => new AttributeValue().withN(l.toString)
-    case _ => throw new IllegalArgumentException("unknown value type: " + value)
-  }
+object EqualTo {
+  def apply(s: String) = new Condition()
+    .withComparisonOperator(ComparisonOperator.EQ)
+    .withAttributeValueList(new AttributeValue(s))
 }
+
 
 trait DynamoDB extends Credentials with Logging {
 
   private def createClient = {
-    val client = new AmazonDynamoDBClient(credentials)
+  val client = new AmazonDynamoDBClient(credentials)
+    //todo put in config
     client.setEndpoint("https://dynamodb.eu-west-1.amazonaws.com")
     client
   }
 
-  def put(tableName: String, properties: Map[String, Any]) = {
+  def put(tableName: String, attributes: Map[String, AttributeValue]) = {
     val client = createClient
     try {
-      val attributes = properties.map { case (key, value) => key -> DbValue(value) }
       val request = new PutItemRequest(tableName, attributes)
       client.putItem(request)
     } finally {
@@ -49,21 +47,88 @@ trait DynamoDB extends Credentials with Logging {
     }
   }
 
-  def get(tableName: String, id: Any): Map[String, Any] = {
+  def get(tableName: String, id: String): Map[String, AttributeValue] = {
     val client = createClient
     try {
-      // eventually consistent reads give twice the throughput http://aws.amazon.com/dynamodb/
-      // it is the default, just being verbose here
-      val request = new GetItemRequest(tableName, new Key(DbValue(id))).withConsistentRead(false)
+      // we want admin reads to be consistent
+      val request = new GetItemRequest(tableName, new Key(new AttributeValue(id))).withConsistentRead(true)
       val item = client.getItem(request)
-      item.getItem.toMap.map{ case (key, attr) => key -> Option(attr.getN).map(_.toLong).getOrElse(attr.getS) }
+      Option(item.getItem).map(_.toMap).getOrElse(Map.empty)
+    } finally {
+      client.shutdown()
+    }
+  }
+
+  def get(tableName: String, id1: String, id2: String): Map[String, AttributeValue] = {
+    val client = createClient
+    try {
+      // we want admin reads to be consistent
+      val request = new GetItemRequest(tableName, new Key(new AttributeValue(id1), new AttributeValue(id2))).withConsistentRead(true)
+      val item = client.getItem(request)
+      Option(item.getItem).map(_.toMap).getOrElse(Map.empty)
+    } finally {
+      client.shutdown()
+    }
+  }
+
+  def findByField(tableName: String, fieldName: String, fieldValue: String): Seq[Map[String, AttributeValue]] = {
+
+    val client = createClient
+
+    try {
+      val request = new ScanRequest(tableName).withScanFilter(Map(fieldName -> EqualTo(fieldValue)))
+      client.scan(request).getItems.map(_.toMap)
     } finally {
       client.shutdown()
     }
   }
 }
 
-object DynamoDB extends DynamoDB
+trait EventPersistence extends DynamoDB {
+
+  //TODO per stage event tables
+  private lazy val eventTable = "dev_event"
+  private lazy val contentTable = "dev_content"
+
+  def saveEvent(event: Event) = {
+
+    val parentEvent = event.parent.map{p =>
+      loadEvent(p.id).getOrElse(throw new IllegalStateException("Trying to set a parent that does not exist " + p.id))
+    }
+
+    val newChainId: Option[String] = parentEvent.flatMap(_.chainId).orElse(event.chainId).orElse(Some(UUID.randomUUID.toString))
+
+    val updatedEvent = event.copy(
+      chainId = newChainId,
+      parent = parentEvent
+    )
+    put(eventTable, updatedEvent.asAttributes)
+
+    updatedEvent.content.map{ content =>
+      content.copy(eventId = Some(event.id))
+    }.foreach{ content =>
+      put(contentTable, content.asAttributes)
+    }
+    updatedEvent
+  }
+
+  def loadEvent(id: String): Option[Event] = {
+    val attributes = get(eventTable, id)
+    if (attributes.isEmpty) None
+    else {
+      val event = Event(attributes)
+
+      val eventContent = findByField(contentTable, "eventId", event.id).map(Content(_))
+
+      Some(event.copy(
+        parent = event.parent.flatMap(p => loadEvent(p.id)),
+        content = eventContent
+      ))
+    }
+  }
+
+  def findEventsInChain(chainId: String): Seq[Event] = findByField(eventTable, "chainId", chainId).map(Event(_))
+}
 
 trait S3 extends Credentials with Logging {
 

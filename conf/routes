@@ -34,4 +34,4 @@ POST    /dev/switchboard                 controllers.SwitchboardController.save(
 
 #Events
 POST    /stories/event                   controllers.event.EventController.save()
-GET     /stories/event/*eventId           controllers.event.EventController.load(eventId)
+GET     /stories/event*eventId           controllers.event.EventController.load(eventId)
