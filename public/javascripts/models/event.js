@@ -24,7 +24,7 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
 
             this.content(o.content || []);
             this.title(o.title || '');
-            this.section(o.section || '');
+            this.section(o.section || 'news');
             this.importance(o.importance || '');
 
             if(o.id) {

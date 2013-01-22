@@ -43,6 +43,10 @@
                 </div>
 
                 <form class="event-form" data-bind="submit: saveEvent">
+                    <label>Title</label>
+                    <input type="text" placeholder="e.g. 'Prime minister's press conference"
+                        data-bind='value: title, valueUpdate: "afterkeydown"' />
+
                     <label>This event follows</label>
                     <select name="parent" data-bind='value: parent().id'>
                         <option value=''>(nothing)</option>
@@ -53,13 +57,11 @@
                         </optgroup>
                     </select>
 
-                    <label>Title</label>
-                    <input type="text" placeholder="e.g. 'Prime minister's press conference"
-                        data-bind='value: title, valueUpdate: "afterkeydown"' />
-
                     <label>Section</label>
-                    <input type="text" placeholder="e.g. 'news'" 
-                        data-bind='value: section, valueUpdate: "afterkeydown"' />
+                    <select name="section" 
+                        data-bind='value: section, valueUpdate: "afterkeydown", foreach: $root.sections'>
+                        <option data-bind="attr: {value: id}, text: webTitle"></option>
+                    </select>
 
                     <label>Date</label>
                     <input type="text" placeholder="e.g. '31/12/2012'. Optional. Default is today." 

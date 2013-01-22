@@ -1,4 +1,4 @@
-define(["EventEmitter"], function (Mediator) {
+define(['EventEmitter'], function (Mediator) {
 
     return {
         mediator: new Mediator(),

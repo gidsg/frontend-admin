@@ -1,9 +1,9 @@
-define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, Knockout, Common, Reqwest) {
+define(['models/event', 'Knockout', 'Common'], function (Event, ko, Common) {
 
     return function(data) {
         var self = this;
 
-        this.events = Knockout.observableArray();
+        this.events = ko.observableArray();
 
         this.createEvent = function() {
             var event = new Event();
@@ -11,7 +11,6 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, Knock
         };
 
         this.eventSaveSuccess = function() {
-            // let the user know
         };
 
         Common.mediator.addListener('models:events:save:success', this.eventSaveSuccess);
