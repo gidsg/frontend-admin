@@ -20,6 +20,12 @@
 
     <div data-bind="foreach: events.events">
         <div class="event" data-bind="css: { viewing: _viewing}">
+
+            <input type="range" class="event-range" min="0" max="100"
+                data-bind="value: importance, event: {change: setImportance}" />
+
+            <span class="event-range-show" data-bind="text: importance"></span>
+
             <h5>
                 <a class="event-title" href="javascript:void(0)" data-bind="
                     text: title().length > 0 ? title : 'New Event',
@@ -37,14 +43,17 @@
                 <div class="event-detail" data-bind="ifnot: _editing()">
                     <button class="btn btn-mini btn-success" data-bind="click: addArticle">Add selected articles</button>
                     <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
+                    <div class="event-articles" data-bind="foreach: content">
+                        <div class="event-article">
+                            <i class="icon-remove-circle" 
+                                data-bind='click: $parent.removeArticle' class="close"></i>
+                            <span data-bind="text: typeof webTitle !== 'undefined' ? webTitle : id"></span>
+                            <input type="range" class="article-range" min="0" max="100"
+                                data-bind="value: importance"/>
+                            <span class="article-range-show" data-bind="text: importance"></span>
+                        </div>
+                    </div>
                     <dl>
-                        <dt>Articles</dt>
-                        <dd data-bind="foreach: content">
-                            <div>
-                                <span data-bind="text: typeof webTitle !== 'undefined' ? webTitle : id"></span>
-                                <button data-bind='click: $parent.removeArticle' class="close">&times;</button>
-                            </div>
-                        </dd>
                         <dt>Section</dt><dd data-bind="text: section"></dd>
                         <dt>Date</dt><dd data-bind="text: _prettyDate"></dd>
                         <dt>URL</dt><dd data-bind="text: id"></dd>
