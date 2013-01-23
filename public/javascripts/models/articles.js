@@ -26,7 +26,6 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
                     url+=  + encodeURIComponent(self.articleTerm());
                     propName = 'results';
                 }
-                console.log(propName + " " + url)
 
                 Reqwest({
                     url: url,

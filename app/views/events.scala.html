@@ -14,7 +14,7 @@
         </label>
     </div>
 
-    <h4>Events <button class="btn btn-mini btn-success" data-bind="event: {click: events.createEvent}">New</button></h4>
+    <h4>Events <button class="btn btn-mini" data-bind="event: {click: events.createEvent}">New event</button></h4>
 
     <div data-bind="foreach: events.events">
         <div class="event" data-bind="css: { viewing: _viewing}">
@@ -32,10 +32,11 @@
 
             <div class="event-wrapper" data-bind="if: _viewing()">
 
-                <div class="event-detail"
-                    data-bind="ifnot: _editing()">
+                <div class="event-detail" data-bind="ifnot: _editing()">
+                    <button class="btn btn-mini btn-success" data-bind="click: addArticle">Attach selected articles</button>
+                    <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">New "follow on" event</button>
                     <dl>
-                        <dt>Articles <button class="btn btn-mini btn-success" data-bind="click: addArticle">attach?</button></dt>
+                        <dt>Articles</dt>
                         <dd data-bind="foreach: content">
                             <div>
                                 <span data-bind="text: typeof webTitle !== 'undefined' ? webTitle : id"></span>
@@ -55,12 +56,12 @@
                 <form class="event-form" 
                     data-bind="if: _editing(), submit: saveEvent">
                     <label>Title</label>
-                    <input type="text" placeholder="e.g. 'Prime minister's press conference"
+                    <input type="text" placeholder="e.g. 'Helicopter crash"
                         data-bind='value: title, valueUpdate: "afterkeydown"' />
 
                     <label>This event follows</label>
-                    <select name="parent" data-bind='value: parent().id'>
-                        <option value=''>(nothing)</option>
+                    <select data-bind='value: parent().id'>
+                        <option>(nothing)</option>
                         <optgroup label="another event:" data-bind="foreach: $root.events.events">
                             <!-- ko if: id && id !== $parent.id -->
                             <option data-bind="attr: {value: id}, text: title"></option>

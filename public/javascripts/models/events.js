@@ -5,16 +5,18 @@ define(['models/event', 'Knockout', 'Common'], function (Event, ko, Common) {
 
         this.events = ko.observableArray();
 
-        /*
-        this.events = ko.observableArray([
-            new Event({articles: articles, section: 'news', id:'/news/event/2013/britons-confirmed-dead-in-algeria', title:'Britons confirmed dead in Algeria', importance:1}),
-            new Event({articles: articles, section: 'news', id:'/news/event/2013/algerian-military-storm-hostage-takers', title:'Algerian military storm hostage takers', importance:1}),
-            new Event({articles: articles, section: 'news', id:'/news/event/2013/british-hostages-taken-in-algeria', title:'British Hostages held in Algeria', importance:1})
-        ]);
-        */
-        
         this.createEvent = function() {
-            var event = new Event({articles: articles});
+            var event = new Event({
+                articles: articles
+            });
+            self.events.unshift(event);
+        };
+
+        this.createEventFollowOn = function(parent) {
+            var event = new Event({
+                articles: articles,
+                parent: {id: parent.id()}
+            });
             self.events.unshift(event);
         };
 

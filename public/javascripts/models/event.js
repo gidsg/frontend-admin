@@ -56,6 +56,10 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
                     this.section().length > 0
                 );
             }, this);
+
+            console.log('INIT');
+            console.log(JSON.stringify({event: this}));
+
         }
 
         this.addArticle = function() {
@@ -85,16 +89,16 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
         };
 
         this.saveEvent =  function() {
-            var body, url;
+            var url;
 
-                // Produce a proper date from the pretty (displayed, edited) date
-                this.startDate(new Date(this._prettyDate()));
+            // Produce a proper date from the pretty (displayed, edited) date
+            this.startDate(new Date(this._prettyDate()));
 
-                // We post to the 'old' id
-                //url = endpoint + (this._tentative() ? '' : this.id());
-                url = endpoint;
-                // ..but we generate the posted id, as the user may have edited the slug, date, etc.  
-                this.id(this.generateId());
+            // We post to the 'old' id
+            //url = endpoint + (this._tentative() ? '' : this.id());
+            url = endpoint;
+            // ..but we generate the posted id, as the user may have edited the slug, date, etc.  
+            this.id(this.generateId());
 
             Reqwest({
                 url: url,
@@ -103,8 +107,8 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
                 contentType: 'application/json',
                 data: JSON.stringify({event: this}),
                 success: function(resp) {
-                    console.log('FROM: ' + url)                    
-                    console.log(JSON.stringify(resp) + "\n")
+                    console.log('RECEIVED:')
+                    console.log(JSON.stringify(resp) + "\n\n")
                     if (resp.event) {
                         // Update event using the server response
                         self.init(resp.event);
@@ -148,14 +152,13 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
     Event.prototype.toJSON = function() {
         var copy = ko.toJS(this),
             prop;
+
         // Strip administrative properties starting '_'
         for (prop in copy) {
             if (0 === prop.indexOf('_')) {
                 delete copy[prop];
             }
         }
-        // Temporary fix
-        copy.startDate = copy.startDate.toISOString().replace(/\.000Z$/,'Z');
         // Clean up an empty parent obj
         if (copy.parent && !copy.parent.id) {
             delete copy.parent;
