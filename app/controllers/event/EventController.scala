@@ -12,8 +12,12 @@ object EventController extends Controller with EventPersistence with Logging wit
 
   val badRequest = BadRequest(toJson(Map("status" -> "Invalid Json")))
 
-  def render() = Action{
+    def render() = Action{
     Ok(views.html.events("{}", Configuration.stage))
+  }
+
+  def list() = Action {
+    Ok(Json(listEvents))
   }
 
   //TODO AuthAction
@@ -39,5 +43,7 @@ object EventController extends Controller with EventPersistence with Logging wit
   }
 
   private def Json(event: Event): String = com.codahale.jerkson.Json.generate(Map("event" -> event.asMap))
+
+  private def Json(events: Seq[Event]): String = com.codahale.jerkson.Json.generate(Map("events" -> events.map(_.asMap)))
 
 }

@@ -27,6 +27,11 @@ object EqualTo {
     .withAttributeValueList(new AttributeValue(s))
 }
 
+object NotNull {
+  def apply() = new Condition()
+    .withComparisonOperator(ComparisonOperator.NOT_NULL)
+}
+
 
 trait DynamoDB extends Credentials with Logging {
 
@@ -82,6 +87,18 @@ trait DynamoDB extends Credentials with Logging {
       client.shutdown()
     }
   }
+
+  def listTable(tableName: String) = {
+
+    val client = createClient
+
+    try {
+      val request = new ScanRequest(tableName).withScanFilter(Map("id" -> NotNull()))
+      client.scan(request).getItems.map(_.toMap)
+    } finally {
+      client.shutdown()
+    }
+  }
 }
 
 trait EventPersistence extends DynamoDB {
@@ -89,6 +106,8 @@ trait EventPersistence extends DynamoDB {
   //TODO per stage event tables
   private lazy val eventTable = "dev_event"
   private lazy val contentTable = "dev_content"
+
+  def listEvents: Seq[Event] = listTable(eventTable).flatMap{a => loadEvent(a("id").getS)}
 
   def saveEvent(event: Event) = {
 
