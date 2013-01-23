@@ -80,8 +80,8 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
         };
 
         this.removeArticle = function(article) {
-            this.content.remove(article);
-            this.saveEvent();
+            self.content.remove(article);
+            self.saveEvent();
         };
 
         this.saveEvent =  function() {
@@ -91,7 +91,8 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
                 this.startDate(new Date(this._prettyDate()));
 
                 // We post to the 'old' id
-                url = endpoint + (this._tentative() ? '' : this.id());
+                //url = endpoint + (this._tentative() ? '' : this.id());
+                url = endpoint;
                 // ..but we generate the posted id, as the user may have edited the slug, date, etc.  
                 this.id(this.generateId());
 
@@ -109,8 +110,7 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
                         self.init(resp.event);
                         // Mark it as real 
                         self._tentative(false);
-                        this._editing(false);
-                        this._viewing(true);
+                        self._editing(false);
                     }
                     Common.mediator.emitEvent('models:events:save:success', [resp]);
                 },
@@ -121,17 +121,15 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
         };
         
         this.generateId = function () {
-            var id,
-                months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
-
-            id = '/' + [
-                this.section(),
-                'event',
-                this.startDate().getFullYear(),
-                months[this.startDate().getMonth()],
-                this.startDate().getDate(),
-                slugify(this._slug() || this.title())
-            ].join('/');
+            var months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"],
+                id = [
+                    this.section(),
+                    'event',
+                    this.startDate().getFullYear(),
+                    months[this.startDate().getMonth()],
+                    this.startDate().getDate(),
+                    slugify(this._slug() || this.title())
+                ].join('/');
             return id;
         };
 
@@ -156,6 +154,9 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
                 delete copy[prop];
             }
         }
+        // Temporary fix
+        copy.startDate = copy.startDate.toISOString().replace(/\.000Z$/,'Z');
+        // Clean up an empty parent obj
         if (copy.parent && !copy.parent.id) {
             delete copy.parent;
         }

@@ -33,12 +33,12 @@
             <div class="event-wrapper" data-bind="if: _viewing()">
 
                 <div class="event-detail"
-                    data-bind="if: !_editing()">
+                    data-bind="ifnot: _editing()">
                     <dl>
                         <dt>Articles <button class="btn btn-mini btn-success" data-bind="click: addArticle">attach?</button></dt>
                         <dd data-bind="foreach: content">
                             <div>
-                                <span data-bind="text: webTitle"></span>
+                                <span data-bind="text: typeof webTitle !== 'undefined' ? webTitle : id"></span>
                                 <button data-bind='click: $parent.removeArticle' class="close">&times;</button>
                             </div>
                         </dd>
