@@ -64,7 +64,7 @@ input[type=checkbox].status {
 /* Events Editor */
 
 .event {
-    border-top: 1px dotted #ccc;
+    border-top: 1px dotted #999;
 }
 
 .event-title {

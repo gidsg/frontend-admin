@@ -2,7 +2,7 @@
 
 @main("Events editor", env, isAuthed = true) {
 
-    <h4>Articles</h4>
+    <h3>Articles</h3>
 
     <input type="text" placeholder="Article search" 
         data-bind='event: {keyup: articles.articleSearch}, value: articles.articleTerm, valueUpdate: "afterkeydown"'/>
@@ -14,7 +14,7 @@
         </label>
     </div>
 
-    <h4>Events <button class="btn btn-mini" data-bind="event: {click: events.createEvent}">New event</button></h4>
+    <h3>Events <button class="btn btn-mini" data-bind="event: {click: events.createEvent}">Create a new event</button></h3>
 
     <div data-bind="text: events.length() === 0 ? 'Loading...' : ''"></div>
 
@@ -35,8 +35,8 @@
             <div class="event-wrapper" data-bind="if: _viewing()">
 
                 <div class="event-detail" data-bind="ifnot: _editing()">
-                    <button class="btn btn-mini btn-success" data-bind="click: addArticle">Attach selected articles</button>
-                    <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">New "follow on" event</button>
+                    <button class="btn btn-mini btn-success" data-bind="click: addArticle">Add selected articles</button>
+                    <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
                     <dl>
                         <dt>Articles</dt>
                         <dd data-bind="foreach: content">
