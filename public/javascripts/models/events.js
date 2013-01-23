@@ -5,10 +5,27 @@ define(['models/event', 'Knockout', 'Common'], function (Event, ko, Common) {
 
         this.events = ko.observableArray();
 
+        this.length = ko.computed(function(){
+            return this.events().length;
+        }, this)
+
+        this.loadEvent = function(opts) {
+            opts = opts || {};
+            opts.articles = articles;
+            self.events.unshift(new Event(opts));
+        };
+
+        this.collapseAll = function() {
+            this.events().map(function(event){
+                event._viewing(false);
+            });
+        };
+
         this.createEvent = function() {
             var event = new Event({
                 articles: articles
             });
+            self.collapseAll();
             self.events.unshift(event);
         };
 
@@ -17,6 +34,7 @@ define(['models/event', 'Knockout', 'Common'], function (Event, ko, Common) {
                 articles: articles,
                 parent: {id: parent.id()}
             });
+            self.collapseAll();
             self.events.unshift(event);
         };
 

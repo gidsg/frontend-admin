@@ -16,6 +16,8 @@
 
     <h4>Events <button class="btn btn-mini" data-bind="event: {click: events.createEvent}">New event</button></h4>
 
+    <div data-bind="text: events.length() === 0 ? 'Loading...' : ''"></div>
+
     <div data-bind="foreach: events.events">
         <div class="event" data-bind="css: { viewing: _viewing}">
             <h5>

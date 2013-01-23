@@ -37,6 +37,19 @@ curl([
         error: function() {}
     });
 
+    // Grab section names from the Content Api
+    Reqwest({
+        url: '/stories/event/list',
+        type: 'json',
+        success: function(resp) {
+            resp.events = resp.events || [];
+            resp.events.map(function(event){
+                viewModel.events.loadEvent(event);
+            });
+        },
+        error: function() {}
+    });
+
     // Render
     ko.applyBindings(viewModel);
 });

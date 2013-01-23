@@ -23,7 +23,7 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
                     propName = 'content';
                 } else {
                     url = 'http://content.guardianapis.com/search?page-size=50&format=json&q=';
-                    url+=  + encodeURIComponent(self.articleTerm());
+                    url+= encodeURIComponent(self.articleTerm());
                     propName = 'results';
                 }
 

@@ -56,10 +56,6 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
                     this.section().length > 0
                 );
             }, this);
-
-            console.log('INIT');
-            console.log(JSON.stringify({event: this}));
-
         }
 
         this.addArticle = function() {
@@ -72,7 +68,7 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
                         return item.id === article.id
                     });
                     if (notIncluded) {
-                        self.content.push(article);
+                        self.content.unshift(article);
                         hasChanged = true;
                     }
                 }
@@ -99,6 +95,9 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
             url = endpoint;
             // ..but we generate the posted id, as the user may have edited the slug, date, etc.  
             this.id(this.generateId());
+
+            console.log('SENT:')
+            console.log(JSON.stringify({event: this}))
 
             Reqwest({
                 url: url,
