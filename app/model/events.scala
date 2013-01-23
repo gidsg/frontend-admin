@@ -77,7 +77,7 @@ case class Event(
 
 object Event {
 
-  val internetDateFormat = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+  val internetDateFormat = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 
   def apply(js: JsObject): Event = {
     Event(
