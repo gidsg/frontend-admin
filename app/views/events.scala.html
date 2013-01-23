@@ -2,13 +2,22 @@
 
 @main("Events editor", env, isAuthed = true) {
 
-    <h4>Article</h4>
-    <input type="text" class="span3" placeholder="Article ID" id="article"/>
+    <h4>Articles</h4>
+
+    <input type="text" placeholder="Article search" 
+        data-bind='event: {keyup: articles.articleSearch}, value: articles.articleTerm, valueUpdate: "afterkeydown"'/>
+
+    <div class="articles" data-bind='foreach: articles.articles'>
+        <label class="checkbox articles-article" data-bind="css: {'articles-article-checked': checked}">
+            <input type="checkbox" data-bind="attr: {value: id}, checked: checked"/>
+            <span data-bind="text: webTitle"></span>
+        </label>
+    </div>
 
     <h4>Events <button class="btn btn-mini btn-success" data-bind="event: {click: events.createEvent}">New</button></h4>
 
     <div data-bind="foreach: events.events">
-        <div class="event" data-bind="css: { viewing: _viewing, editing: _editing}">
+        <div class="event" data-bind="css: { viewing: _viewing}">
             <h5>
                 <a class="event-title" href="javascript:void(0)" data-bind="
                     text: title().length > 0 ? title : 'New Event',
@@ -21,19 +30,20 @@
                 <!-- /ko -->
             </h5>
 
-            <div class="event-wrapper">
+            <div class="event-wrapper" data-bind="if: _viewing()">
 
-                <div class="event-detail">
+                <div class="event-detail"
+                    data-bind="if: !_editing()">
                     <dl>
-                        <dt>Articles [<a data-bind="click: addArticle" href="javascript:void(0)">attach?</a>]:</dt>
+                        <dt>Articles <button class="btn btn-mini btn-success" data-bind="click: addArticle">attach?</button></dt>
                         <dd data-bind="foreach: content">
                             <div>
-                                <span data-bind="text: id"></span>
+                                <span data-bind="text: webTitle"></span>
                                 <button data-bind='click: $parent.removeArticle' class="close">&times;</button>
                             </div>
                         </dd>
                         <dt>Section</dt><dd data-bind="text: section"></dd>
-                        <dt>Date</dt><dd data-bind="text: date"></dd>
+                        <dt>Date</dt><dd data-bind="text: _prettyDate"></dd>
                         <dt>URL</dt><dd data-bind="text: id"></dd>
                     </dl>
 
@@ -42,7 +52,8 @@
                     </div>
                 </div>
 
-                <form class="event-form" data-bind="submit: saveEvent">
+                <form class="event-form" 
+                    data-bind="if: _editing(), submit: saveEvent">
                     <label>Title</label>
                     <input type="text" placeholder="e.g. 'Prime minister's press conference"
                         data-bind='value: title, valueUpdate: "afterkeydown"' />

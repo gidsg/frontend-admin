@@ -5,18 +5,21 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
         var self = this, 
             endpoint = '/stories/event'
 
+        // A refence to articles that we might want to add to this event
+        opts.articles =  opts.articles || []; 
+
         // Event 'schema' poperties
         this.content    = ko.observableArray();
         this.title      = ko.observable();
         this.section    = ko.observable();
-        this.date       = ko.observable();
+        this.startDate  = ko.observable();
         this.importance = ko.observable();
         this.id         = ko.observable();
         this.parent     = ko.observable();
 
         // Input values that get post processed
         this._prettyDate = ko.observable(); 
-        this._slug      = ko.observable();
+        this._slug       = ko.observable();
 
         // Administrative vars
         this._tentative = ko.observable(!opts || !opts.id); // No id means it's a new unpersisted event,
@@ -40,12 +43,12 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
                 id: ko.observable(o.parent ? o.parent.id : '')
             });
 
-            if (o.date) {
-                this.date(new Date(o.date));
+            if (o.startDate) {
+                this.startDate(new Date(o.startDate));
             } else {
-                this.date(new Date());
+                this.startDate(new Date());
             }
-            this._prettyDate(this.date().toISOString().match(/^\d{4}-\d{2}-\d{2}/)[0]); 
+            this._prettyDate(this.startDate().toISOString().match(/^\d{4}-\d{2}-\d{2}/)[0]); 
 
             this._isValid = ko.computed(function () {
                 return (
@@ -56,16 +59,22 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
         }
 
         this.addArticle = function() {
-            var 
-                id = document.querySelector('#article').value.replace(' ',''),
-                hasId = function(o) {return o.id === id};
+            var hasChanged;
 
-            if (id) {
-                if (_.some(this.content(), hasId)) { // remove it
-                    this.content.remove(hasId)
-                } else { // add it
-                    this.content.unshift({id: id});
+            opts.articles.map(function(article){
+                var notIncluded;
+                if (article.checked()) {
+                    notIncluded = !_.some(self.content(), function(item){
+                        return item.id === article.id
+                    });
+                    if (notIncluded) {
+                        self.content.push(article);
+                        hasChanged = true;
+                    }
                 }
+            });
+
+            if (hasChanged) {
                 this.saveEvent();
             }
         };
@@ -79,7 +88,7 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
             var body, url;
 
                 // Produce a proper date from the pretty (displayed, edited) date
-                this.date(new Date(this._prettyDate()));
+                this.startDate(new Date(this._prettyDate()));
 
                 // We post to the 'old' id
                 url = endpoint + (this._tentative() ? '' : this.id());
@@ -118,9 +127,9 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
             id = '/' + [
                 this.section(),
                 'event',
-                this.date().getFullYear(),
-                months[this.date().getMonth()],
-                this.date().getDate(),
+                this.startDate().getFullYear(),
+                months[this.startDate().getMonth()],
+                this.startDate().getDate(),
                 slugify(this._slug() || this.title())
             ].join('/');
             return id;

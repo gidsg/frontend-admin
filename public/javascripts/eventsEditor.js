@@ -1,23 +1,31 @@
 curl([
     'models/events',
+    'models/articles',
     'Knockout',
     'Reqwest',
     'Config',
     'Common'
 ]).then(function(
     Events,
+    Articles,
     ko,
     Reqwest,
     Config,
     Common
 ) {
+    var 
+        articles = new Articles(),
+        events = new Events(articles.articles()),
+        deBounced;
 
     var viewModel = {
-        events: new Events(),
+        events: events,
+        articles: articles,
         sections: ko.observableArray()
     };
 
-    ko.applyBindings(viewModel);
+    // Do an initial article search
+    articles.articleSearch();
 
     // Grab section names from the Content Api
     Reqwest({
@@ -26,13 +34,9 @@ curl([
         success: function(resp) {
             viewModel.sections(resp.response && resp.response.results ? resp.response.results : []);
         },
-        error: function() {
-        }
+        error: function() {}
     });
 
-    // Populate article id field from query str
-    if(Common.queryParams.article) {
-        document.querySelector('#article').value = Common.queryParams.article;
-    }
-
+    // Render
+    ko.applyBindings(viewModel);
 });

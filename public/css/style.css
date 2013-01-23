@@ -72,30 +72,6 @@ input[type=checkbox].status {
     color: #000;
 }
 
-.event-wrapper {
-    display: none;
-}
-
-.viewing .event-wrapper {
-    display: block;
-}
-
-.event-detail {
-    display: block;
-}
-
-.editing .event-detail {
-    display: none;
-}
-
-.event-form {
-    display: none;
-}
-
-.editing .event-form {
-    display: block;
-}
-
 .event-form,
 .event-form-toggler {
     margin: 8px 0;    
@@ -105,3 +81,23 @@ input[type=checkbox].status {
     display: none;
 }
 
+.articles { 
+    height: 200px; 
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.articles-article {
+    color: #999;
+}
+
+.articles-article-checked {
+    color: #468847;
+    font-weight: bold;
+}
+
+/*
+.articles-article:nth-child(even) {
+   background-color: #f0f0f0;
+}
+*/
