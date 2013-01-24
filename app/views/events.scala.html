@@ -32,21 +32,20 @@
             <div class="event-wrapper" data-bind="if: _viewing()">
 
                 <div class="event-detail" data-bind="ifnot: _editing()">
-                    <button class="btn btn-mini btn-success" data-bind="click: addArticle">Add selected articles</button>
+                    <button class="btn btn-mini" data-bind="click: addArticle">Add selected articles</button>
                     <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
                     <div class="event-articles" data-bind="foreach: content">
-                        <div class="event-article">
+                        <div class="event-article"
+                            data-bind="click: $parent.bump, css: {'event-article-important': importance() > 50}">
                             <i class="icon-remove-circle" 
                                 data-bind='click: $parent.removeArticle' class="close"></i>
                             <span data-bind="text: webTitle() ? webTitle : id"></span>
-                            <input type="range" class="article-range" min="0" max="100"
-                                data-bind="value: importance, event: {change: $parent.backgroundSave}" style="display: none;"/>
-
-                            <!--span class="article-range-show" data-bind="text: importance"></span-->
+                            <span data-bind="text: importance"></span>
+                            <!--input type="range" class="article-range" min="0" max="100"
+                                data-bind="value: importance, event: {change: $parent.backgroundSave}" style="display: none;"/-->
                         </div>
                     </div>
                     <dl>
-                        <dt>Section</dt><dd data-bind="text: section"></dd>
                         <dt>Date</dt><dd data-bind="text: _prettyDate"></dd>
                         <dt>URL</dt><dd data-bind="text: id"></dd>
                     </dl>

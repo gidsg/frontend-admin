@@ -2,9 +2,14 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
 
     var Event = function(opts) {
 
-        var self = this, 
+        var maxBumpedArticles = 2,
+            importanceBumped  = 100,
+            importanceDefault = 50,
+            saveInterval = 100, // milliseconds
+            bumped = [],
             endpoint = '/events',
-            deBounced;
+            deBounced,
+            self = this;
 
         // A refence to articles that we might want to add to this event
         opts.articles =  opts.articles || []; 
@@ -12,15 +17,13 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
         // Event 'schema' poperties
         this.content    = ko.observableArray();
         this.title      = ko.observable();
-        this.section    = ko.observable();
         this.startDate  = ko.observable();
         this.importance = ko.observable();
         this.id         = ko.observable();
         this.parent     = ko.observable();
 
         // Input values that get post processed
-        this._prettyDate = ko.observable(); 
-        this._slug       = ko.observable();
+        this._prettyDate = ko.observable();
 
         // Administrative vars
         this._tentative = ko.observable(!opts || !opts.id); // No id means it's a new unpersisted event,
@@ -31,17 +34,24 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
             o = o || {};
 
             self.content.removeAll();
-            (o.content || []).map(function(article){
-                self.content.push(new Article(article));
+            (o.content || []).map(function(a){
+                var article = new Article(a);
+                self.content.push(article);
             })
 
+            if (0 === bumped.length) {
+                self.content().map(function(a){
+                    if (a.importance() > importanceDefault) {
+                        bumped.push(a.id());
+                    }
+                })
+            }
+
             this.title(o.title || '');
-            this.section(o.section || 'news');
-            this.importance(o.importance || 30);
+            this.importance(o.importance || importanceDefault);
 
             if(o.id) {
                 this.id(o.id);
-                this._slug(_.last(o.id.split('/')));
             }
 
             this.parent({
@@ -57,8 +67,7 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
 
             this._isValid = ko.computed(function () {
                 return (
-                    this.title().length > 0 &&
-                    this.section().length > 0
+                    this.title().length > 0
                 );
             }, this);
         }
@@ -133,19 +142,18 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                 clearTimeout(deBounced);
                 deBounced = setTimeout(function(){
                     self.save();
-                }, 750);
+                }, saveInterval);
             }
         };
 
         this.generateId = function () {
             var months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"],
                 id = [
-                    this.section(),
                     'event',
                     this.startDate().getFullYear(),
                     months[this.startDate().getMonth()],
                     this.startDate().getDate(),
-                    slugify(this._slug() || this.title())
+                    slugify(this.title())
                 ].join('/');
             return id;
         };
@@ -157,6 +165,25 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
 
         this.toggleEditing = function() {
             this._editing(!this._editing());
+        };
+
+        this.bump = function(item) {
+            var id = item.id();
+            if (_.contains(bumped, id)) {
+                bumped = _.without(bumped, id)
+            } else {
+                bumped.unshift(id)
+                bumped = bumped.slice(0,maxBumpedArticles);
+            }
+            // Now adjust the importance of all the other content accordingly 
+            self.content().map(function(a){
+                if (_.some(bumped, function(b){return a.id() === b})) {
+                    a.importance(importanceBumped);
+                } else {
+                    a.importance(importanceDefault);
+                }
+            });
+            self.backgroundSave();
         };
 
         this.init(opts);
