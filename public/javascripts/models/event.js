@@ -1,4 +1,4 @@
-define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
+define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, ko, Common, Reqwest) {
 
     var Event = function(opts) {
 
@@ -29,12 +29,10 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
 
         this.init = function (o) {
             o = o || {};
-            o.content = o.content || [];
 
             self.content.removeAll();
-            o.content.map(function(article){
-                article.importance = ko.observable(article.importance || 30)
-                self.content.push(article)
+            (o.content || []).map(function(article){
+                self.content.push(new Article(article));
             })
 
             this.title(o.title || '');
@@ -82,24 +80,16 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
             });
 
             if (hasChanged) {
-                this.saveEvent();
+                this.backgroundSave();
             }
         };
 
         this.removeArticle = function(article) {
             self.content.remove(article);
-            self.saveEvent();
+            self.backgroundSave();
         };
 
-        this.setImportance = function() {
-            if(!self._editing()) {
-                self.saveEvent();
-            }
-        };
-
-        this.saveEvent =  function() {
-            clearTimeout(deBounced);
-            deBounced = setTimeout(function(){
+        this.save =  function() {
                 var url;
 
                 // Produce a proper date from the pretty (displayed, edited) date
@@ -136,9 +126,17 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
                         Common.mediator.emitEvent('models:events:save:error');
                     }
                 });
-            }, 500);
         };
         
+        this.backgroundSave = function() {
+            if(!self._editing()) {
+                clearTimeout(deBounced);
+                deBounced = setTimeout(function(){
+                    self.save();
+                }, 750);
+            }
+        };
+
         this.generateId = function () {
             var months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"],
                 id = [

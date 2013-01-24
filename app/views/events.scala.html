@@ -2,29 +2,20 @@
 
 @main("Events editor", env, isAuthed = true) {
 
-    <h3>Articles</h3>
+<div class="storify row-fluid">
 
-    <input type="text" placeholder="Article search" 
-        data-bind='event: {keyup: articles.articleSearch}, value: articles.articleTerm, valueUpdate: "afterkeydown"'/>
-
-    <div class="articles" data-bind='foreach: articles.articles'>
-        <label class="checkbox articles-article" data-bind="css: {'articles-article-checked': checked}">
-            <input type="checkbox" data-bind="attr: {value: id}, checked: checked"/>
-            <span data-bind="text: webTitle"></span>
-        </label>
-    </div>
-
+  <div class="storify-events span6">
     <h3>Events <button class="btn btn-mini" data-bind="event: {click: events.createEvent}">Create a new event</button></h3>
 
     <div data-bind="text: events.length() === 0 ? 'Loading...' : ''"></div>
 
     <div data-bind="foreach: events.events">
-        <div class="event" data-bind="css: { viewing: _viewing}">
+        <div class="event">
 
             <input type="range" class="event-range" min="0" max="100"
-                data-bind="value: importance, event: {change: setImportance}" />
+                data-bind="value: importance, event: {change: backgroundSave}" />
 
-            <span class="event-range-show" data-bind="text: importance"></span>
+            <!--span class="event-range-show" data-bind="text: importance"></span-->
 
             <h5>
                 <a class="event-title" href="javascript:void(0)" data-bind="
@@ -47,10 +38,11 @@
                         <div class="event-article">
                             <i class="icon-remove-circle" 
                                 data-bind='click: $parent.removeArticle' class="close"></i>
-                            <span data-bind="text: typeof webTitle !== 'undefined' ? webTitle : id"></span>
+                            <span data-bind="text: webTitle() ? webTitle : id"></span>
                             <input type="range" class="article-range" min="0" max="100"
-                                data-bind="value: importance"/>
-                            <span class="article-range-show" data-bind="text: importance"></span>
+                                data-bind="value: importance, event: {change: $parent.backgroundSave}"/>
+
+                            <!--span class="article-range-show" data-bind="text: importance"></span-->
                         </div>
                     </div>
                     <dl>
@@ -65,7 +57,7 @@
                 </div>
 
                 <form class="event-form" 
-                    data-bind="if: _editing(), submit: saveEvent">
+                    data-bind="if: _editing(), submit: save">
                     <label>Title</label>
                     <input type="text" placeholder="e.g. 'Helicopter crash"
                         data-bind='value: title, valueUpdate: "afterkeydown"' />
@@ -100,6 +92,21 @@
             </div>
         </div>
     </div>
+  </div>
 
-    <script src="@routes.Assets.at("javascripts/eventsEditor.js")" type="text/javascript"></script>
+  <div class="storify-articles span6">
+    <h3>Articles</h3>
+    <input type="text" placeholder="Article search" 
+        data-bind='event: {keyup: articles.articleSearch}, value: articles.articleTerm, valueUpdate: "afterkeydown"'/>
+    <div class="articles" data-bind='foreach: articles.articles'>
+        <label class="checkbox articles-article" data-bind="css: {'articles-article-checked': checked}">
+            <input type="checkbox" data-bind="attr: {value: id}, checked: checked"/>
+            <span data-bind="text: webTitle"></span>
+        </label>
+    </div>
+  </div>
+
+</div>
+
+<script src="@routes.Assets.at("javascripts/eventsEditor.js")" type="text/javascript"></script>
 }

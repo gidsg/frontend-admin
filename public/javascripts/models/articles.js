@@ -1,4 +1,4 @@
-define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
+define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, ko, Common, Reqwest) {
 
     return function() {
 
@@ -40,13 +40,10 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
 
                         self.articles.removeAll();
                         rawArticles.map(function(a){
-                            var article = {
-                                id: a.id,
-                                webTitle: a.webTitle,
-                                // If single result, default it to checked
-                                checked: ko.observable(1 === length) 
-                            }
-                            self.articles.push(article);
+                            a = a || {};
+                            // If single result, default it to checked
+                            a.checked = (1 === length); 
+                            self.articles.push(new Article(a));
                         })
                     },
                     error: function() {}

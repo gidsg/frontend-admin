@@ -15,7 +15,7 @@ define(['models/event', 'Knockout', 'Common'], function (Event, ko, Common) {
             self.events.unshift(new Event(opts));
         };
 
-        this.collapseAll = function() {
+        this.collapseAll = function(current) {
             this.events().map(function(event){
                 event._viewing(false);
             });

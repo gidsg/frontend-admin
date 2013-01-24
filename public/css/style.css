@@ -84,6 +84,7 @@ input[type=checkbox].status {
 .event-range {
     margin: 10px 0 0 0;
     float: right;
+    width: 20%;
 }
 .event-range-show {
     display: inline-block;
@@ -103,6 +104,7 @@ input[type=checkbox].status {
 .event-article {
     padding: 2px 0;
     min-height: 22px;
+    overflow: auto;
 }
 
 .event-article:nth-child(odd) {
@@ -111,6 +113,7 @@ input[type=checkbox].status {
 
 .article-range {
     float: right;
+    width: 20%;
 }
 
 .article-range-show {
@@ -121,9 +124,6 @@ input[type=checkbox].status {
 }
 
 .articles { 
-    height: 200px; 
-    overflow-x: hidden;
-    overflow-y: scroll;
 }
 
 .articles-article {
