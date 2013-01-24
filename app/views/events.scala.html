@@ -22,6 +22,7 @@
                     text: title().length > 0 ? title : 'New Event',
                     event: {click: toggleShowing}" ></a>
                 <small data-bind="text: '(' + content().length + ')'"></small>
+                
                 <!-- ko if: parent().id -->
                 <div>
                     <small>follows <strong data-bind="text: parent().id"></strong></small>
@@ -47,6 +48,7 @@
                     </div>
                     <dl>
                         <dt>Date</dt><dd data-bind="text: _prettyDate"></dd>
+                        <dt>Time</dt><dd data-bind="text: _prettyTime"></dd>
                         <dt>URL</dt><dd data-bind="text: id"></dd>
                     </dl>
 
@@ -64,6 +66,10 @@
                     <label>When</label>
                     <input type="date"
                         data-bind='value: _prettyDate, valueUpdate: "afterkeydown"' />
+
+                    <label>Time</label>    
+                    <input type="time"
+                        data-bind='value: _prettyTime, valueUpdate: "afterkeydown"' />
 
                     <label>Did this event follow another?</label>
                     <select data-bind='value: parent().id'>

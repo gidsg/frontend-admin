@@ -1,5 +1,13 @@
 define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, ko, Common, Reqwest) {
 
+    Date.prototype.getHoursPadded = function() {
+        return ("0" + this.getHours()).slice(-2);
+    }
+    
+    Date.prototype.getMinutesPadded = function() {
+        return ("0" + this.getMinutes()).slice(-2);
+    }
+
     var Event = function(opts) {
 
         var maxBumpedArticles = 2,
@@ -14,16 +22,30 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
         // A refence to articles that we might want to add to this event
         opts.articles =  opts.articles || []; 
 
+        // Input values that get post processed
+        this._prettyDate = ko.observable(); 
+        this._prettyTime = ko.observable(); 
+        this._slug       = ko.observable(); // TODO - remove
+        
         // Event 'schema' poperties
         this.content    = ko.observableArray();
         this.title      = ko.observable();
-        this.startDate  = ko.observable();
+        this.startDate  = ko.computed({
+            read: function() {
+                  return this._prettyDate() + 'T' + this._prettyTime() + ':00.000Z'; 
+                  },
+            write: function(value) {
+                  this._prettyDate(new Date(value).toISOString().match(/^\d{4}-\d{2}-\d{2}/)[0]);
+                  console.log('v', value);
+                  var d = new Date(value)
+                  this._prettyTime(d.getHoursPadded() +':'+ d.getMinutesPadded());
+                  },
+            owner: this
+        });
+
         this.importance = ko.observable();
         this.id         = ko.observable();
         this.parent     = ko.observable();
-
-        // Input values that get post processed
-        this._prettyDate = ko.observable();
 
         // Administrative vars
         this._tentative = ko.observable(!opts || !opts.id); // No id means it's a new unpersisted event,
@@ -48,6 +70,7 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
             }
 
             this.title(o.title || '');
+
             this.importance(o.importance || importanceDefault);
 
             if(o.id) {
@@ -59,11 +82,12 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
             });
 
             if (o.startDate) {
-                this.startDate(new Date(o.startDate));
+                this.startDate(new Date(o.startDate)); // today
             } else {
-                this.startDate(new Date());
+                var d = new Date();
+                d.setHours(0, 0, 0, 0);
+                this.startDate(d);
             }
-            this._prettyDate(this.startDate().toISOString().match(/^\d{4}-\d{2}-\d{2}/)[0]); 
 
             this._isValid = ko.computed(function () {
                 return (
@@ -100,9 +124,6 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
 
         this.save =  function() {
                 var url;
-
-                // Produce a proper date from the pretty (displayed, edited) date
-                self.startDate(new Date(self._prettyDate()));
 
                 // We post to the 'old' id
                 //url = endpoint + (self._tentative() ? '' : self.id());
@@ -147,15 +168,7 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
         };
 
         this.generateId = function () {
-            var months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"],
-                id = [
-                    'event',
-                    this.startDate().getFullYear(),
-                    months[this.startDate().getMonth()],
-                    this.startDate().getDate(),
-                    slugify(this.title())
-                ].join('/');
-            return id;
+            return slugify(this.title()); // TODO - decide id scheme
         };
 
         this.toggleShowing = function() {
@@ -175,7 +188,7 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                 bumped.unshift(id)
                 bumped = bumped.slice(0,maxBumpedArticles);
             }
-            // Now adjust the importance of all the other content accordingly 
+            // Now adjust the importance of all content items accordingly 
             self.content().map(function(a){
                 if (_.some(bumped, function(b){return a.id() === b})) {
                     a.importance(importanceBumped);
