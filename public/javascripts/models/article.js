@@ -4,8 +4,6 @@ define(['Knockout'], function (ko) {
 
         opts = opts || {};
 
-        console.log(opts);
-
         this.id         = ko.observable(opts.id         || '');
         this.webTitle   = ko.observable(opts.webTitle   || '');
         this.webPublicationDate = ko.observable(opts.webPublicationDate || '');
