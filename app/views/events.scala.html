@@ -3,6 +3,7 @@
 @main("Events editor", env, isAuthed = true) {
 
 
+<<<<<<< HEAD
     <ul class="nav nav-tabs" id="navigation">
       <li class="active"><a href="#events">Events</a></li>
       <li><a href="#articles">Articles</a></li>
@@ -80,6 +81,65 @@
 
                             <button class="btn btn-success" type="submit" data-bind="enable: _isValid">Save event</button>
                         </form>
+=======
+    <input type="text" placeholder="Article search" 
+        data-bind='event: {keyup: articles.articleSearch}, value: articles.articleTerm, valueUpdate: "afterkeydown"'/>
+
+    <div class="articles" data-bind='foreach: articles.articles'>
+        <label class="checkbox articles-article" data-bind="css: {'articles-article-checked': checked}">
+            <input type="checkbox" data-bind="attr: {value: id}, checked: checked"/>
+            <span data-bind="text: webTitle"></span>
+        </label>
+    </div>
+
+    <h3>Events <button class="btn btn-mini" data-bind="event: {click: events.createEvent}">Create a new event</button></h3>
+
+    <div data-bind="text: events.length() === 0 ? 'Loading...' : ''"></div>
+
+    <div data-bind="foreach: events.events">
+        <div class="event" data-bind="css: { viewing: _viewing}">
+
+            <input type="range" class="event-range" min="0" max="100"
+                data-bind="value: importance, event: {change: setImportance}" />
+
+            <span class="event-range-show" data-bind="text: importance"></span>
+
+            <h5>
+                <a class="event-title" href="javascript:void(0)" data-bind="
+                    text: title().length > 0 ? title : 'New Event',
+                    event: {click: toggleShowing}" ></a>
+                <small data-bind="text: '(' + content().length + ')'"></small>
+                <!-- ko if: parent().id -->
+                <div>
+                    <small>follows <strong data-bind="text: parent().id"></strong></small>
+                </div>
+                <!-- /ko -->
+            </h5>
+
+            <div class="event-wrapper" data-bind="if: _viewing()">
+
+                <div class="event-detail" data-bind="ifnot: _editing()">
+                    <button class="btn btn-mini btn-success" data-bind="click: addArticle">Add selected articles</button>
+                    <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
+                    <div class="event-articles" data-bind="foreach: content">
+                        <div class="event-article">
+                            <i class="icon-remove-circle" 
+                                data-bind='click: $parent.removeArticle' class="close"></i>
+                            <span data-bind="text: typeof webTitle !== 'undefined' ? webTitle : id"></span>
+                            <input type="range" class="article-range" min="0" max="100"
+                                data-bind="value: importance"/>
+                            <span class="article-range-show" data-bind="text: importance"></span>
+                        </div>
+                    </div>
+                    <dl>
+                        <dt>Section</dt><dd data-bind="text: section"></dd>
+                        <dt>Date</dt><dd data-bind="text: _prettyDate"></dd>
+                        <dt>URL</dt><dd data-bind="text: id"></dd>
+                    </dl>
+
+                    <div class="event-form-toggler">
+                        <a data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit Event</a>
+>>>>>>> 8a88f3cd9218bc50ae3f80cc48df3d7d81e32f9d
                     </div>
                 </div>
             </div>

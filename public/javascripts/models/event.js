@@ -4,6 +4,7 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
 
         var self = this, 
             endpoint = '/events'
+            deBounced;
 
         // A refence to articles that we might want to add to this event
         opts.articles =  opts.articles || []; 
@@ -28,11 +29,17 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
 
         this.init = function (o) {
             o = o || {};
+            o.content = o.content || [];
 
-            this.content(o.content || []);
+            self.content.removeAll();
+            o.content.map(function(article){
+                article.importance = ko.observable(article.importance || 30)
+                self.content.push(article)
+            })
+
             this.title(o.title || '');
             this.section(o.section || 'news');
-            this.importance(o.importance || 50);
+            this.importance(o.importance || 30);
 
             if(o.id) {
                 this.id(o.id);
@@ -84,43 +91,52 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
             self.saveEvent();
         };
 
+        this.setImportance = function() {
+            if(!self._editing()) {
+                self.saveEvent();
+            }
+        };
+
         this.saveEvent =  function() {
-            var url;
+            clearTimeout(deBounced);
+            deBounced = setTimeout(function(){
+                var url;
 
-            // Produce a proper date from the pretty (displayed, edited) date
-            this.startDate(new Date(this._prettyDate()));
+                // Produce a proper date from the pretty (displayed, edited) date
+                self.startDate(new Date(self._prettyDate()));
 
-            // We post to the 'old' id
-            //url = endpoint + (this._tentative() ? '' : this.id());
-            url = endpoint;
-            // ..but we generate the posted id, as the user may have edited the slug, date, etc.  
-            this.id(this.generateId());
+                // We post to the 'old' id
+                //url = endpoint + (self._tentative() ? '' : self.id());
+                url = endpoint;
+                // ..but we generate the posted id, as the user may have edited the slug, date, etc.  
+                self.id(self.generateId());
 
-            console.log('SENT:')
-            console.log(JSON.stringify({event: this}))
+                console.log('SENT:')
+                console.log(JSON.stringify({event: self}))
 
-            Reqwest({
-                url: url,
-                method: 'post',
-                type: 'json',
-                contentType: 'application/json',
-                data: JSON.stringify({event: this}),
-                success: function(resp) {
-                    console.log('RECEIVED:')
-                    console.log(JSON.stringify(resp) + "\n\n")
-                    if (resp.event) {
-                        // Update event using the server response
-                        self.init(resp.event);
-                        // Mark it as real 
-                        self._tentative(false);
-                        self._editing(false);
+                Reqwest({
+                    url: url,
+                    method: 'post',
+                    type: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({event: self}),
+                    success: function(resp) {
+                        console.log('RECEIVED:')
+                        console.log(JSON.stringify(resp) + "\n\n")
+                        if (resp.event) {
+                            // Update event using the server response
+                            self.init(resp.event);
+                            // Mark it as real 
+                            self._tentative(false);
+                            self._editing(false);
+                        }
+                        Common.mediator.emitEvent('models:events:save:success', [resp]);
+                    },
+                    error: function() {
+                        Common.mediator.emitEvent('models:events:save:error');
                     }
-                    Common.mediator.emitEvent('models:events:save:success', [resp]);
-                },
-                error: function() {
-                    Common.mediator.emitEvent('models:events:save:error');
-                }
-            });
+                });
+            }, 500);
         };
         
         this.generateId = function () {
