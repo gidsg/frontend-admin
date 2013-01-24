@@ -37,7 +37,7 @@ curl([
         error: function() {}
     });
 
-    // Grab section names from the Content Api
+    // Grab events
     Reqwest({
         url: '/events/list',
         type: 'json',
