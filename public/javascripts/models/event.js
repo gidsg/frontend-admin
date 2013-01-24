@@ -3,7 +3,7 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
     var Event = function(opts) {
 
         var self = this, 
-            endpoint = '/stories/event'
+            endpoint = '/events'
 
         // A refence to articles that we might want to add to this event
         opts.articles =  opts.articles || []; 

@@ -8,7 +8,7 @@ import play.api.libs.json.JsObject
 import play.api.libs.json.Json.toJson
 import model.Event
 
-object EventController extends Controller with EventPersistence with Logging with AuthLogging {
+object EventsController extends Controller with EventPersistence with Logging with AuthLogging {
 
   val badRequest = BadRequest(toJson(Map("status" -> "Invalid Json")))
 

@@ -39,7 +39,7 @@ curl([
 
     // Grab section names from the Content Api
     Reqwest({
-        url: '/stories/event/list',
+        url: '/events/list',
         type: 'json',
         success: function(resp) {
             resp.events = resp.events || [];
