@@ -1,5 +1,6 @@
 define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, ko, Common, Reqwest) {
 
+    // zero pad the date getters
     Date.prototype.getHoursPadded = function() {
         return ("0" + this.getHours()).slice(-2);
     }
@@ -14,13 +15,13 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
             endpoint = '/events',
             deBounced;
 
-        // A refence to articles that we might want to add to this event
+        // A reference to articles that we might want to add to this event
         opts.articles =  opts.articles || []; 
 
         // Input values that get post processed
         this._prettyDate = ko.observable(); 
         this._prettyTime = ko.observable(); 
-        this._slug       = ko.observable(); // TODO - remove
+        this._slug       = ko.observable(); // TODO - remove ?
         
         // Event 'schema' poperties
         this.content    = ko.observableArray();
@@ -30,9 +31,8 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                   return this._prettyDate() + 'T' + this._prettyTime() + ':00.000Z'; 
                   },
             write: function(value) {
-                  this._prettyDate(new Date(value).toISOString().match(/^\d{4}-\d{2}-\d{2}/)[0]);
-                  console.log('v', value);
                   var d = new Date(value)
+                  this._prettyDate(d.toISOString().match(/^\d{4}-\d{2}-\d{2}/)[0]);
                   this._prettyTime(d.getHoursPadded() +':'+ d.getMinutesPadded());
                   },
             owner: this
@@ -41,7 +41,6 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
         this.importance = ko.observable();
         this.id         = ko.observable();
         this.parent     = ko.observable();
-
 
         // Administrative vars
         this._tentative = ko.observable(!opts || !opts.id); // No id means it's a new unpersisted event,
@@ -57,7 +56,7 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
             })
 
             this.title(o.title || '');
-            this.importance(o.importance || 30);
+            this.importance(o.importance || 30); // TODO decide on 0, 25, 50 etc.
             
             if(o.id) {
                 this.id(o.id);

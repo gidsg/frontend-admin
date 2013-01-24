@@ -135,10 +135,33 @@ input[type=checkbox].status {
     font-weight: bold;
 }
 
+/** events */
 
-
-/*
-.articles-article:nth-child(even) {
-   background-color: #f0f0f0;
+/** */
+.storify {
+    overflow: hidden;
 }
-*/
+
+.storify-events, .storify-articles {
+    overflow-y: auto; 
+    max-height: 600px;
+}
+
+/** search results */
+.articles label h3 { font-size: 1em; color: blue; margin: 12px 0 3px; line-height: 15px; }
+.articles label p[data-bind="text: id"] { font-size: 1em; color: green; margin-bottom: 0; font-size: 0.9em; }
+.articles label p[data-bind="text: webPublicationDate"] { font-size: 1em; color: #999; margin-bottom: 0; font-size: 0.9em; }
+.articles label { padding-left: 0; }
+.articles label:hover { cursor: pointer; background-color: #ffe; }
+.storify-articles input[type="text"]{
+    background-color: #fff;
+    color: #000;    
+}
+.storify-articles {
+    padding-left: 5px;
+    border-left: 1px solid #999;
+    -webkit-linear-gradient(top,#fff,#f2f2f2)
+}
+.event-article { 
+    padding: 8px 0 8px 5px;
+}
