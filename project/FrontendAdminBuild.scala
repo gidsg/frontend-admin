@@ -16,6 +16,7 @@ object FrontendAdminBuild extends Build {
     "com.gu" %% "management-play" % "5.15",
     "com.gu" %% "management-logback" % "5.15",
     "com.amazonaws" % "aws-java-sdk" % "1.3.27",
+    "com.novus" %% "salat" % "1.9.1",
 
     //test
     "org.scalatest" %% "scalatest" % "1.8" % "test"
