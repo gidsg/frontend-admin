@@ -3,7 +3,7 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
     var Event = function(opts) {
 
         var self = this, 
-            endpoint = '/events'
+            endpoint = '/events',
             deBounced;
 
         // A refence to articles that we might want to add to this event
