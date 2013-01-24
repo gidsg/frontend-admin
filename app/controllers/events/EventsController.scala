@@ -10,7 +10,6 @@ import com.mongodb.casbah.Imports._
 
 object EventController extends Controller with Logging with AuthLogging {
 
-
   def render() = Action{
     Ok(views.html.events("{}", Configuration.stage))
   }

@@ -37,6 +37,18 @@ curl([
         error: function() {}
     });
 
+    // Grab events
+    Reqwest({
+        url: '/events/list',
+        type: 'json',
+        success: function(resp) {
+            resp.map(function(event){
+                viewModel.events.loadEvent(event);
+            });
+        },
+        error: function() {}
+    });
+
     // Render
     ko.applyBindings(viewModel);
 });

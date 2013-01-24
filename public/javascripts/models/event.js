@@ -1,25 +1,47 @@
-define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
+define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, ko, Common, Reqwest) {
+
+    Date.prototype.getHoursPadded = function() {
+        return ("0" + this.getHours()).slice(-2);
+    }
+    
+    Date.prototype.getMinutesPadded = function() {
+        return ("0" + this.getMinutes()).slice(-2);
+    }
 
     var Event = function(opts) {
 
         var self = this, 
-            endpoint = '/stories/event'
+            endpoint = '/events',
+            deBounced;
 
         // A refence to articles that we might want to add to this event
         opts.articles =  opts.articles || []; 
 
+        // Input values that get post processed
+        this._prettyDate = ko.observable(); 
+        this._prettyTime = ko.observable(); 
+        this._slug       = ko.observable(); // TODO - remove
+        
         // Event 'schema' poperties
         this.content    = ko.observableArray();
         this.title      = ko.observable();
-        this.section    = ko.observable();
-        this.startDate  = ko.observable();
+        this.startDate  = ko.computed({
+            read: function() {
+                  return this._prettyDate() + 'T' + this._prettyTime() + ':00.000Z'; 
+                  },
+            write: function(value) {
+                  this._prettyDate(new Date(value).toISOString().match(/^\d{4}-\d{2}-\d{2}/)[0]);
+                  console.log('v', value);
+                  var d = new Date(value)
+                  this._prettyTime(d.getHoursPadded() +':'+ d.getMinutesPadded());
+                  },
+            owner: this
+        });
+
         this.importance = ko.observable();
         this.id         = ko.observable();
         this.parent     = ko.observable();
 
-        // Input values that get post processed
-        this._prettyDate = ko.observable(); 
-        this._slug       = ko.observable();
 
         // Administrative vars
         this._tentative = ko.observable(!opts || !opts.id); // No id means it's a new unpersisted event,
@@ -29,11 +51,14 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
         this.init = function (o) {
             o = o || {};
 
-            this.content(o.content || []);
-            this.title(o.title || '');
-            this.section(o.section || 'news');
-            this.importance(o.importance || 50);
+            self.content.removeAll();
+            (o.content || []).map(function(article){
+                self.content.push(new Article(article));
+            })
 
+            this.title(o.title || '');
+            this.importance(o.importance || 30);
+            
             if(o.id) {
                 this.id(o.id);
                 this._slug(_.last(o.id.split('/')));
@@ -44,16 +69,16 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
             });
 
             if (o.startDate) {
-                this.startDate(new Date(o.startDate));
+                this.startDate(new Date(o.startDate)); // today
             } else {
-                this.startDate(new Date());
+                var d = new Date();
+                d.setHours(0, 0, 0, 0);
+                this.startDate(d);
             }
-            this._prettyDate(this.startDate().toISOString().match(/^\d{4}-\d{2}-\d{2}/)[0]); 
 
             this._isValid = ko.computed(function () {
                 return (
-                    this.title().length > 0 &&
-                    this.section().length > 0
+                    this.title().length > 0
                 );
             }, this);
         }
@@ -68,71 +93,69 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
                         return item.id === article.id
                     });
                     if (notIncluded) {
-                        self.content.push(article);
+                        self.content.unshift(article);
                         hasChanged = true;
                     }
                 }
             });
 
             if (hasChanged) {
-                this.saveEvent();
+                this.backgroundSave();
             }
         };
 
         this.removeArticle = function(article) {
-            this.content.remove(article);
-            this.saveEvent();
+            self.content.remove(article);
+            self.backgroundSave();
         };
 
-        this.saveEvent =  function() {
-            var body, url;
-
-                // Produce a proper date from the pretty (displayed, edited) date
-                this.startDate(new Date(this._prettyDate()));
+        this.save =  function() {
+                var url;
 
                 // We post to the 'old' id
-                url = endpoint + (this._tentative() ? '' : this.id());
+                //url = endpoint + (self._tentative() ? '' : self.id());
+                url = endpoint;
                 // ..but we generate the posted id, as the user may have edited the slug, date, etc.  
-                this.id(this.generateId());
+                self.id(self.generateId());
 
-            Reqwest({
-                url: url,
-                method: 'post',
-                type: 'json',
-                contentType: 'application/json',
-                data: JSON.stringify({event: this}),
-                success: function(resp) {
-                    console.log('FROM: ' + url)                    
-                    console.log(JSON.stringify(resp) + "\n")
-                    if (resp.event) {
-                        // Update event using the server response
-                        self.init(resp.event);
-                        // Mark it as real 
-                        self._tentative(false);
-                        this._editing(false);
-                        this._viewing(true);
+                console.log('SENT:')
+                console.log(JSON.stringify({event: self}))
+
+                Reqwest({
+                    url: url,
+                    method: 'post',
+                    type: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({event: self}),
+                    success: function(resp) {
+                        console.log('RECEIVED:')
+                        console.log(JSON.stringify(resp) + "\n\n")
+                        if (resp.event) {
+                            // Update event using the server response
+                            self.init(resp.event);
+                            // Mark it as real 
+                            self._tentative(false);
+                            self._editing(false);
+                        }
+                        Common.mediator.emitEvent('models:events:save:success', [resp]);
+                    },
+                    error: function() {
+                        Common.mediator.emitEvent('models:events:save:error');
                     }
-                    Common.mediator.emitEvent('models:events:save:success', [resp]);
-                },
-                error: function() {
-                    Common.mediator.emitEvent('models:events:save:error');
-                }
-            });
+                });
         };
         
-        this.generateId = function () {
-            var id,
-                months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+        this.backgroundSave = function() {
+            if(!self._editing()) {
+                clearTimeout(deBounced);
+                deBounced = setTimeout(function(){
+                    self.save();
+                }, 750);
+            }
+        };
 
-            id = '/' + [
-                this.section(),
-                'event',
-                this.startDate().getFullYear(),
-                months[this.startDate().getMonth()],
-                this.startDate().getDate(),
-                slugify(this._slug() || this.title())
-            ].join('/');
-            return id;
+        this.generateId = function () {
+            return slugify(this.title()); // TODO - decide id scheme
         };
 
         this.toggleShowing = function() {
@@ -150,12 +173,14 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
     Event.prototype.toJSON = function() {
         var copy = ko.toJS(this),
             prop;
+
         // Strip administrative properties starting '_'
         for (prop in copy) {
             if (0 === prop.indexOf('_')) {
                 delete copy[prop];
             }
         }
+        // Clean up an empty parent obj
         if (copy.parent && !copy.parent.id) {
             delete copy.parent;
         }

@@ -1,4 +1,4 @@
-define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
+define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, ko, Common, Reqwest) {
 
     return function() {
 
@@ -19,14 +19,13 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
                     // If term contains slashes, assume it's an article id
                     url = 'http://content.guardianapis.com/';
                     url+= self.articleTerm();
-                    url+= '?format=json';
+                    url+= '?show-fields=all&format=json';
                     propName = 'content';
                 } else {
-                    url = 'http://content.guardianapis.com/search?page-size=50&format=json&q=';
-                    url+=  + encodeURIComponent(self.articleTerm());
+                    url = 'http://content.guardianapis.com/search?show-fields=all&page-size=50&format=json&q=';
+                    url+= encodeURIComponent(self.articleTerm());
                     propName = 'results';
                 }
-                console.log(propName + " " + url)
 
                 Reqwest({
                     url: url,
@@ -41,13 +40,10 @@ define(['Knockout', 'Common', 'Reqwest'], function (ko, Common, Reqwest) {
 
                         self.articles.removeAll();
                         rawArticles.map(function(a){
-                            var article = {
-                                id: a.id,
-                                webTitle: a.webTitle,
-                                // If single result, default it to checked
-                                checked: ko.observable(1 === length) 
-                            }
-                            self.articles.push(article);
+                            a = a || {};
+                            // If single result, default it to checked
+                            a.checked = (1 === length); 
+                            self.articles.push(new Article(a));
                         })
                     },
                     error: function() {}
