@@ -172,6 +172,12 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
             this._editing(!this._editing());
         };
 
+        this.star = function() {
+            var i = (this.importance() > 50) ? 25 : 75;
+            this.importance(i)
+            self.backgroundSave();
+        }
+
         this.bump = function(item) {
             var id = item.id();
             if (_.contains(bumped, id)) {

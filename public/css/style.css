@@ -162,6 +162,10 @@ input[type=checkbox].status {
 .articles label p[data-bind="text: webPublicationDate"] { font-size: 1em; color: #999; margin-bottom: 0; font-size: 0.9em; }
 .articles label { padding-left: 0; }
 .articles label:hover { cursor: pointer; background-color: #ffe; }
+.star:hover, .star-selected:hover { cursor: pointer; }
+.star, .star.star-selected:hover { color: #000; }
+.star:hover, .star-selected { color: #FF4500; }
+
 .storify-articles input[type="text"]{
     background-color: #fff;
     color: #000;    

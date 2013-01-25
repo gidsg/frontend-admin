@@ -40,12 +40,9 @@
     <div data-bind="foreach: events.events">
       <!-- ko if: !$root.events.selectedEvent() || $root.events.selectedEvent() === $data -->
         <div class="event">
-
-            <!-- <input type="range" class="event-range" min="0" max="100"
-                data-bind="value: importance, event: {change: backgroundSave}" />
-                    -->
+            
             <h5>
-                <span class="star">☆</span> <!-- 'star' an event as significant -->
+                <span class="star" data-bind="css: { 'star-selected': importance() > 50 }, click: star">☆</span>
                 <a class="event-title" href="javascript:void(0)" data-bind="
                     text: title().length > 0 ? title : 'New Event',
                     event: {click: $root.events.setSelected}" ></a>
@@ -59,13 +56,10 @@
             </h5>
 
             <div class="event-wrapper" data-bind="if: $root.events.selectedEvent() === $data">
-
                 <div class="event-detail" data-bind="ifnot: _editing()">
-
                     <p>
                         <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
                     </p>
-
                     <div class="event-articles" data-bind="foreach: content">
                         <div class="event-article"
                             data-bind="click: $parent.bump, css: {'event-article-important': importance() > 50}">
@@ -73,8 +67,6 @@
                                 data-bind='click: $parent.removeArticle' class="close"></i>
                             <span data-bind="text: webTitle() ? webTitle : id"></span>
                             <span data-bind="text: importance"></span>
-                            <!--input type="range" class="article-range" min="0" max="100"
-                                data-bind="value: importance, event: {change: $parent.backgroundSave}" style="display: none;"/-->
                         </div>
                     </div>
                     <dl>
@@ -112,8 +104,9 @@
                         </optgroup>
                     </select>
 
-
-                    <button class="btn btn-success" type="submit" data-bind="enable: _isValid">Save event</button>
+                    <p>
+                        <button class="btn btn-success" type="submit" data-bind="enable: _isValid">Save event</button>
+                    </p>
                 </form>
 
             </div>
