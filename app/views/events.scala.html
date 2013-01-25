@@ -5,22 +5,26 @@
 <div class="storify row-fluid">
 
   <div class="storify-events span6">
-    <h3>Events <button class="btn btn-mini" data-bind="event: {click: events.createEvent}">Create a new event</button></h3>
+    <h3>
+        Events
+        <button class="btn btn-mini" data-bind="event: {click: events.createEvent}">Create a new event</button>
+    </h3>
 
     <div data-bind="text: events.length() === 0 ? 'Loading...' : ''"></div>
 
     <div data-bind="foreach: events.events">
+      <!-- ko if: !$root.events.selectedEvent() || $root.events.selectedEvent() === $data -->
         <div class="event">
 
             <input type="range" class="event-range" min="0" max="100"
                 data-bind="value: importance, event: {change: backgroundSave}" />
 
-            <!--span class="event-range-show" data-bind="text: importance"></span-->
+            <span class="event-range-show" data-bind="text: importance"></span>
 
             <h5>
                 <a class="event-title" href="javascript:void(0)" data-bind="
                     text: title().length > 0 ? title : 'New Event',
-                    event: {click: toggleShowing}" ></a>
+                    event: {click: $root.events.setSelected}" ></a>
                 <small data-bind="text: '(' + content().length + ')'"></small>
                 
                 <!-- ko if: parent().id -->
@@ -30,7 +34,7 @@
                 <!-- /ko -->
             </h5>
 
-            <div class="event-wrapper" data-bind="if: _viewing()">
+            <div class="event-wrapper" data-bind="if: $root.events.selectedEvent() === $data">
 
                 <div class="event-detail" data-bind="ifnot: _editing()">
                     <button class="btn btn-mini" data-bind="click: addArticle">Add selected articles</button>
@@ -87,6 +91,7 @@
 
             </div>
         </div>
+      <!-- /ko -->
     </div>
   </div>
 
@@ -99,7 +104,7 @@
             <input type="checkbox" data-bind="attr: {value: id}, checked: checked"/>
             <span data-bind="text: webTitle"></span>
             <span data-bind="text: webPublicationDate"></span>
-            <span data-bind="html: trailText"></span>
+            <small data-bind="html: trailText"></small>
         </label>
     </div>
   </div>

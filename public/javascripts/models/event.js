@@ -25,7 +25,6 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
         // Input values that get post processed
         this._prettyDate = ko.observable(); 
         this._prettyTime = ko.observable(); 
-        this._slug       = ko.observable(); // TODO - remove
         
         // Event 'schema' poperties
         this.content    = ko.observableArray();
@@ -36,7 +35,6 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                   },
             write: function(value) {
                   this._prettyDate(new Date(value).toISOString().match(/^\d{4}-\d{2}-\d{2}/)[0]);
-                  console.log('v', value);
                   var d = new Date(value)
                   this._prettyTime(d.getHoursPadded() +':'+ d.getMinutesPadded());
                   },
@@ -48,9 +46,8 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
         this.parent     = ko.observable();
 
         // Administrative vars
-        this._tentative = ko.observable(!opts || !opts.id); // No id means it's a new unpersisted event,
-        this._viewing   = ko.observable(this._tentative()); // in which case view it 
-        this._editing   = ko.observable(this._tentative()); // as editable
+        this._tentative = ko.observable(!opts || !opts.id); // No id means it's a new un-persisted event,
+        this._editing   = ko.observable(this._tentative()); // so mark as editable
 
         this.init = function (o) {
             o = o || {};
@@ -169,11 +166,6 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
 
         this.generateId = function () {
             return slugify(this.title()); // TODO - decide id scheme
-        };
-
-        this.toggleShowing = function() {
-           this._viewing(!this._viewing());
-           this._editing(false);
         };
 
         this.toggleEditing = function() {

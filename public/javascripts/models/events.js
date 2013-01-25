@@ -4,6 +4,7 @@ define(['models/event', 'Knockout', 'Common'], function (Event, ko, Common) {
         var self = this;
 
         this.events = ko.observableArray();
+        this.selectedEvent = ko.observable();
 
         this.length = ko.computed(function(){
             return this.events().length;
@@ -15,18 +16,17 @@ define(['models/event', 'Knockout', 'Common'], function (Event, ko, Common) {
             self.events.unshift(new Event(opts));
         };
 
-        this.collapseAll = function(current) {
-            this.events().map(function(event){
-                event._viewing(false);
-            });
+        this.setSelected = function(current) {
+            self.selectedEvent(current === self.selectedEvent() ? undefined : current);
+            console.log(self.selectedEvent());
         };
 
         this.createEvent = function() {
             var event = new Event({
                 articles: articles
             });
-            self.collapseAll();
             self.events.unshift(event);
+            self.selectedEvent(event)
         };
 
         this.createEventFollowOn = function(parent) {
@@ -34,8 +34,8 @@ define(['models/event', 'Knockout', 'Common'], function (Event, ko, Common) {
                 articles: articles,
                 parent: {id: parent.id()}
             });
-            self.collapseAll();
             self.events.unshift(event);
+            self.selectedEvent(event)
         };
 
         this.eventSaveSuccess = function() {
