@@ -42,8 +42,7 @@ curl([
         url: '/events/list',
         type: 'json',
         success: function(resp) {
-            resp.events = resp.events || [];
-            resp.events.map(function(event){
+            resp.map(function(event){
                 viewModel.events.loadEvent(event);
             });
         },
