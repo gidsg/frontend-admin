@@ -2,13 +2,13 @@
 
 @main("Events editor", env, isAuthed = true) {
 
-<p>
+<p id="dragTest" draggable="true">
     <span class="alert">This is an experimental system to manage Events.</span>
 </p>
 
 <div class="storify row-fluid">
 
-  <div class="storify-articles span7">
+  <div class="storify-articles span6">
     <p>
         <div class="btn-group">
           <button class="btn" data-bind="event: {click: articles.articleSearch}, value: 'foo'">Latest</button>
@@ -19,16 +19,16 @@
         data-bind='event: {keyup: articles.articleSearch}, value: articles.articleTerm, valueUpdate: "afterkeydown"'/>
         
     <div class="articles" data-bind='foreach: articles.articles'>
-        <label draggable="true" class="checkbox articles-article" data-bind="attr: {'data-id': id}">
-            <h3 data-bind="text: webTitle"></h3>
-            <p data-bind="text: id"></p>
-            <p data-bind="text: webPublicationDate"></p>
-        </label>
+        <div class="article" draggable="true" data-bind="makeDraggable: true">
+            <div class="article-title" data-bind="text: webTitle"></div>
+            <div class="article-id"    data-bind="text: id"></div>
+            <div class="article-date"  data-bind="text: webPublicationDate"></div>
+        </div>
     </div>
   </div>
 
   <!-- FIXME - needs to operation as two independent window panes -->
-  <div class="storify-events span5">
+  <div class="storify-events span6">
       
     <p>
       <button class="btn btn" data-bind="event: {click: events.createEvent}">Create a new event</button>
@@ -38,53 +38,53 @@
 
     <div data-bind="foreach: events.events">
       <!-- ko if: !$root.events.selectedEvent() || $root.events.selectedEvent() === $data -->
-        <div class="event">
+        <div class="event" data-bind="makeDropabble: true">
 
-            <!-- <input type="range" class="event-range" min="0" max="100"
-                data-bind="value: importance, event: {change: backgroundSave}" />
-                    -->
-            <h5>
-                <span class="star">☆</span> <!-- 'star' an event as significant -->
-                <a class="event-title" href="javascript:void(0)" data-bind="
+            <div class="event-header">
+                <i data-bind="
+                    click: bump,
+                    css: {
+                        'icon-star-empty': importance() <= 50,
+                        'icon-star': importance() > 50
+                    }
+                "></i>
+                <span class="event-title" data-bind="
                     text: title().length > 0 ? title : 'New Event',
-                    event: {click: $root.events.setSelected}" ></a>
-                <small data-bind="text: '(' + content().length + ')'"></small>
-                
+                    event: {click: $root.events.setSelected}" ></span>
+                <span class="event-article-count" data-bind="text: '(' + content().length + ')'"></span>
                 <!-- ko if: parent().id -->
-                <div>
-                    <small>follows <strong data-bind="text: parent().id"></strong></small>
-                </div>
+                <span class="event-parent">
+                    follows <strong data-bind="text: parent().id"></strong></small>
+                </span>
                 <!-- /ko -->
-            </h5>
+            </div>
 
             <div class="event-wrapper" data-bind="if: $root.events.selectedEvent() === $data">
-
                 <div class="event-detail" data-bind="ifnot: _editing()">
-
-                    <p>
-                        <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
-                    </p>
-
                     <div class="event-articles" data-bind="foreach: content">
-                        <div class="event-article"
-                            data-bind="click: $parent.bump, css: {'event-article-important': importance() > 50}">
-                            <i class="icon-remove-circle" 
-                                data-bind='click: $parent.removeArticle' class="close"></i>
-                            <span data-bind="text: webTitle() ? webTitle : id"></span>
-                            <span data-bind="text: importance"></span>
-                            <!--input type="range" class="article-range" min="0" max="100"
-                                data-bind="value: importance, event: {change: $parent.backgroundSave}" style="display: none;"/-->
+                        <div class="article">
+                            <i data-bind="
+                                click: $parent.bumpContent,
+                                css: {
+                                    'icon-star-empty': importance() <= 50,
+                                    'icon-star': importance() > 50
+                                }
+                            "></i>
+                            <span class="article-title" data-bind="text: webTitle() ? webTitle : id"></span>
+                            <button type="button" class="close"
+                                data-bind='click: $parent.removeArticle' class="close">×</button>
                         </div>
                     </div>
+                    <!-- ko if: content().length === 0 -->
+                    <p class="text-info">Drag articles here</p>
+                    <!-- /ko -->
+                    <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
                     <dl>
                         <dt>Date</dt><dd data-bind="text: _prettyDate"></dd>
                         <dt>Time</dt><dd data-bind="text: _prettyTime"></dd>
                         <dt>URL</dt><dd data-bind="text: id"></dd>
                     </dl>
-
-                    <div class="event-form-toggler">
-                        <a data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit Event</a>
-                    </div>
+                     <button class="event-form-toggler btn btn-mini" data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit Event</button>
                 </div>
 
                 <form class="event-form" 
@@ -111,8 +111,9 @@
                         </optgroup>
                     </select>
 
-
-                    <button class="btn btn-success" type="submit" data-bind="enable: _isValid">Save event</button>
+                    <div>
+                        <button class="btn btn-success" type="submit" data-bind="enable: _isValid">Save event</button>
+                    </div>
                 </form>
 
             </div>

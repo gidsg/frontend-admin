@@ -49,6 +49,7 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
         // Administrative vars
         this._tentative = ko.observable(!opts || !opts.id); // No id means it's a new un-persisted event,
         this._editing   = ko.observable(this._tentative()); // so mark as editable
+        this._hasNewArticle = ko.observable();
 
         this.init = function (o) {
             o = o || {};
@@ -94,6 +95,16 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
 
         }
 
+        this.addContent = function(article) {
+            var included = _.some(self.content(), function(item){
+                return item.id() === article.id()
+            });
+            if (!included) {
+                self.content.unshift(article);
+                this.backgroundSave();
+            }
+        };
+
         this.addArticle = function() {
             var hasChanged;
 
@@ -127,9 +138,6 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                 url = endpoint + (self._tentative() ? '' : self.id());
                 // ..but we generate the posted id, as the user may have edited the slug, date, etc.
                 self.id(self.generateId());
-
-                console.log('SENT:')
-                console.log(JSON.stringify(self))
 
                 Reqwest({
                     url: url,
@@ -172,7 +180,16 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
             this._editing(!this._editing());
         };
 
-        this.bump = function(item) {
+        this.bump = function() {
+            if (self.importance() > importanceDefault) {
+                self.importance(importanceDefault)
+            } else {
+                self.importance(importanceBumped)                
+            }
+            self.backgroundSave();
+        };
+
+        this.bumpContent = function(item) {
             var id = item.id();
             if (_.contains(bumped, id)) {
                 bumped = _.without(bumped, id)

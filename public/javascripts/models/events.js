@@ -18,7 +18,6 @@ define(['models/event', 'Knockout', 'Common'], function (Event, ko, Common) {
 
         this.setSelected = function(current) {
             self.selectedEvent(current === self.selectedEvent() ? undefined : current);
-            console.log(self.selectedEvent());
         };
 
         this.createEvent = function() {
