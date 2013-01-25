@@ -8,7 +8,7 @@ define(['Knockout'], function (ko) {
         this.webTitle   = ko.observable(opts.webTitle   || '');
         this.webPublicationDate = ko.observable(opts.webPublicationDate || '');
         this.importance = ko.observable(opts.importance || 50);
-        this.checked    = ko.observable(opts.checked    || false);
+
         if (opts.fields)
             this.trailText  = ko.observable(opts.fields.trailText  || '');
     };

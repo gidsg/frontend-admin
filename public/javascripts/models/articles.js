@@ -41,18 +41,13 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                     url: url,
                     type: 'jsonp',
                     success: function(resp) {
-                        var rawArticles = resp.response && resp.response[propName] ? resp.response[propName] : [],
-                            length;
+                        var rawArticles = resp.response && resp.response[propName] ? resp.response[propName] : [];
 
                         // Make sure it's an array 
                         rawArticles = [].concat(rawArticles);
-                        length = rawArticles.length;
 
                         self.articles.removeAll();
                         rawArticles.map(function(a){
-                            a = a || {};
-                            // If single result, default it to checked
-                            a.checked = (1 === length);  // TODO remove?
                             self.articles.push(new Article(a));
                         })
                     },

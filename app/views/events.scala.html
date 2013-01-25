@@ -8,6 +8,25 @@
 
 <div class="storify row-fluid">
 
+  <div class="storify-articles span7">
+    <p>
+        <div class="btn-group">
+          <button class="btn" data-bind="event: {click: articles.articleSearch}, value: 'foo'">Latest</button>
+        </div>
+    </p>
+
+    <input type="text" placeholder="Article search" 
+        data-bind='event: {keyup: articles.articleSearch}, value: articles.articleTerm, valueUpdate: "afterkeydown"'/>
+        
+    <div class="articles" data-bind='foreach: articles.articles'>
+        <label draggable="true" class="checkbox articles-article" data-bind="attr: {'data-id': id}">
+            <h3 data-bind="text: webTitle"></h3>
+            <p data-bind="text: id"></p>
+            <p data-bind="text: webPublicationDate"></p>
+        </label>
+    </div>
+  </div>
+
   <!-- FIXME - needs to operation as two independent window panes -->
   <div class="storify-events span5">
       
@@ -99,25 +118,6 @@
             </div>
         </div>
       <!-- /ko -->
-    </div>
-  </div>
-
-  <div class="storify-articles span7">
-      <p>
-      <div class="btn-group">
-          <button class="btn" data-bind="event: {click: articles.articleSearch}, value: 'foo'">Latest</button>
-      </div>
-      </p>
-
-    <input type="text" placeholder="Article search" 
-        data-bind='event: {keyup: articles.articleSearch}, value: articles.articleTerm, valueUpdate: "afterkeydown"'/>
-        
-    <div class="articles" data-bind='foreach: articles.articles'>
-        <label draggable="true" class="checkbox articles-article" data-bind="css: {'articles-article-checked': checked}, attr: {'data-id': id}">
-            <h3 data-bind="text: webTitle"></h3>
-            <p data-bind="text: id"></p>
-            <p data-bind="text: webPublicationDate"></p>
-        </label>
     </div>
   </div>
 
