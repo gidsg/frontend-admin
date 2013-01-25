@@ -147,12 +147,13 @@ input[type=checkbox].status {
 /** */
 .storify {
     overflow: hidden;
+    display: table;
 }
 
 .storify-events, .storify-articles {
     overflow-y: auto;
     scroll-x: none;
-    max-height: 600px;
+    max-height: 600px; 
 }
 
 /** search results */

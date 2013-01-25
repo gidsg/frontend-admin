@@ -2,20 +2,22 @@
 
 @main("Events editor", env, isAuthed = true) {
 
+<script src="/assets/javascripts/humanized_time_span.js"></script>
+
 <p>
     <span class="alert">This is an experimental system to manage Events.</span>
 </p>
 
 <div class="storify row-fluid">
 
-  <div class="storify-articles span7">
-    <p>
+  <div class="storify-articles span6" style="display: table-cell;height:100%">
+      <p>
         <div class="btn-group">
           <button class="btn" data-bind="event: {click: articles.articleSearch}, value: 'foo'">Latest</button>
         </div>
-    </p>
+      </p>
 
-    <input type="text" placeholder="Article search" 
+    <input type="text" placeholder="Search" 
         data-bind='event: {keyup: articles.articleSearch}, value: articles.articleTerm, valueUpdate: "afterkeydown"'/>
         
     <div class="articles" data-bind='foreach: articles.articles'>
@@ -27,8 +29,7 @@
     </div>
   </div>
 
-  <!-- FIXME - needs to operation as two independent window panes -->
-  <div class="storify-events span5">
+  <div class="storify-events span6">
       
     <p>
       <button class="btn btn" data-bind="event: {click: events.createEvent}">Create a new event</button>
