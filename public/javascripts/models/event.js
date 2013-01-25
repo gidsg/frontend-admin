@@ -1,5 +1,6 @@
 define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, ko, Common, Reqwest) {
 
+    // zero pad the date getters
     Date.prototype.getHoursPadded = function() {
         return ("0" + this.getHours()).slice(-2);
     }
@@ -19,7 +20,7 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
             deBounced,
             self = this;
 
-        // A refence to articles that we might want to add to this event
+        // A reference to articles that we might want to add to this event
         opts.articles =  opts.articles || []; 
 
         // Input values that get post processed
@@ -31,12 +32,12 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
         this.title      = ko.observable();
         this.startDate  = ko.computed({
             read: function() {
-                  return this._prettyDate() + 'T' + this._prettyTime() + ':00.000Z'; 
+                      return this._prettyDate() + 'T' + this._prettyTime() + ':00.000Z'; 
                   },
             write: function(value) {
-                  this._prettyDate(new Date(value).toISOString().match(/^\d{4}-\d{2}-\d{2}/)[0]);
-                  var d = new Date(value)
-                  this._prettyTime(d.getHoursPadded() +':'+ d.getMinutesPadded());
+                      var d = new Date(value)
+                      this._prettyDate(d.toISOString().match(/^\d{4}-\d{2}-\d{2}/)[0]);
+                      this._prettyTime(d.getHoursPadded() +':'+ d.getMinutesPadded());
                   },
             owner: this
         });
@@ -67,9 +68,8 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
             }
 
             this.title(o.title || '');
-
             this.importance(o.importance || importanceDefault);
-
+            
             if(o.id) {
                 this.id(o.id);
             }
@@ -91,6 +91,7 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                     this.title().length > 0
                 );
             }, this);
+
         }
 
         this.addArticle = function() {
@@ -123,30 +124,29 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                 var url;
 
                 // We post to the 'old' id
-                //url = endpoint + (self._tentative() ? '' : self.id());
-                url = endpoint;
-                // ..but we generate the posted id, as the user may have edited the slug, date, etc.  
+                url = endpoint + (self._tentative() ? '' : self.id());
+                // ..but we generate the posted id, as the user may have edited the slug, date, etc.
                 self.id(self.generateId());
 
                 console.log('SENT:')
-                console.log(JSON.stringify({event: self}))
+                console.log(JSON.stringify(self))
 
                 Reqwest({
                     url: url,
                     method: 'post',
                     type: 'json',
                     contentType: 'application/json',
-                    data: JSON.stringify({event: self}),
+                    data: JSON.stringify(self),
                     success: function(resp) {
                         console.log('RECEIVED:')
                         console.log(JSON.stringify(resp) + "\n\n")
-                        if (resp.event) {
-                            // Update event using the server response
-                            self.init(resp.event);
-                            // Mark it as real 
-                            self._tentative(false);
-                            self._editing(false);
-                        }
+
+                        // Update event using the server response
+                        self.init(resp);
+                        // Mark it as real
+                        self._tentative(false);
+                        self._editing(false);
+
                         Common.mediator.emitEvent('models:events:save:success', [resp]);
                     },
                     error: function() {

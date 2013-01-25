@@ -2,13 +2,18 @@
 
 @main("Events editor", env, isAuthed = true) {
 
+<p>
+    <span class="alert">This is an experimental system to manage Events.</span>
+</p>
+
 <div class="storify row-fluid">
 
-  <div class="storify-events span6">
-    <h3>
-        Events
-        <button class="btn btn-mini" data-bind="event: {click: events.createEvent}">Create a new event</button>
-    </h3>
+  <!-- FIXME - needs to operation as two independent window panes -->
+  <div class="storify-events span5">
+      
+    <p>
+      <button class="btn btn" data-bind="event: {click: events.createEvent}">Create a new event</button>
+    </p>
 
     <div data-bind="text: events.length() === 0 ? 'Loading...' : ''"></div>
 
@@ -16,12 +21,11 @@
       <!-- ko if: !$root.events.selectedEvent() || $root.events.selectedEvent() === $data -->
         <div class="event">
 
-            <input type="range" class="event-range" min="0" max="100"
+            <!-- <input type="range" class="event-range" min="0" max="100"
                 data-bind="value: importance, event: {change: backgroundSave}" />
-
-            <span class="event-range-show" data-bind="text: importance"></span>
-
+                    -->
             <h5>
+                <span class="star">☆</span> <!-- 'star' an event as significant -->
                 <a class="event-title" href="javascript:void(0)" data-bind="
                     text: title().length > 0 ? title : 'New Event',
                     event: {click: $root.events.setSelected}" ></a>
@@ -37,8 +41,11 @@
             <div class="event-wrapper" data-bind="if: $root.events.selectedEvent() === $data">
 
                 <div class="event-detail" data-bind="ifnot: _editing()">
-                    <button class="btn btn-mini" data-bind="click: addArticle">Add selected articles</button>
-                    <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
+
+                    <p>
+                        <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
+                    </p>
+
                     <div class="event-articles" data-bind="foreach: content">
                         <div class="event-article"
                             data-bind="click: $parent.bump, css: {'event-article-important': importance() > 50}">
@@ -95,16 +102,21 @@
     </div>
   </div>
 
-  <div class="storify-articles span6">
-    <h3>Articles</h3>
+  <div class="storify-articles span7">
+      <p>
+      <div class="btn-group">
+          <button class="btn" data-bind="event: {click: articles.articleSearch}, value: 'foo'">Latest</button>
+      </div>
+      </p>
+
     <input type="text" placeholder="Article search" 
         data-bind='event: {keyup: articles.articleSearch}, value: articles.articleTerm, valueUpdate: "afterkeydown"'/>
+        
     <div class="articles" data-bind='foreach: articles.articles'>
-        <label class="checkbox articles-article" data-bind="css: {'articles-article-checked': checked}">
-            <input type="checkbox" data-bind="attr: {value: id}, checked: checked"/>
-            <span data-bind="text: webTitle"></span>
-            <span data-bind="text: webPublicationDate"></span>
-            <small data-bind="html: trailText"></small>
+        <label draggable="true" class="checkbox articles-article" data-bind="css: {'articles-article-checked': checked}, attr: {'data-id': id}">
+            <h3 data-bind="text: webTitle"></h3>
+            <p data-bind="text: id"></p>
+            <p data-bind="text: webPublicationDate"></p>
         </label>
     </div>
   </div>

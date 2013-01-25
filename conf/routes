@@ -33,7 +33,10 @@ GET     /dev/switchboard                 controllers.SwitchboardController.rende
 POST    /dev/switchboard                 controllers.SwitchboardController.save()
 
 #Events
-GET	    /events                   controllers.event.EventsController.render()
-GET	    /events/list              controllers.event.EventsController.list()
-POST    /events                   controllers.event.EventsController.save()
-GET     /events*eventId           controllers.event.EventsController.load(eventId)
+GET	    /events                          controllers.event.EventController.render()
+POST    /events                          controllers.event.EventController.create()
+
+GET	    /events/list                     controllers.event.EventController.list()
+
+GET     /events*eventId                  controllers.event.EventController.load(eventId)
+POST    /events*eventId                  controllers.event.EventController.update(eventId)
