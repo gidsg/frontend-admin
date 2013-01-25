@@ -6,7 +6,7 @@ define(['Knockout'], function (ko) {
 
         this.id         = ko.observable(opts.id         || '');
         this.webTitle   = ko.observable(opts.webTitle   || '');
-        this.webPublicationDate = ko.observable(opts.webPublicationDate || '');
+        this.webPublicationDate = ko.observable( humanized_time_span( opts.webPublicationDate ) || '-');
         this.importance = ko.observable(opts.importance || 50);
 
         if (opts.fields)

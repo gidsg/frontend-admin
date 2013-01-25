@@ -2,32 +2,31 @@
 
 @main("Events editor", env, isAuthed = true) {
 
-<p id="dragTest" draggable="true">
+<p>
     <span class="alert">This is an experimental system to manage Events.</span>
 </p>
 
 <div class="storify row-fluid">
 
-  <div class="storify-articles span6">
-    <p>
+  <div class="storify-articles span6" style="display: table-cell;height:100%">
+      <p>
         <div class="btn-group">
           <button class="btn" data-bind="event: {click: articles.articleSearch}, value: 'foo'">Latest</button>
         </div>
-    </p>
+      </p>
 
-    <input type="text" placeholder="Article search" 
+    <input type="text" placeholder="Search" 
         data-bind='event: {keyup: articles.articleSearch}, value: articles.articleTerm, valueUpdate: "afterkeydown"'/>
         
     <div class="articles" data-bind='foreach: articles.articles'>
         <div class="article" draggable="true" data-bind="makeDraggable: true">
-            <div class="article-title" data-bind="text: webTitle"></div>
+            <div class="article-title" data-bind="html: webTitle"></div>
             <div class="article-id"    data-bind="text: id"></div>
             <div class="article-date"  data-bind="text: webPublicationDate"></div>
         </div>
     </div>
   </div>
 
-  <!-- FIXME - needs to operation as two independent window panes -->
   <div class="storify-events span6">
       
     <p>
@@ -125,4 +124,7 @@
 </div>
 
 <script src="@routes.Assets.at("javascripts/eventsEditor.js")" type="text/javascript"></script>
+<script src="@routes.Assets.at("javascripts/humanized_time_span.js")" type="text/javascript"></script>
+
+
 }

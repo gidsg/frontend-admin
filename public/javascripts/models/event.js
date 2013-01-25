@@ -135,7 +135,11 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                 var url;
 
                 // We post to the 'old' id
-                url = endpoint + (self._tentative() ? '' : self.id());
+                //url = endpoint + (self._tentative() ? '' : '/' + self.id());
+
+                // TEMPORARY - while id endpoint don't seem to work 
+                url = endpoint;
+
                 // ..but we generate the posted id, as the user may have edited the slug, date, etc.
                 self.id(self.generateId());
 

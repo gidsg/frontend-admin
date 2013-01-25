@@ -137,6 +137,7 @@ input[type=checkbox].status {
 /** scaffolding */
 .storify {
     overflow: hidden;
+    display: table;
 }
 
 .storify-events, .storify-articles {
