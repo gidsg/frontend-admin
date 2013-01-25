@@ -102,13 +102,20 @@ input[type=checkbox].status {
 }
 
 .event-article {
-    padding: 2px 0;
-    min-height: 22px;
+    margin: 0 0 1px 0;
+    padding: 1px 0 0 4px;
+    min-height: 25px;
     overflow: auto;
+    font-size: 13px;
 }
 
-.event-article:nth-child(odd) {
-    background-color: #f0f0f0;
+.event-article:hover {
+    cursor: pointer;
+}
+
+.event-article-important, .event-article:hover {
+    font-weight: bold;
+    color: #51A351;
 }
 
 .article-range {

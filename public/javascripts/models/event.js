@@ -11,9 +11,14 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
 
     var Event = function(opts) {
 
-        var self = this, 
+        var maxBumpedArticles = 2,
+            importanceBumped  = 100,
+            importanceDefault = 50,
+            saveInterval = 100, // milliseconds
+            bumped = [],
             endpoint = '/events',
-            deBounced;
+            deBounced,
+            self = this;
 
         // A reference to articles that we might want to add to this event
         opts.articles =  opts.articles || []; 
@@ -51,16 +56,24 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
             o = o || {};
 
             self.content.removeAll();
-            (o.content || []).map(function(article){
-                self.content.push(new Article(article));
+            (o.content || []).map(function(a){
+                var article = new Article(a);
+                self.content.push(article);
             })
 
+            if (0 === bumped.length) {
+                self.content().map(function(a){
+                    if (a.importance() > importanceDefault) {
+                        bumped.push(a.id());
+                    }
+                })
+            }
+
             this.title(o.title || '');
-            this.importance(o.importance || 30); // TODO decide on 0, 25, 50 etc.
+            this.importance(o.importance || importanceDefault);
             
             if(o.id) {
                 this.id(o.id);
-                this._slug(_.last(o.id.split('/')));
             }
 
             this.parent({
@@ -150,7 +163,7 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                 clearTimeout(deBounced);
                 deBounced = setTimeout(function(){
                     self.save();
-                }, 750);
+                }, saveInterval);
             }
         };
 
@@ -165,6 +178,25 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
 
         this.toggleEditing = function() {
             this._editing(!this._editing());
+        };
+
+        this.bump = function(item) {
+            var id = item.id();
+            if (_.contains(bumped, id)) {
+                bumped = _.without(bumped, id)
+            } else {
+                bumped.unshift(id)
+                bumped = bumped.slice(0,maxBumpedArticles);
+            }
+            // Now adjust the importance of all content items accordingly 
+            self.content().map(function(a){
+                if (_.some(bumped, function(b){return a.id() === b})) {
+                    a.importance(importanceBumped);
+                } else {
+                    a.importance(importanceDefault);
+                }
+            });
+            self.backgroundSave();
         };
 
         this.init(opts);
