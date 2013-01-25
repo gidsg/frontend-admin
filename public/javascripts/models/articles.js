@@ -5,14 +5,20 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
         var self = this,
             deBounced,
             apiHost = 'http://content.guardianapis.com/',
-            apiParams = [{
+            apiParams = {
                 'show-fields': 'all',
                 'page-size': 50,
                 'format': 'json'
-            }];
+            };
 
         this.articles = ko.observableArray();
         this.articleTerm = ko.observable(Common.queryParams.q || '');
+        this.makeUrl = function () {
+            var queryString = Object.keys(this.apiParams).map(function (key) {
+                return [key, this.apiParams[key]].join('=')
+            }).join('&')
+            return this.apiHost + queryString
+        }
 
         // Grab articles from Content Api
         this.articleSearch = function() {

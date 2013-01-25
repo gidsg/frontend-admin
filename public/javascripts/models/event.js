@@ -28,12 +28,12 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
         this.title      = ko.observable();
         this.startDate  = ko.computed({
             read: function() {
-                  return this._prettyDate() + 'T' + this._prettyTime() + ':00.000Z'; 
+                      return this._prettyDate() + 'T' + this._prettyTime() + ':00.000Z'; 
                   },
             write: function(value) {
-                  var d = new Date(value)
-                  this._prettyDate(d.toISOString().match(/^\d{4}-\d{2}-\d{2}/)[0]);
-                  this._prettyTime(d.getHoursPadded() +':'+ d.getMinutesPadded());
+                      var d = new Date(value)
+                      this._prettyDate(d.toISOString().match(/^\d{4}-\d{2}-\d{2}/)[0]);
+                      this._prettyTime(d.getHoursPadded() +':'+ d.getMinutesPadded());
                   },
             owner: this
         });
@@ -80,6 +80,7 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                     this.title().length > 0
                 );
             }, this);
+
         }
 
         this.addArticle = function() {

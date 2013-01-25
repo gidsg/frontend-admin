@@ -157,6 +157,9 @@ input[type=checkbox].status {
     background-color: #fff;
     color: #000;    
 }
+.storify { 
+    margin-top: 20px;
+}
 .storify-articles {
     padding-left: 5px;
     border-left: 1px solid #999;

@@ -2,6 +2,10 @@
 
 @main("Events editor", env, isAuthed = true) {
 
+<p>
+    <span class="alert">This is an experimental system to manage Events.</span>
+</p>
+
 <div class="storify row-fluid">
 
   <!-- FIXME - needs to operation as two independent window panes -->
@@ -20,7 +24,7 @@
                 data-bind="value: importance, event: {change: backgroundSave}" />
                     -->
                 <h5>
-                    <span class="star">☆</span>
+                    <span class="star">☆</span> <!-- 'star' an event as significant -->
                     <a class="event-title" href="javascript:void(0)" data-bind="
                         text: title().length > 0 ? title : 'New Event',
                         event: {click: toggleShowing}" ></a>
@@ -101,10 +105,7 @@
   <div class="storify-articles span7">
       <p>
       <div class="btn-group">
-          <button class="btn">Latest</button>
-          <button class="btn">Today</button>
-          <button class="btn">Yesterday</button>
-          <button class="btn">Tone: News</button>
+          <button class="btn" data-bind="event: {click: articles.articleSearch}, value: 'foo'">Latest</button>
       </div>
       </p>
 
@@ -112,8 +113,7 @@
         data-bind='event: {keyup: articles.articleSearch}, value: articles.articleTerm, valueUpdate: "afterkeydown"'/>
         
     <div class="articles" data-bind='foreach: articles.articles'>
-        <label draggable="true" class="checkbox articles-article" data-bind="css: {'articles-article-checked': checked}">
-            <!-- <input type="checkbox" data-bind="attr: {value: id}, checked: checked" style="display:none"/> TODO make draggable -->
+        <label draggable="true" class="checkbox articles-article" data-bind="css: {'articles-article-checked': checked}, attr: {'data-id': id}">
             <h3 data-bind="text: webTitle"></h3>
             <p data-bind="text: id"></p>
             <p data-bind="text: webPublicationDate"></p>
