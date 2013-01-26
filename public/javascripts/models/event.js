@@ -131,7 +131,7 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
             self.backgroundSave();
         };
 
-        this.save =  function() {
+        this.save =  function(a) {
                 var url;
 
                 // We post to the 'old' id
