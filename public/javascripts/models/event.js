@@ -137,6 +137,11 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                 // We post to the 'old' id
                 url = endpoint + (self._tentative() ? '' : '/' + self.id());
 
+                // 
+                this.content.sort(function (left, right) {
+                    return (left.id() < right.id()) ? -1 : 1
+                })
+
                 // ..but we generate the posted id, as the user may have edited the slug, date, etc.
                 self.id(self.generateId());
 
@@ -234,7 +239,7 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
             .replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'')
             .replace(/\s+/g,' ')
             .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-');
+            .replace(/[^a-z0-9]+/g, '-'); // unfair on utf-8 IMHO
         return str;
     }
 
