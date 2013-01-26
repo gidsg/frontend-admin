@@ -21,7 +21,9 @@
     <div class="articles" data-bind='foreach: articles.articles'>
         <div class="article" draggable="true" data-bind="makeDraggable: true">
             <div class="article-title" data-bind="html: webTitle"></div>
-            <div class="article-id"    data-bind="text: id"></div>
+            <div>
+                <a class="article-id" data-bind="attr: { href: mDot }, text: id" target="_blank"></a>
+            </div>
             <div class="article-date"  data-bind="text: webPublicationDate"></div>
         </div>
     </div>
