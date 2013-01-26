@@ -38,7 +38,7 @@ object EventController extends Controller with Logging with AuthLogging {
   }
 
   def load(eventId: String) = AuthAction{ request =>
-    Events.findOne(Map("id" -> eventId)).map{ Event.fromDbObject }.map{ event =>   Ok(Event.toJsonString(event)) }
+    Events.findOne(Map("id" -> eventId.drop(1))).map{ Event.fromDbObject }.map{ event =>   Ok(Event.toJsonString(event)) }
       .getOrElse(NotFound(status("no event found: " + eventId)).as("application/json"))
   }
 
