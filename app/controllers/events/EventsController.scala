@@ -28,7 +28,7 @@ object EventController extends Controller with Logging with AuthLogging {
 
   def update(eventId: String) = AuthAction{ request =>
     request.body.asJson.map(_.toString).map(Event.fromJson).map { event =>
-      val result = Events.update(Map("id" -> eventId), Event.toDbObject(event), upsert = false)
+      val result = Events.update(Map("id" -> eventId.drop(1)), Event.toDbObject(event), upsert = false)
       if (result.getLastError.get("updatedExisting").asInstanceOf[Boolean]) {
         Ok(Event.toJsonString(event)).as("application/json")
       } else {
