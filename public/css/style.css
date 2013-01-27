@@ -119,7 +119,7 @@ input[type=checkbox].status {
             transition: opacity 0.5s;
 }
 
-.article-title { font-weight: bold; font-size: 1em; }
+.article-title { font-size: 1em; }
 .article-id { font-size: 1em; color: #999; margin-bottom: 0; font-size: 0.9em; }
 .article-date { font-size: 1em; color: #ccc; margin-bottom: 0; font-size: 0.8em; line-height: 0.99em; }
 

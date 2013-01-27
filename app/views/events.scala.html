@@ -11,7 +11,7 @@
   <div class="storify-articles span6" style="display: table-cell;height:100%">
       <p>
         <div class="btn-group">
-          <button class="btn" data-bind="event: {click: articles.articleSearch}, value: 'foo'">Latest</button>
+          <button class="btn btn-mini" data-bind="event: {click: articles.articleSearch}, value: 'foo'">Latest</button>
         </div>
       </p>
 
@@ -32,7 +32,7 @@
   <div class="storify-events span6">
       
     <p>
-      <button class="btn btn" data-bind="event: {click: events.createEvent}">Create a new event</button>
+      <button class="btn btn-mini" data-bind="event: {click: events.createEvent}">Create a new event</button>
     </p>
 
     <div data-bind="text: events.length() === 0 ? 'Loading...' : ''"></div>
@@ -81,13 +81,13 @@
                     <!-- ko if: content().length === 0 -->
                     <p class="alert">Drag articles here</p>
                     <!-- /ko -->
-                    <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
                     <dl>
                         <dt>Date</dt><dd data-bind="text: _prettyDate"></dd>
                         <dt>Time</dt><dd data-bind="text: _prettyTime"></dd>
                         <dt>URL</dt><dd data-bind="text: id"></dd>
                     </dl>
                      <button class="event-form-toggler btn btn-mini" data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit Event</button>
+                     <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
                 </div>
 
                 <form class="event-form" 
@@ -116,9 +116,9 @@
                     </select>
 
                     <div>
-                        <button class="btn btn-success" type="submit" data-bind="enable: _isValid">Save event</button>
-                        <button data-bind="visible: _tentative()" class="btn btn-danger" type="submit" value="cancel">Cancel</button>
-                        <button data-bind="visible: !_tentative()" class="btn btn-danger" type="submit" value="delete">Delete</button>
+                        <button class="btn btn-success btn-mini" type="submit" data-bind="enable: _isValid">Save event</button>
+                        <button data-bind="visible: _tentative()" class="btn btn-danger btn-mini" type="submit" value="cancel">Cancel</button>
+                        <button data-bind="visible: !_tentative()" class="btn btn-danger btn-mini" type="submit" value="delete">Delete</button>
                     </div>
                 </form>
 
