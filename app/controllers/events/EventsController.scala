@@ -14,7 +14,9 @@ object EventController extends Controller with Logging with AuthLogging {
     Ok(views.html.events("{}", Configuration.stage))
   }
 
-  def list() = AuthAction { request =>
+  /* API */
+
+  def find() = AuthAction { request =>
     val results = Events.find().sort(Map("startDate" -> -1)).toSeq.map(Event.fromDbObject)
     Ok(Event.toJsonList(results)).as("application/json")
   }
@@ -24,6 +26,11 @@ object EventController extends Controller with Logging with AuthLogging {
       Events.insert(Event.toDbObject(event))
       Ok(Event.toJsonString(event)).as("application/json")
     }.getOrElse(BadRequest(status("Invalid Json")).as("application/json"))
+  }
+  
+  def read(eventId: String) = AuthAction{ request =>
+    Events.findOne(Map("id" -> eventId.drop(1))).map{ Event.fromDbObject }.map{ event =>   Ok(Event.toJsonString(event)) }
+      .getOrElse(NotFound(status("no event found: " + eventId)).as("application/json"))
   }
 
   def update(eventId: String) = AuthAction{ request =>
@@ -37,7 +44,7 @@ object EventController extends Controller with Logging with AuthLogging {
     }.getOrElse(BadRequest(status("Invalid Json")).as("application/json"))
   }
   
-  def remove(eventId: String) = AuthAction{ request =>
+  def delete(eventId: String) = AuthAction{ request =>
     Events.findOne(Map("id" -> eventId.drop(1))).map{ Event.fromDbObject }.map{ event =>
         val result = Events.remove(Map("id" -> eventId.drop(1)))
         if (result.getLastError.ok()) {
@@ -47,11 +54,6 @@ object EventController extends Controller with Logging with AuthLogging {
         }
       }.getOrElse(NotFound(status("no event found: " + eventId)).as("application/json"))
     }
-
-  def load(eventId: String) = AuthAction{ request =>
-    Events.findOne(Map("id" -> eventId.drop(1))).map{ Event.fromDbObject }.map{ event =>   Ok(Event.toJsonString(event)) }
-      .getOrElse(NotFound(status("no event found: " + eventId)).as("application/json"))
-  }
 
   def status(msg: String) = toJson(Map("status" -> msg))
 }

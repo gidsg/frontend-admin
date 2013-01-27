@@ -36,8 +36,9 @@ POST    /dev/switchboard                 controllers.SwitchboardController.save(
 GET	    /events                          controllers.event.EventController.render()
 POST    /events                          controllers.event.EventController.create()
 
-GET	    /events/list                     controllers.event.EventController.list()
+GET	    /events/list                     controllers.event.EventController.find()
 
-GET     /events*eventId                  controllers.event.EventController.load(eventId)
+GET     /events*eventId                  controllers.event.EventController.read(eventId)
 POST    /events*eventId                  controllers.event.EventController.update(eventId)
-DELETE  /events*eventId                  controllers.event.EventController.remove(eventId)
+DELETE  /events*eventId                  controllers.event.EventController.delete(eventId)
+
