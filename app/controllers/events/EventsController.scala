@@ -36,6 +36,17 @@ object EventController extends Controller with Logging with AuthLogging {
       }
     }.getOrElse(BadRequest(status("Invalid Json")).as("application/json"))
   }
+  
+  def remove(eventId: String) = AuthAction{ request =>
+    Events.findOne(Map("id" -> eventId.drop(1))).map{ Event.fromDbObject }.map{ event =>
+        val result = Events.remove(Map("id" -> eventId.drop(1)))
+        if (result.getLastError.ok()) {
+          Ok(Event.toJsonString(event)).as("application/json")
+        } else {
+          InternalServerError(status("error deleting document: " + eventId)).as("application/json")
+        }
+      }.getOrElse(NotFound(status("no event found: " + eventId)).as("application/json"))
+    }
 
   def load(eventId: String) = AuthAction{ request =>
     Events.findOne(Map("id" -> eventId.drop(1))).map{ Event.fromDbObject }.map{ event =>   Ok(Event.toJsonString(event)) }

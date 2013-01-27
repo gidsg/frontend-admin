@@ -40,3 +40,4 @@ GET	    /events/list                     controllers.event.EventController.list(
 
 GET     /events*eventId                  controllers.event.EventController.load(eventId)
 POST    /events*eventId                  controllers.event.EventController.update(eventId)
+DELETE  /events*eventId                  controllers.event.EventController.remove(eventId)
