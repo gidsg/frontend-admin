@@ -1,4 +1,4 @@
-define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, ko, Common, Reqwest) {
+define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (Article, ko, Config, Common, Reqwest) {
 
     // zero pad the date getters
     Date.prototype.getHoursPadded = function() {
@@ -26,7 +26,7 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
         // Input values that get post processed
         this._prettyDate = ko.observable(); 
         this._prettyTime = ko.observable(); 
-        
+
         // Event 'schema' poperties
         this.content    = ko.observableArray();
         this.title      = ko.observable();
@@ -42,10 +42,21 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
             owner: this
         });
 
-        this.importance = ko.observable();
-        this.id         = ko.observable();
-        this.parent     = ko.observable();
+        this._contentApi = ko.observable();
+        this.importance  = ko.observable();
+        this.id          = ko.observable();
+        this.parent      = ko.observable();
 
+        // listen out for changes to content array and generate a content api
+        this.content.subscribe(function(content){
+            var apiHost = "http://content.guardianapis.com/search",
+                query = "?page-size=50&format=json&show-fields=all&show-tags=all&show-factboxes=all&show-media=all&show-references=all&api-key=" + Config.apiKey + "&ids="
+                apiUrl = apiHost + query + content.map( function (article) {
+                    return encodeURIComponent(article.id())
+            }).join(',')
+            self._contentApi(apiUrl);
+        });
+        
         // Administrative vars
         this._tentative = ko.observable(!opts || !opts.id); // No id means it's a new un-persisted event,
         this._editing   = ko.observable(this._tentative()); // so mark as editable

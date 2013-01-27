@@ -84,7 +84,10 @@
                     <dl>
                         <dt>Date</dt><dd data-bind="text: _prettyDate"></dd>
                         <dt>Time</dt><dd data-bind="text: _prettyTime"></dd>
-                        <dt>URL</dt><dd data-bind="text: id"></dd>
+                        <dt>API</dt>
+                            <dd>
+                                <a data-bind='attr: { href: _contentApi }' target="_blank">See articles in the Content API</a>
+                            </dd>
                     </dl>
                      <button class="event-form-toggler btn btn-mini" data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit Event</button>
                      <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
