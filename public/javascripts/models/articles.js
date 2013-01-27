@@ -13,11 +13,13 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
 
         this.articles = ko.observableArray();
         this.articleTerm = ko.observable(Common.queryParams.q || '');
+        this.toneNews = ko.observable(false);
+
         this.makeUrl = function () {
-            var queryString = Object.keys(this.apiParams).map(function (key) {
-                return [key, this.apiParams[key]].join('=')
+            var queryString = Object.keys(apiParams).map(function (key) {
+                return [key, apiParams[key]].join('=')
             }).join('&')
-            return this.apiHost + queryString
+            return apiHost + '?' + queryString
         }
 
         // Grab articles from Content Api
@@ -27,13 +29,18 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                 
                 var url, propName;
 
+
                 // If term contains slashes, assume it's an article id
                 if (self.articleTerm().match(/\//)) {
                     var url = apiHost + self.articleTerm() + '?show-fields=all&format=json';
                     propName = 'content';
                 } else {
-                    url = 'http://content.guardianapis.com/search?show-fields=all&page-size=50&format=json&q=';
-                    url+= encodeURIComponent(self.articleTerm());
+                    url  = 'http://content.guardianapis.com/search?show-fields=all&page-size=50&format=json&q=';
+                    url += encodeURIComponent(self.articleTerm());
+                    
+                    if (self.toneNews())
+                        url += '&tag=tone%2Fnews'
+
                     propName = 'results';
                 }
 
@@ -54,6 +61,8 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                     error: function() {}
                 });
             }, 250);
+            
+            return true; // ensure default click happens on all the bindings
         };
 
     };

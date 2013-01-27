@@ -8,7 +8,7 @@
 
 <div class="storify row-fluid">
 
-  <div class="storify-articles span6" style="display: table-cell;height:100%">
+  <div class="storify-articles span6">
       <p>
         <div class="btn-group">
           <button class="btn btn-mini" data-bind="event: {click: articles.articleSearch}, value: 'foo'">Latest</button>
@@ -18,6 +18,8 @@
     <input type="text" placeholder="Search" 
         data-bind='event: {keyup: articles.articleSearch}, value: articles.articleTerm, valueUpdate: "afterkeydown"'/>
         
+        <input id="tone-news" type="checkbox" value="news" data-bind="checked: articles.toneNews, event: {click: articles.articleSearch}"/>    
+        <label for="tone-news">tone/news</label>
     <div class="articles" data-bind='foreach: articles.articles'>
         <div class="article" draggable="true" data-bind="makeDraggable: true">
             <div class="article-title" data-bind="html: webTitle"></div>
