@@ -9,30 +9,28 @@
 <div class="storify row-fluid">
 
   <div class="storify-articles span6">
-      <p>
-        <div class="btn-group">
-          <button class="btn btn-mini" data-bind="event: {click: articles.articleSearch}, value: 'foo'">Latest</button>
-        </div>
-      </p>
 
-    <input type="text" placeholder="Search" 
+    <input type="text" placeholder="Articles - search term or ID" 
         data-bind='event: {keyup: articles.articleSearch}, value: articles.articleTerm, valueUpdate: "afterkeydown"'/>
-        
-        <input id="tone-news" type="checkbox" value="news" data-bind="checked: articles.toneNews, event: {click: articles.articleSearch}"/>    
-        <label for="tone-news">tone/news</label>
+
+    <input id="tone-news" type="checkbox" value="news" 
+        data-bind="checked: articles.toneNews, event: {click: articles.articleSearch}"/>    
+
+    <label for="tone-news">tone/news</label>
+
     <div class="articles" data-bind='foreach: articles.articles'>
         <div class="article" draggable="true" data-bind="makeDraggable: true">
-            <div class="article-title" data-bind="html: webTitle"></div>
-            <div>
-                <a class="article-id" data-bind="attr: { href: mDot }, text: id" target="_blank"></a>
-            </div>
-            <div class="article-date"  data-bind="text: webPublicationDate"></div>
+            <a class="article-title" target="_blank"
+                data-bind="html: webTitle, attr: {href: mDot}"></a>
+            <div class="article-date"  data-bind="text: _humanDate"></div>
         </div>
     </div>
   </div>
 
   <div class="storify-events span6">
       
+    <input type="text" placeholder="Events - search term or ID"/>
+
     <p>
       <button class="btn btn-mini" data-bind="event: {click: events.createEvent}">Create a new event</button>
     </p>
@@ -67,18 +65,24 @@
             <div class="event-wrapper" data-bind="if: $root.events.selectedEvent() === $data">
                 <div class="event-detail" data-bind="ifnot: _editing()">
                     <div class="event-articles" data-bind="foreach: content">
+                        <!-- ko if: webTitle -->
+                        <button type="button" class="close"
+                            data-bind='click: $parent.removeArticle' class="close">×</button>
+
+                        <div class="article-star" data-bind="
+                            click: $parent.bumpContent,
+                            css: {
+                                'icon-star-empty': importance() <= 50,
+                                'icon-star': importance() > 50
+                            }
+                        "></div>
+
                         <div class="article">
-                            <i data-bind="
-                                click: $parent.bumpContent,
-                                css: {
-                                    'icon-star-empty': importance() <= 50,
-                                    'icon-star': importance() > 50
-                                }
-                            "></i>
-                            <span class="article-title" data-bind="text: webTitle() ? webTitle : id"></span>
-                            <button type="button" class="close"
-                                data-bind='click: $parent.removeArticle' class="close">×</button>
+                            <a class="article-title" target="_blank"
+                                data-bind="text: webTitle, attr: {href: mDot}"></a>
+                            <div class="article-date"  data-bind="text: _humanDate"></div>
                         </div>
+                        <!-- /ko -->
                     </div>
                     <!-- ko if: content().length === 0 -->
                     <p class="alert">Drag articles here</p>
@@ -86,10 +90,6 @@
                     <dl>
                         <dt>Date</dt><dd data-bind="text: _prettyDate"></dd>
                         <dt>Time</dt><dd data-bind="text: _prettyTime"></dd>
-                        <dt>API</dt>
-                            <dd>
-                                <a data-bind='attr: { href: _contentApi }' target="_blank">See articles in the Content API</a>
-                            </dd>
                     </dl>
                      <button class="event-form-toggler btn btn-mini" data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit Event</button>
                      <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>

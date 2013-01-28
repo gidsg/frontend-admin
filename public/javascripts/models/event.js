@@ -20,9 +20,6 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             deBounced,
             self = this;
 
-        // A reference to articles that we might want to add to this event
-        opts.articles =  opts.articles || []; 
-
         // Input values that get post processed
         this._prettyDate = ko.observable(); 
         this._prettyTime = ko.observable(); 
@@ -42,7 +39,6 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             owner: this
         });
 
-        this._contentApi = ko.observable();
         this.importance  = ko.observable();
         this.id          = ko.observable();
         this.parent      = ko.observable();
@@ -58,6 +54,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         });
         
         // Administrative vars
+        this._contentApi = ko.observable();
         this._tentative = ko.observable(!opts || !opts.id); // No id means it's a new un-persisted event,
         this._editing   = ko.observable(this._tentative()); // so mark as editable
         this._hasNewArticle = ko.observable();
@@ -67,8 +64,12 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
 
             self.content.removeAll();
             (o.content || []).map(function(a){
-                var article = new Article(a);
-                self.content.push(article);
+                var cached = opts.articleCache[a.id];
+                if (cached) {
+                    cached.importance = a.importance;
+                    a = cached;
+                }
+                self.content.push(new Article(a));
             })
 
             if (0 === bumped.length) {
@@ -106,7 +107,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
 
         }
 
-        this.addContent = function(article) {
+        this.addArticle = function(article) {
             var included = _.some(self.content(), function(item){
                 return item.id() === article.id()
             });
@@ -116,30 +117,39 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             }
         };
 
-        this.addArticle = function() {
-            var hasChanged;
-
-            opts.articles.map(function(article){
-                var notIncluded;
-                if (article.checked()) {
-                    notIncluded = !_.some(self.content(), function(item){
-                        return item.id === article.id
-                    });
-                    if (notIncluded) {
-                        self.content.unshift(article);
-                        hasChanged = true;
-                    }
-                }
-            });
-
-            if (hasChanged) {
-                this.backgroundSave();
-            }
-        };
-
         this.removeArticle = function(article) {
             self.content.remove(article);
             self.backgroundSave();
+        };
+
+        this.decorateContent = function() {
+            var apiUrl = "http://content.guardianapis.com/search";
+            // Find articles that aren't yet decorated with API data..
+            var areRaw = _.filter(self.content(), function(a){return ! a.webTitle()});
+            // and grab them from the API
+            if(areRaw.length) {                    
+                apiUrl += "?page-size=50&format=json&show-fields=all&show-tags=all&show-factboxes=all&show-media=all&show-references=all&api-key=" + Config.apiKey;
+                apiUrl += "&ids=" + areRaw.map(function(article){
+                    return encodeURIComponent(article.id())
+                }).join(',');
+
+                Reqwest({
+                    url: apiUrl,
+                    type: 'jsonp',
+                    success: function(resp) {
+                        if (resp.response && resp.response.results) {
+                            resp = resp.response.results;
+                            resp.map(function(ra){
+                                var c = _.find(areRaw,function(a){return a.id() === ra.id});
+                                c.webTitle(ra.webTitle);
+                                c.webPublicationDate(ra.webPublicationDate);
+                                opts.articleCache[ra.id] = ra;
+                            })
+                        }
+                    },
+                    error: function() {}
+                });
+            }
         };
 
         this.save =  function(a) {
@@ -148,10 +158,11 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                 // We post to the 'old' id
                 url = endpoint + (self._tentative() ? '' : '/' + self.id());
 
-                // 
+                /* 
                 this.content.sort(function (left, right) {
                     return (left.id() < right.id()) ? -1 : 1
                 })
+                */
 
                 // ..but we generate the posted id, as the user may have edited the slug, date, etc.
                 self.id(self.generateId());
@@ -168,6 +179,8 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
 
                         // Update event using the server response
                         self.init(resp);
+                        self.decorateContent();
+
                         // Mark it as real
                         self._tentative(false);
                         self._editing(false);

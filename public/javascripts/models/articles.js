@@ -12,6 +12,9 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
             };
 
         this.articles = ko.observableArray();
+
+        this.cache = {};
+
         this.articleTerm = ko.observable(Common.queryParams.q || '');
         this.toneNews = ko.observable(false);
 
@@ -56,7 +59,9 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                         self.articles.removeAll();
                         rawArticles.map(function(a){
                             self.articles.push(new Article(a));
+                            self.cache[a.id] = a;
                         })
+                        console.log(self.articleCache)
                     },
                     error: function() {}
                 });

@@ -1,6 +1,6 @@
-define(['models/event', 'Knockout', 'Common'], function (Event, ko, Common) {
+define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, Common, Reqwest) {
 
-    return function(articles) {
+    return function(articleCache) {
         var self = this;
 
         this.events = ko.observableArray();
@@ -12,17 +12,22 @@ define(['models/event', 'Knockout', 'Common'], function (Event, ko, Common) {
 
         this.loadEvent = function(opts) {
             opts = opts || {};
-            opts.articles = articles;
+            opts.articleCache = articleCache;
             self.events.unshift(new Event(opts));
         };
 
         this.setSelected = function(current) {
-            self.selectedEvent(current === self.selectedEvent() ? undefined : current);
+            if (current === self.selectedEvent()) {
+                self.selectedEvent(undefined);
+            } else {
+                current.decorateContent();
+                self.selectedEvent(current);
+            } 
         };
 
         this.createEvent = function() {
             var event = new Event({
-                articles: articles
+                articleCache: articleCache
             });
             self.events.unshift(event);
             self.selectedEvent(event)
@@ -30,7 +35,7 @@ define(['models/event', 'Knockout', 'Common'], function (Event, ko, Common) {
 
         this.createEventFollowOn = function(parent) {
             var event = new Event({
-                articles: articles,
+                articleCache: articleCache,
                 parent: {id: parent.id()}
             });
             self.events.unshift(event);
