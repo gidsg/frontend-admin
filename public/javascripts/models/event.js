@@ -54,9 +54,10 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         });
         
         // Administrative vars
+        this._parentId   = ko.observable();
         this._contentApi = ko.observable();
-        this._tentative = ko.observable(!opts || !opts.id); // No id means it's a new un-persisted event,
-        this._editing   = ko.observable(this._tentative()); // so mark as editable
+        this._tentative  = ko.observable(!opts || !opts.id); // No id means it's a new un-persisted event,
+        this._editing    = ko.observable(this._tentative()); // so mark as editable
         this._hasNewArticle = ko.observable();
 
         this.init = function (o) {
@@ -83,13 +84,15 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             this.title(o.title || '');
             this.importance(o.importance || importanceDefault);
             
+            this._parentId(o._parentId);
+            if (o.parent && o.parent.id) {
+                this.parent(o.parent);
+                this._parentId(o.parent.id) 
+            }
+
             if(o.id) {
                 this.id(o.id);
             }
-
-            this.parent({
-                id: ko.observable(o.parent ? o.parent.id : '')
-            });
 
             if (o.startDate) {
                 this.startDate(new Date(o.startDate)); // today
@@ -153,44 +156,44 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         };
 
         this.save =  function(a) {
-                var url;
+            // We post to the 'old' id
+            var url = endpoint + (self._tentative() ? '' : '/' + self.id());
 
-                // We post to the 'old' id
-                url = endpoint + (self._tentative() ? '' : '/' + self.id());
+            // ..but we generate the posted id, as the user may have edited the slug, date, etc.
+            self.id(self.generateId());
 
-                /* 
-                this.content.sort(function (left, right) {
-                    return (left.id() < right.id()) ? -1 : 1
-                })
-                */
+            /* 
+            this.content.sort(function (left, right) {
+                return (left.id() < right.id()) ? -1 : 1
+            })
+            */
 
-                // ..but we generate the posted id, as the user may have edited the slug, date, etc.
-                self.id(self.generateId());
+            console.log('SENT:')
+            console.log(JSON.stringify(self) + "\n\n")
 
-                Reqwest({
-                    url: url,
-                    method: 'post',
-                    type: 'json',
-                    contentType: 'application/json',
-                    data: JSON.stringify(self),
-                    success: function(resp) {
-                        console.log('RECEIVED:')
-                        console.log(JSON.stringify(resp) + "\n\n")
-
-                        // Update event using the server response
-                        self.init(resp);
-                        self.decorateContent();
-
-                        // Mark it as real
-                        self._tentative(false);
-                        self._editing(false);
-
-                        Common.mediator.emitEvent('models:events:save:success', [resp]);
-                    },
-                    error: function() {
-                        Common.mediator.emitEvent('models:events:save:error');
-                    }
-                });
+            Reqwest({
+                url: url,
+                method: 'post',
+                type: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(self),
+                success: function(resp) {
+                    console.log('RECEIVED:')
+                    console.log(JSON.stringify(resp) + "\n\n")
+                    // Update event using the server response
+                    self.init(resp);
+                    // Get UI stuff from api/cache
+                    self.decorateContent();
+                    // Mark event as real
+                    self._tentative(false);
+                    // Stop editing
+                    self._editing(false);
+                    Common.mediator.emitEvent('models:event:save:success', [resp]);
+                },
+                error: function() {
+                    Common.mediator.emitEvent('models:event:save:error');
+                }
+            });
         };
         
         this.backgroundSave = function() {
@@ -245,16 +248,18 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         var copy = ko.toJS(this),
             prop;
 
+        // Turn parentId into parent obj
+        if (copy._parentId) {
+            copy.parent = {id: copy._parentId};
+        }
+
         // Strip administrative properties starting '_'
         for (prop in copy) {
             if (0 === prop.indexOf('_')) {
                 delete copy[prop];
             }
         }
-        // Clean up an empty parent obj
-        if (copy.parent && !copy.parent.id) {
-            delete copy.parent;
-        }
+
         return copy;
     };
 

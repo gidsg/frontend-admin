@@ -1,7 +1,8 @@
 define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, Common, Reqwest) {
 
     return function(articleCache) {
-        var self = this;
+        var endpoint = '/events',
+            self = this;
 
         this.events = ko.observableArray();
         this.selectedEvent = ko.observable();
@@ -33,14 +34,41 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
             self.selectedEvent(event)
         };
 
+        this.deleteEvent = function(event){
+            var url = endpoint + '/' + event.id();
+            self.events.remove(event);
+            self.selectedEvent(false);
+            Reqwest({
+                url: url,
+                method: 'delete',
+                type: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(self),
+                success: function(resp) {
+                    Common.mediator.emitEvent('models:event:delete:success', [resp]);
+                },
+                error: function() {
+                    Common.mediator.emitEvent('models:event:delete:error');
+                }
+            });
+        };
+
         this.createEventFollowOn = function(parent) {
             var event = new Event({
                 articleCache: articleCache,
-                parent: {id: parent.id()}
+                _parentId: parent.id()
             });
             self.events.unshift(event);
             self.selectedEvent(event)
         };
+
+        this.cancelEditing = function(event) {
+            event._editing(false);
+            if (event._tentative()) {
+                self.events.remove(event);
+                self.selectedEvent(false);
+            }
+        }
 
         this.eventSaveSuccess = function() {
         };

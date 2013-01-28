@@ -55,9 +55,9 @@
                     text: title().length > 0 ? title : 'New Event',
                     event: {click: $root.events.setSelected}" ></span>
                 <span class="event-article-count" data-bind="text: '(' + content().length + ')'"></span>
-                <!-- ko if: parent().id -->
+                <!-- ko with: parent -->
                 <span class="event-parent">
-                    follows <strong data-bind="text: parent().id"></strong></small>
+                    follows <strong data-bind="text: typeof title === 'undefined' ? id : title"></strong></small>
                 </span>
                 <!-- /ko -->
             </div>
@@ -106,24 +106,27 @@
                     <input type="date"
                         data-bind='value: _prettyDate, valueUpdate: "afterkeydown"' />
 
-                    <label>Time</label>    
+                    <label>Time</label>
                     <input type="time"
                         data-bind='value: _prettyTime, valueUpdate: "afterkeydown"' />
 
-                    <label>Did this event follow another?</label>
-                    <select data-bind='value: parent().id'>
-                        <option>(nothing)</option>
-                        <optgroup label="another event:" data-bind="foreach: $root.events.events">
-                            <!-- ko if: id && id !== $parent.id -->
-                            <option data-bind="attr: {value: id}, text: title"></option>
-                            <!-- /ko -->
-                        </optgroup>
+                    <label>Does this follow another event?</label>
+                    <select data-bind='
+                        value: _parentId, 
+                        options: $root.events.events,
+                        optionsText: "title",
+                        optionsValue: "id"
+                    '>
                     </select>
 
                     <div>
                         <button class="btn btn-success btn-mini" type="submit" data-bind="enable: _isValid">Save event</button>
-                        <button data-bind="visible: _tentative()" class="btn btn-danger btn-mini" type="submit" value="cancel">Cancel</button>
-                        <button data-bind="visible: !_tentative()" class="btn btn-danger btn-mini" type="submit" value="delete">Delete</button>
+                        <button class="btn btn-mini" type="submit" value="cancel"
+                            data-bind="click: $root.events.cancelEditing" 
+                        >Cancel</button>
+                        <button class="btn btn-danger btn-mini" type="submit" value="delete"
+                            data-bind="click: $root.events.deleteEvent, visible: !_tentative()"
+                        >Delete event</button>
                     </div>
                 </form>
 

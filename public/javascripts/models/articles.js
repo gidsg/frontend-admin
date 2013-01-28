@@ -61,7 +61,6 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                             self.articles.push(new Article(a));
                             self.cache[a.id] = a;
                         })
-                        console.log(self.articleCache)
                     },
                     error: function() {}
                 });

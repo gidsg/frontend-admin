@@ -154,6 +154,7 @@ input[type=checkbox].status {
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 800px;
+    padding: 0 8px 0 0;
 }
 
 .storify input[type="text"]{
@@ -163,11 +164,6 @@ input[type=checkbox].status {
 .storify { 
     margin-top: 20px;
 }
-.storify-articles {
-    padding: 0 8px 0 0;
-    -webkit-linear-gradient(top,#fff,#f2f2f2)
-}
-
 input#tone-news { 
     float: left;
     margin-right: 5px;
