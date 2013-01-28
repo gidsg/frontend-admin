@@ -41,7 +41,6 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
 
         this.importance  = ko.observable();
         this.id          = ko.observable();
-        this.parent      = ko.observable();
 
         // listen out for changes to content array and generate a content api
         this.content.subscribe(function(content){
@@ -54,10 +53,11 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         });
         
         // Administrative vars
-        this._parentId   = ko.observable();
-        this._contentApi = ko.observable();
-        this._tentative  = ko.observable(!opts || !opts.id); // No id means it's a new un-persisted event,
-        this._editing    = ko.observable(this._tentative()); // so mark as editable
+        this._parentId    = ko.observable();
+        this._parentTitle = ko.observable();
+        this._contentApi  = ko.observable();
+        this._tentative   = ko.observable(!opts || !opts.id); // No id means it's a new un-persisted event,
+        this._editing     = ko.observable(this._tentative()); // so mark as editable
         this._hasNewArticle = ko.observable();
 
         this.init = function (o) {
@@ -84,10 +84,12 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             this.title(o.title || '');
             this.importance(o.importance || importanceDefault);
             
-            this._parentId(o._parentId);
-            if (o.parent && o.parent.id) {
-                this.parent(o.parent);
+            if (o.parent) {
                 this._parentId(o.parent.id) 
+                this._parentTitle(o.parent.title) 
+            } else {
+                this._parentId(undefined)
+                this._parentTitle(undefined)
             }
 
             if(o.id) {
@@ -162,7 +164,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             // ..but we generate the posted id, as the user may have edited the slug, date, etc.
             self.id(self.generateId());
 
-            /* 
+            /*
             this.content.sort(function (left, right) {
                 return (left.id() < right.id()) ? -1 : 1
             })

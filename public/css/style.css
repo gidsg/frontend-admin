@@ -74,6 +74,10 @@ input[type=checkbox].status {
     padding: 4px 0;
 }
 
+.event-header .icon-arrow-right {
+    opacity: 0.3;
+}
+
 .event-title {
     color: #51A351;
     font-size: 1em;
@@ -87,9 +91,8 @@ input[type=checkbox].status {
 }
 
 .event-parent {
-    display: block;
-    color: #999;
-    padding: 0 0 0 18px;
+    color: #ccc;
+    font-weight: bold;
 }
 
 .event-form,

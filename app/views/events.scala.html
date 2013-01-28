@@ -51,15 +51,16 @@
                         'icon-star': importance() > 50
                     }
                 "></i>
+                <!-- ko if: _parentId -->
+                <span class="event-parent">
+                    <span data-bind="text: _parentTitle() ? _parentTitle : _parentId"></span>
+                    <i class="icon-arrow-right"></i>
+                </span>
+                <!-- /ko -->
                 <span class="event-title" data-bind="
                     text: title().length > 0 ? title : 'New Event',
                     event: {click: $root.events.setSelected}" ></span>
                 <span class="event-article-count" data-bind="text: '(' + content().length + ')'"></span>
-                <!-- ko with: parent -->
-                <span class="event-parent">
-                    follows <strong data-bind="text: typeof title === 'undefined' ? id : title"></strong></small>
-                </span>
-                <!-- /ko -->
             </div>
 
             <div class="event-wrapper" data-bind="if: $root.events.selectedEvent() === $data">
@@ -110,12 +111,13 @@
                     <input type="time"
                         data-bind='value: _prettyTime, valueUpdate: "afterkeydown"' />
 
-                    <label>Does this follow another event?</label>
+                    <label>Which previous event does this follow?</label>
                     <select data-bind='
                         value: _parentId, 
-                        options: $root.events.events,
+                        options: $root.events.unSelectedEvents(),
                         optionsText: "title",
-                        optionsValue: "id"
+                        optionsValue: "id",
+                        optionsCaption: "(none)"
                     '>
                     </select>
 

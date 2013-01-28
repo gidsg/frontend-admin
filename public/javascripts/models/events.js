@@ -7,6 +7,10 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         this.events = ko.observableArray();
         this.selectedEvent = ko.observable();
 
+        this.unSelectedEvents = ko.computed(function(){
+            return _.without(this.events(), this.selectedEvent());
+        }, this);
+
         this.length = ko.computed(function(){
             return this.events().length;
         }, this)
@@ -56,7 +60,7 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         this.createEventFollowOn = function(parent) {
             var event = new Event({
                 articleCache: articleCache,
-                _parentId: parent.id()
+                parent: {id: parent.id()}
             });
             self.events.unshift(event);
             self.selectedEvent(event)
