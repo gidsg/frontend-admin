@@ -40,6 +40,11 @@ object Mongo {
       Map("background" -> true, "name" -> "Start date ID index")
     )
 
+    table.underlying.ensureIndex(
+      Map("ancestor.id" -> 1),
+      Map("background" -> true, "name" -> "Ancestor ID index")
+    )
+
     table
   }
 }
