@@ -23,18 +23,7 @@ object EventController extends Controller with Logging with AuthLogging {
 
   def create() = AuthAction{ request =>
     request.body.asJson.map(_.toString).map(Event.fromJson).map { event =>
-
-      val parentEvent = event.parent.flatMap(p => Event.mongo.byId(p.id))
-      val ancestorId = parentEvent.flatMap(_.ancestor.map(_.id)).orElse(parentEvent.map(_.id))
-
-      val eventWithParent = event.copy(
-        parent = parentEvent.map(p => Parent(p.id, Some(p.title))),
-        ancestor = ancestorId.map(Parent(_))
-      )
-
-      Event.mongo.save(eventWithParent)
-
-      Ok(Event.toJsonString(eventWithParent)).as("application/json")
+      Ok(Event.toJsonString(Event.mongo.createNew(event))).as("application/json")
     }.getOrElse(BadRequest(status("Invalid Json")).as("application/json"))
   }
   

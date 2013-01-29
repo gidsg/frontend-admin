@@ -41,9 +41,13 @@ object Mongo {
     )
 
     table.underlying.ensureIndex(
-      Map("ancestor.id" -> 1),
+      Map("_rootEvent.id" -> 1),
       Map("background" -> true, "name" -> "Ancestor ID index")
     )
+
+    // Write operations wait for the server to flush data to disk
+    // http://api.mongodb.org/scala/casbah/2.1.2/scaladoc/com/mongodb/casbah/WriteConcern$.html
+    table.setWriteConcern(com.mongodb.WriteConcern.FSYNC_SAFE)
 
     table
   }
