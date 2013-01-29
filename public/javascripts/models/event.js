@@ -53,6 +53,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         });
         
         // Administrative vars
+        this._children    = ko.observableArray();
         this._parentId    = ko.observable();
         this._parentTitle = ko.observable();
         this._contentApi  = ko.observable();
@@ -164,7 +165,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             // ..but we generate the posted id, as the user may have edited the slug, date, etc.
             self.id(self.generateId());
 
-            /*
+            /* 
             this.content.sort(function (left, right) {
                 return (left.id() < right.id()) ? -1 : 1
             })

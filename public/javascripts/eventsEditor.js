@@ -33,12 +33,29 @@ curl([
         url: '/events/list',
         type: 'json',
         success: function(resp) {
-            resp.map(function(event){
-                viewModel.events.loadEvent(event);
+            buildGraph(resp).map(function(e){
+                viewModel.events.loadEvent(e, viewModel.events.events);
             });
         },
         error: function() {}
     });
+
+    function buildGraph(events) {
+        var eventsById = {},
+            roots = [],
+            len = events.length,
+            i;
+        for (i = 0; i < len; ++i) {
+            eventsById[events[i].id] = events[i];
+            events[i].children = [];
+        }
+        for (i = 0; i < len; ++i) {
+            var parent = events[i].parent ? events[i].parent.id : null;
+            var nodes = (parent === null) ? roots : eventsById[parent].children;
+            nodes.push(events[i]);
+        }
+        return roots;
+    }
 
     function onDragStart(event) {
         event.dataTransfer.setData('article', '1');
@@ -55,12 +72,12 @@ curl([
 
     function onDragOver(event) {
         event.preventDefault();
-        event.currentTarget.style.background = '#EEE';
+        event.currentTarget.style.background = '#DFF0D8';
     }
 
     function onDragLeave(event) {
         event.preventDefault();
-        event.currentTarget.style.background = '#fff';  
+        event.currentTarget.style.background = 'inherit';  
     }
 
     function onDrop(event) {
@@ -68,9 +85,9 @@ curl([
         event.preventDefault();
         var target = ko.dataFor(el);
         target.addArticle(dragged)
-        el.style.background = '#FCF8E3';
+        el.style.background = '#CEE8C3';
         setTimeout(function(){
-            el.style.background = '#fff';  
+            el.style.background = 'inherit';  
         }, 1000);
     }
 

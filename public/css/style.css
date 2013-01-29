@@ -65,23 +65,29 @@ input[type=checkbox].status {
 
 /** events */
 
+.events > .event-wrapper {
+    border-top: 1px solid #eee;
+    padding: 8px 0;
+}
+
+.events > .event-wrapper:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
 .event {
-    border-top: 1px dotted #999;
     padding: 0 4px;
 }
 
 .event-header {
-    padding: 4px 0;
 }
 
-.event-header .icon-arrow-right {
-    opacity: 0.3;
+.event-children {
+    padding-left: 20px;    
 }
 
 .event-title {
     color: #51A351;
     font-size: 1em;
-    font-weight: bold;
     cursor: pointer;
 }
 

@@ -8,17 +8,33 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         this.selectedEvent = ko.observable();
 
         this.unSelectedEvents = ko.computed(function(){
-            return _.without(this.events(), this.selectedEvent());
+            var unSelectedEvents = [];
+            function walk (event) {
+                if (event !== self.selectedEvent()) {
+                    unSelectedEvents.push(event)
+                }
+                (event._children() || []).map(function(e){
+                    walk(e)
+                })
+            }
+            this.events().map(function(e){
+                walk(e)
+            })
+            return unSelectedEvents;
         }, this);
 
         this.length = ko.computed(function(){
             return this.events().length;
         }, this)
 
-        this.loadEvent = function(opts) {
-            opts = opts || {};
-            opts.articleCache = articleCache;
-            self.events.unshift(new Event(opts));
+        this.loadEvent = function(o, into) {
+            o = o || {};
+            o.articleCache = articleCache;
+            var event = new Event(o);
+            into.unshift(event);
+            (o.children || []).map(function(e){
+                self.loadEvent(e, event._children);
+            });
         };
 
         this.setSelected = function(current) {
