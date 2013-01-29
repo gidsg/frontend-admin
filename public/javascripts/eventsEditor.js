@@ -15,7 +15,7 @@ curl([
 ) {
     var 
         articles = new Articles(),
-        events = new Events(articles.articles()),
+        events = new Events(articles.cache),
         dragged,
         deBounced;
 
@@ -67,7 +67,7 @@ curl([
         var el = event.currentTarget;
         event.preventDefault();
         var target = ko.dataFor(el);
-        target.addContent(dragged)
+        target.addArticle(dragged)
         el.style.background = '#FCF8E3';
         setTimeout(function(){
             el.style.background = '#fff';  

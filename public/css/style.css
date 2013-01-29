@@ -74,7 +74,12 @@ input[type=checkbox].status {
     padding: 4px 0;
 }
 
+.event-header .icon-arrow-right {
+    opacity: 0.3;
+}
+
 .event-title {
+    color: #51A351;
     font-size: 1em;
     font-weight: bold;
     cursor: pointer;
@@ -86,9 +91,8 @@ input[type=checkbox].status {
 }
 
 .event-parent {
-    display: block;
-    color: #999;
-    padding: 0 0 0 18px;
+    color: #ccc;
+    font-weight: bold;
 }
 
 .event-form,
@@ -112,6 +116,8 @@ input[type=checkbox].status {
 
 .article {
     display: block;
+    overflow: hidden;
+    padding: 0 0 8px 0;
     -webkit-transition: opacity 0.5s;
        -moz-transition: opacity 0.5s;
         -ms-transition: opacity 0.5s;
@@ -119,7 +125,9 @@ input[type=checkbox].status {
             transition: opacity 0.5s;
 }
 
-.article-title { font-size: 1em; }
+.article-star {float: left; display: block; width: 18px; }
+
+.article-title { font-size: 1em; color: #005689;}
 .article-id { font-size: 1em; color: #999; margin-bottom: 0; font-size: 0.9em; }
 .article-date { font-size: 1em; color: #ccc; margin-bottom: 0; font-size: 0.8em; line-height: 0.99em; }
 
@@ -127,11 +135,12 @@ input[type=checkbox].status {
 
 .articles {
     border-top: 1px dotted #999;
+    padding: 8px 0;
+    margin: 13px 0;
 }
 
 .articles .article {
-    cursor: move;     
-    padding: 2px 4px 8px 4px;
+    cursor: move;
 }
 
 .articles .article:hover {
@@ -148,20 +157,16 @@ input[type=checkbox].status {
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 800px;
+    padding: 0 8px 0 0;
 }
 
-.storify-articles input[type="text"]{
+.storify input[type="text"]{
     background-color: #fff;
     color: #000;    
 }
 .storify { 
     margin-top: 20px;
 }
-.storify-articles {
-    padding: 0 8px 0 0;
-    -webkit-linear-gradient(top,#fff,#f2f2f2)
-}
-
 input#tone-news { 
     float: left;
     margin-right: 5px;
