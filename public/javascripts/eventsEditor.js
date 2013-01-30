@@ -28,35 +28,6 @@ curl([
     // Do an initial article search
     articles.articleSearch();
 
-    // Grab events
-    Reqwest({
-        url: '/events/list',
-        type: 'json',
-        success: function(resp) {
-            buildGraph(resp).map(function(e){
-                viewModel.events.loadEvent(e, viewModel.events.events);
-            });
-        },
-        error: function() {}
-    });
-
-    function buildGraph(events) {
-        var eventsById = {},
-            roots = [],
-            len = events.length,
-            i;
-        for (i = 0; i < len; ++i) {
-            eventsById[events[i].id] = events[i];
-            events[i].children = [];
-        }
-        for (i = 0; i < len; ++i) {
-            var parent = events[i].parent ? events[i].parent.id : null;
-            var nodes = (parent === null) ? roots : eventsById[parent].children;
-            nodes.push(events[i]);
-        }
-        return roots;
-    }
-
     function onDragStart(event) {
         event.dataTransfer.setData('article', '1');
         event.target.style.opacity = '0.3';  // this / e.target is the source node.

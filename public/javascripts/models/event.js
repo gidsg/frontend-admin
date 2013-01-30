@@ -21,12 +21,16 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             self = this;
 
         // Input values that get post processed
-        this._prettyDate = ko.observable(); 
-        this._prettyTime = ko.observable(); 
+        this._humanDate  = ko.observable();
+        this._prettyDate = ko.observable();
+        this._prettyTime = ko.observable();
 
         // Event 'schema' poperties
         this.content    = ko.observableArray();
         this.title      = ko.observable();
+        this.importance  = ko.observable();
+        this.id          = ko.observable();
+
         this.startDate  = ko.computed({
             read: function() {
                       return this._prettyDate() + 'T' + this._prettyTime() + ':00.000Z'; 
@@ -35,12 +39,10 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                       var d = new Date(value)
                       this._prettyDate(d.toISOString().match(/^\d{4}-\d{2}-\d{2}/)[0]);
                       this._prettyTime(d.getHoursPadded() +':'+ d.getMinutesPadded());
+                      this._humanDate(humanized_time_span(d));
                   },
             owner: this
         });
-
-        this.importance  = ko.observable();
-        this.id          = ko.observable();
 
         // listen out for changes to content array and generate a content api
         this.content.subscribe(function(content){
@@ -190,8 +192,8 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                     // Mark event as real
                     self._tentative(false);
                     // Stop editing
-                    self._editing(false);
-                    Common.mediator.emitEvent('models:event:save:success', [resp]);
+                    self._editing(false)
+                    Common.mediator.emitEvent('models:event:save:success');
                 },
                 error: function() {
                     Common.mediator.emitEvent('models:event:save:error');

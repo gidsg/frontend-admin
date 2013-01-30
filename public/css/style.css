@@ -135,7 +135,8 @@ input[type=checkbox].status {
 
 .article-title { font-size: 1em; color: #005689;}
 .article-id { font-size: 1em; color: #999; margin-bottom: 0; font-size: 0.9em; }
-.article-date { font-size: 1em; color: #ccc; margin-bottom: 0; font-size: 0.8em; line-height: 0.99em; }
+
+.event-date, .article-date { font-size: 1em; color: #ccc; margin-bottom: 0; font-size: 0.8em; line-height: 0.99em; }
 
 /** search results */
 

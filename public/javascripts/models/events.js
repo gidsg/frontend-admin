@@ -1,48 +1,62 @@
 define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, Common, Reqwest) {
 
-    return function(articleCache) {
+    var Events = function(articleCache) {
         var endpoint = '/events',
             self = this;
 
-        this.events = ko.observableArray();
-        this.selectedEvent = ko.observable();
+        this.list  = ko.observableArray();
+        this.trees = ko.observableArray();
 
-        this.unSelectedEvents = ko.computed(function(){
-            var unSelectedEvents = [];
-            function walk (event) {
-                if (event !== self.selectedEvent()) {
-                    unSelectedEvents.push(event)
-                }
-                (event._children() || []).map(function(e){
-                    walk(e)
-                })
+        this.selected = ko.observable();
+        this.previous = ko.computed(function(e){
+            if (this.selected()) {
+                return _.filter(this.list(), function(e){
+                    return e.startDate() < self.selected().startDate()
+                });
+            } else {
+                return [];
             }
-            this.events().map(function(e){
-                walk(e)
-            })
-            return unSelectedEvents;
         }, this);
 
+        this.growTrees = function() {
+            var eventsById = {},
+                list = self.list(),
+                len = list.length,
+                parentId,
+                addTo,
+                i;
+            self.trees.removeAll();
+            for (i = 0; i < len; ++i) {
+                list[i]._children.removeAll();
+                eventsById[list[i].id()] = list[i];
+            }
+            for (i = 0; i < len; ++i) {
+                parentId = list[i]._parentId();
+                addTo = (parentId && eventsById[parentId]) ? eventsById[parentId]._children : self.trees;
+                addTo.push(list[i]);
+            }
+        };
+
+        Common.mediator.addListener('models:event:save:success',      self.growTrees);
+        Common.mediator.addListener('models:event:delete:success',    self.growTrees);
+        Common.mediator.addListener('models:events:hierarchy:change', self.growTrees);
+
         this.length = ko.computed(function(){
-            return this.events().length;
+            return this.list().length;
         }, this)
 
-        this.loadEvent = function(o, into) {
+        this.loadEvent = function(o) {
             o = o || {};
             o.articleCache = articleCache;
-            var event = new Event(o);
-            into.unshift(event);
-            (o.children || []).map(function(e){
-                self.loadEvent(e, event._children);
-            });
+            self.list.unshift(new Event(o));
         };
 
         this.setSelected = function(current) {
-            if (current === self.selectedEvent()) {
-                self.selectedEvent(undefined);
+            if (current === self.selected()) {
+                self.selected(undefined);
             } else {
                 current.decorateContent();
-                self.selectedEvent(current);
+                self.selected(current);
             } 
         };
 
@@ -50,14 +64,15 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
             var event = new Event({
                 articleCache: articleCache
             });
-            self.events.unshift(event);
-            self.selectedEvent(event)
+            self.list.unshift(event);
+            self.selected(event)
+            Common.mediator.emitEvent('models:events:hierarchy:change');
         };
 
         this.deleteEvent = function(event){
             var url = endpoint + '/' + event.id();
-            self.events.remove(event);
-            self.selectedEvent(false);
+            self.list.remove(event);
+            self.selected(false);
             Reqwest({
                 url: url,
                 method: 'delete',
@@ -65,10 +80,7 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
                 contentType: 'application/json',
                 data: JSON.stringify(self),
                 success: function(resp) {
-                    Common.mediator.emitEvent('models:event:delete:success', [resp]);
-                },
-                error: function() {
-                    Common.mediator.emitEvent('models:event:delete:error');
+                    Common.mediator.emitEvent('models:events:hierarchy:change');
                 }
             });
         };
@@ -78,21 +90,37 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
                 articleCache: articleCache,
                 parent: {id: parent.id()}
             });
-            self.events.unshift(event);
-            self.selectedEvent(event)
+            self.list.unshift(event);
+            self.selected(event)
+            Common.mediator.emitEvent('models:events:hierarchy:change');
         };
 
         this.cancelEditing = function(event) {
             event._editing(false);
             if (event._tentative()) {
-                self.events.remove(event);
-                self.selectedEvent(false);
+                self.list.remove(event);
+                self.selected(false);
             }
         }
 
         this.eventSaveSuccess = function() {
+            // Show success
         };
-
         Common.mediator.addListener('models:events:save:success', this.eventSaveSuccess);
+
+        // Grab events
+        Reqwest({
+            url: '/events/list',
+            type: 'json',
+            success: function(resp) {
+                resp.map(function(e){
+                    self.loadEvent(e);
+                });
+                Common.mediator.emitEvent('models:events:hierarchy:change');
+            },
+            error: function() {}
+        });
     };
+
+    return Events;
 });

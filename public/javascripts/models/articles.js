@@ -13,10 +13,10 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
 
         this.articles = ko.observableArray();
 
-        this.cache = {};
-
         this.articleTerm = ko.observable(Common.queryParams.q || '');
         this.toneNews = ko.observable(false);
+
+        this.cache = {};
 
         this.makeUrl = function () {
             var queryString = Object.keys(apiParams).map(function (key) {
