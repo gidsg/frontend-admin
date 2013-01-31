@@ -1,4 +1,4 @@
-@(title: String, env: String, isAuthed: Boolean = false)(content: Html)
+@(title: String, env: String, isAuthed: Boolean = false, identity: String = "{}")(content: Html)
 
 <!DOCTYPE html>
 
@@ -31,7 +31,8 @@
         <script>
             define('Config', function() {
                 return {
-                    apiKey: '@conf.Configuration.api.key'
+                    apiKey: '@conf.Configuration.api.key',
+                    identity: @{Html(identity)}
                 }
             });
         </script>

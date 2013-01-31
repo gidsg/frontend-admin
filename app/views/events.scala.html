@@ -1,10 +1,8 @@
-@(config: String, env: String)
+@(identity: String, env: String)
 
-@main("Events editor", env, isAuthed = true) {
+@main("Events editor", env, isAuthed = true, identity) {
 
-<p>
-    <span class="alert">This is an experimental system to manage Events.</span>
-</p>
+<div class="alert" style="text-align: center">This is an experimental system to manage Events.</div>
 
 <div class="storify row-fluid">
 
@@ -107,9 +105,18 @@
                     <!-- /ko -->
                      <button class="event-form-toggler btn btn-mini" data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit Event</button>
                      <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
-                    <p>Date: 
+                    <p>
+                        <span class="muted">Event date</span> 
                         <span data-bind="text: _prettyDate"></span>
-                        <span data-bind="text: _prettyTime"></span>
+                        <span data-bind="text: _prettyTime"></span>                        
+                    </p>
+                    <p>
+                        <span class="muted">Last edited by</span> 
+                        <span data-bind="text: lastModifiedBy"></span>
+                    </p>
+                    <p>
+                        <span class="muted">Created by</span> 
+                        <span data-bind="text: createdBy"></span>
                     </p>
                 </div>
 

@@ -11,7 +11,8 @@ import com.mongodb.casbah.Imports._
 object EventController extends Controller with Logging with AuthLogging {
 
   def render() = AuthAction{ request =>
-    Ok(views.html.events("{}", Configuration.stage))
+    val identity = request.session.get("identity").head
+    Ok(views.html.events(identity, Configuration.stage))
   }
 
   /* API */

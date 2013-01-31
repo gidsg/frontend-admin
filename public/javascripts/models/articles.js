@@ -45,7 +45,6 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                     url += self.toneNews() ? '&tag=tone%2Fnews' : '';
                     propName = 'results';
                 }
-                console.log(url);
 
                 Reqwest({
                     url: url,

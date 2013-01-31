@@ -31,6 +31,9 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         this.importance = ko.observable();
         this.id         = ko.observable();
 
+        this.createdBy  = ko.observable();
+        this.lastModifiedBy = ko.observable(Config.identity.email);
+
         this.startDate  = ko.computed({
             read: function() {
                       return this._prettyDate() + 'T' + this._prettyTime() + ':00.000Z'; 
@@ -114,6 +117,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                 );
             }, this);
 
+            this.createdBy(o.createdBy || Config.identity.email);
         }
 
         this.addArticle = function(article) {
