@@ -25,26 +25,36 @@
                 }
             }
         </script>
+
+  <!-- supporting libraries -->
   <script type="text/javascript" src="../vendor/curl.js"></script>
   <script  type="text/javascript" src="../vendor/underscore.js"></script>
   <script  type="text/javascript" src="../vendor/jquery-ui-1.8.23.custom/js/jquery-1.7.2.min.js"></script>
+  <script  type="text/javascript" src="../vendor/humanized_time_span.js"></script>
+  
   <script>
     define('Config', function() {
       return {
-        apiKey: '55kszyb2sy6d48bjue95n778'
+        apiKey: '55kszyb2sy6d48bjue95n778' // Content API calls
       }
     });
   </script>
 
-  <!-- include spec files here... -->
+  <!-- model specs -->
   <script type="text/javascript" src="./modules/ItemSearchSpec.js"></script>
   <script type="text/javascript" src="./models/EditionSpec.js"></script>
   <script type="text/javascript" src="./models/TrailblockSpec.js"></script>
   <script type="text/javascript" src="./models/NetworkFrontSpec.js"></script>
+  <script type="text/javascript" src="./models/EventSpec.js"></script>
+  <script type="text/javascript" src="./models/EventsSpec.js"></script>
+  <script type="text/javascript" src="./models/ArticleSpec.js"></script>
+  <script type="text/javascript" src="./models/ArticlesSpec.js"></script>
+
+  <!-- modules specs -->
   <script type="text/javascript" src="./modules/TagSearchSpec.js"></script>
   <script type="text/javascript" src="./modules/TagEntrySpec.js"></script>
   <script type="text/javascript" src="./modules/AutoCompleteSpec.js"></script>
-
+  
   <script type="text/javascript">
     (function() {
       var jasmineEnv = jasmine.getEnv();
