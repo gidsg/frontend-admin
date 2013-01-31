@@ -17,13 +17,31 @@ curl([
         articles = new Articles(),
         events = new Events(articles.cache),
         dragged,
-        deBounced;
+        deBounced,
+        self = this;
 
     var viewModel = {
         events: events,
         articles: articles,
         sections: ko.observableArray()
     };
+
+    // Grab the section definitions
+    Reqwest({
+        url: 'http://content.guardianapis.com/sections?format=json',
+        type: 'jsonp',
+        success: function(resp) {
+            if (resp.response) {
+                var sections = resp.response.results || [];
+                sections.sort(function(l,r) {
+                    return l.webTitle < r.webTitle ? -1 : 1;
+                })
+                viewModel.sections(sections);
+            }
+            //viewModel.articles.sectionTerm('news');
+        },
+        error: function() {}
+    });
 
     // Do an initial article search
     articles.articleSearch();

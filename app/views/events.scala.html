@@ -11,13 +11,25 @@
   <div class="storify-articles span6">
 
     <form class="form-inline">
-        <input type="text" class="input-medium" placeholder="Article search" 
+         <h3> Articles
+        <input type="text" class="input-small" placeholder="Search" 
             data-bind='event: {keyup: articles.articleSearch}, value: articles.articleTerm, valueUpdate: "afterkeydown"'/>
+
+        <select data-bind='
+            value: articles.sectionTerm,
+            options: sections,
+            optionsText: "webTitle",
+            optionsValue: "id",
+            valueUpdate: "afterkeydown",
+            optionsCaption: "Section",
+            event: {change: articles.articleSearch}
+        '></select>
         <label class="checkbox">
             <input id="tone-news" type="checkbox" value="news" 
                 data-bind="checked: articles.toneNews, event: {click: articles.articleSearch}"/>
             tone/news
         </label>
+        </h3>
     </form>
 
     <div class="articles" data-bind='foreach: articles.articles'>
@@ -31,9 +43,11 @@
 
   <div class="storify-events span6">
     <form class="form-inline">
-        <input type="text" class="input-medium" placeholder="Event search"
-            data-bind='event: {keyup: events.pruneTrees}, value: events.pruneTerm, valueUpdate: "afterkeydown"'/>
-        <button class="btn btn-mini" data-bind="event: {click: events.createEvent}">Create a new event</button>
+        <h3> Events
+            <input type="text" class="input-small" placeholder="Search"
+                data-bind='event: {keyup: events.pruneTrees}, value: events.pruneTerm, valueUpdate: "afterkeydown"'/>
+            <button class="btn btn-mini" data-bind="event: {click: events.createEvent}">Create a new event</button>
+        </h3>
     </form>
     <div data-bind="text: events.length() === 0 ? 'Loading...' : ''"></div>
     <div class="events" data-bind="template: {name: 'event_template', foreach: events.trees}"></div>
@@ -48,7 +62,8 @@
         <div class="event" 
             data-bind="makeDropabble: true, if: !$root.events.selected() || $root.events.selected() === $data">
 
-            <div class="event-header">
+            <div class="event-header" data-bind="
+                css: {'event-header-selected': $root.events.selected() === $data}">
                 <i data-bind="
                     click: bump,
                     css: {
@@ -59,7 +74,6 @@
                 <span class="event-title" data-bind="
                     text: title().length > 0 ? title : 'New Event',
                     event: {click: $root.events.setSelected},
-                    css: {'event-title-selected': $root.events.selected() === $data}
                 "></span>
                 <span class="event-date" data-bind="text: _humanDate"></span>
                 <span class="event-article-count" 
@@ -91,16 +105,15 @@
                     <!-- ko if: content().length === 0 -->
                     <p class="alert">Drag articles here</p>
                     <!-- /ko -->
-                    <dl>
-                        <dt>Date</dt><dd data-bind="text: _prettyDate"></dd>
-                        <dt>Time</dt><dd data-bind="text: _prettyTime"></dd>
-                    </dl>
                      <button class="event-form-toggler btn btn-mini" data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit Event</button>
                      <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
+                    <p>Date: 
+                        <span data-bind="text: _prettyDate"></span>
+                        <span data-bind="text: _prettyTime"></span>
+                    </p>
                 </div>
 
-                <form class="event-form" 
-                    data-bind="if: _editing(), submit: save">
+                <form class="event-form" data-bind="if: _editing(), submit: save">
                   
                     <label>What happened? (or what is happening?)</label>
                     <input type="text" placeholder="e.g. 'Helicopter crash"
@@ -121,8 +134,7 @@
                         optionsText: "title",
                         optionsValue: "id",
                         optionsCaption: "(none)"
-                    '>
-                    </select>
+                    '></select>
 
                     <div>
                         <button class="btn btn-success btn-mini" type="submit" data-bind="enable: _isValid">Save event</button>

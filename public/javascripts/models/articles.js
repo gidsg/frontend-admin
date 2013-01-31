@@ -14,7 +14,8 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
         this.articles = ko.observableArray();
 
         this.articleTerm = ko.observable(Common.queryParams.q || '');
-        this.toneNews = ko.observable(false);
+        this.sectionTerm = ko.observable();
+        this.toneNews    = ko.observable();
 
         this.cache = {};
 
@@ -40,12 +41,11 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                 } else {
                     url  = 'http://content.guardianapis.com/search?show-fields=all&page-size=50&format=json&q=';
                     url += encodeURIComponent(self.articleTerm());
-                    
-                    if (self.toneNews())
-                        url += '&tag=tone%2Fnews'
-
+                    url += self.sectionTerm() ? '&section=' + encodeURIComponent(self.sectionTerm()) : '';
+                    url += self.toneNews() ? '&tag=tone%2Fnews' : '';
                     propName = 'results';
                 }
+                console.log(url);
 
                 Reqwest({
                     url: url,
