@@ -7,6 +7,8 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         this.list  = ko.observableArray();
         this.trees = ko.observableArray();
 
+        this.pruneTerm = ko.observable();
+
         this.selected = ko.observable();
         this.previous = ko.computed(function(e){
             if (this.selected()) {
@@ -35,6 +37,21 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
                 addTo = (parentId && eventsById[parentId]) ? eventsById[parentId]._children : self.trees;
                 addTo.push(list[i]);
             }
+        };
+
+        this.pruneTrees = function () {
+            self.trees().map(function(e){
+                self.prune(new RegExp(self.pruneTerm(),"i"), e)
+            })
+        };
+
+        this.prune = function(regex, node, keep) {
+            var keep = !!node.title().match(regex) || keep;
+            node._children().map(function(e){
+                if (self.prune(regex, e, keep)) keep = true
+            })
+            node._hidden(!keep);
+            return keep 
         };
 
         Common.mediator.addListener('models:event:save:success',      self.growTrees);

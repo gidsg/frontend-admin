@@ -61,6 +61,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         this._contentApi  = ko.observable();
         this._tentative   = ko.observable(!opts || !opts.id); // No id means it's a new un-persisted event,
         this._editing     = ko.observable(this._tentative()); // so mark as editable
+        this._hidden      = ko.observable();
         this._hasNewArticle = ko.observable();
 
         this.init = function (o) {
