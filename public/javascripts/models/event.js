@@ -28,8 +28,8 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         // Event 'schema' poperties
         this.content    = ko.observableArray();
         this.title      = ko.observable();
-        this.importance  = ko.observable();
-        this.id          = ko.observable();
+        this.importance = ko.observable();
+        this.id         = ko.observable();
 
         this.startDate  = ko.computed({
             read: function() {
@@ -167,11 +167,10 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             // ..but we generate the posted id, as the user may have edited the slug, date, etc.
             self.id(self.generateId());
 
-            /* 
+            // Sort in descending date order. This'll probably need changing.
             this.content.sort(function (left, right) {
-                return (left.id() < right.id()) ? -1 : 1
+                return (left.webPublicationDate() > right.webPublicationDate()) ? -1 : 1
             })
-            */
 
             console.log('SENT:')
             console.log(JSON.stringify(self) + "\n\n")
