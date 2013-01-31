@@ -167,9 +167,18 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             // ..but we generate the posted id, as the user may have edited the slug, date, etc.
             self.id(self.generateId());
 
-            // Sort in descending date order. This'll probably need changing.
+            // Sort by importance then by date.  Both descending. This'll probably need changing.
             this.content.sort(function (left, right) {
-                return (left.webPublicationDate() > right.webPublicationDate()) ? -1 : 1
+                var 
+                    li = left.importance(),
+                    ri = right.importance(),
+                    ld = left.webPublicationDate(),
+                    rd = right.webPublicationDate();
+                if (li === ri) {
+                    return (ld > rd) ? -1 : 1
+                } else {
+                    return (li > ri) ? -1 : 1
+                }
             })
 
             console.log('SENT:')
