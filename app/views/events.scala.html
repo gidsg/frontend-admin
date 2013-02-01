@@ -2,7 +2,7 @@
 
 @main("Events editor", env, isAuthed = true, identity) {
 
-<div class="alert" style="text-align: center">This is an experimental system to manage Events.</div>
+<div class="alert" style="text-align: center">This is an experimental system to manage Events</div>
 
 <div class="storify row-fluid">
 
@@ -103,26 +103,35 @@
                     <!-- ko if: content().length === 0 -->
                     <p class="alert">Drag articles here</p>
                     <!-- /ko -->
-                     <button class="event-form-toggler btn btn-mini" data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit Event</button>
-                     <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
                     <p>
                         <span class="muted">Event date</span> 
                         <span data-bind="text: _prettyDate"></span>
                         <span data-bind="text: _prettyTime"></span>                        
                     </p>
-                    <p>
+                     <button class="event-form-toggler btn btn-mini" data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit Event</button>
+                     <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
+                    <!--p>
                         <span class="muted">Last edited by</span> 
                         <span data-bind="text: lastModifiedBy"></span>
                     </p>
                     <p>
                         <span class="muted">Created by</span> 
                         <span data-bind="text: createdBy"></span>
-                    </p>
+                    </p-->
                 </div>
 
                 <form class="event-form" data-bind="if: _editing(), submit: save">
                   
-                    <label>What happened? (or what is happening?)</label>
+                    <label>Which event does this follow?</label>
+                    <select data-bind='
+                        value: _parentId, 
+                        options: $root.events.previous(),
+                        optionsText: "title",
+                        optionsValue: "id",
+                        optionsCaption: "(none)"
+                    '></select>
+
+                    <label>Title (what happend, is happening, or will happen)</label>
                     <input type="text" placeholder="e.g. 'Helicopter crash"
                         data-bind='value: title, valueUpdate: "afterkeydown"' />
                         
@@ -133,15 +142,6 @@
                     <label>Time</label>
                     <input type="time"
                         data-bind='value: _prettyTime, valueUpdate: "afterkeydown"' />
-
-                    <label>Which previous event does this follow?</label>
-                    <select data-bind='
-                        value: _parentId, 
-                        options: $root.events.previous(),
-                        optionsText: "title",
-                        optionsValue: "id",
-                        optionsCaption: "(none)"
-                    '></select>
 
                     <div>
                         <button class="btn btn-success btn-mini" type="submit" data-bind="enable: _isValid">Save event</button>

@@ -9,6 +9,8 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
 
         this.pruneTerm = ko.observable();
 
+        this.people = ko.observable({});
+
         this.selected = ko.observable();
         this.previous = ko.computed(function(e){
             if (this.selected()) {
@@ -63,9 +65,14 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         }, this)
 
         this.loadEvent = function(o) {
+            var event;
             o = o || {};
             o.articleCache = articleCache;
-            self.list.unshift(new Event(o));
+            event = new Event(o);
+            self.list.unshift(event);
+
+            if (event.createdBy()) self.people()[event.createdBy()] = true
+            if (event.lastModifiedBy()) self.people()[event.lastModifiedBy()] = true
         };
 
         this.setSelected = function(current) {
