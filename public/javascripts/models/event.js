@@ -30,7 +30,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         this.title      = ko.observable();
         this.importance = ko.observable();
         this.id         = ko.observable();
-
+        this.explainer  = ko.observable();
         this.createdBy  = ko.observable();
         this.lastModifiedBy = ko.observable(Config.identity.email);
 
@@ -89,6 +89,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             }
 
             this.title(o.title || '');
+            this.explainer(o.explainer || '');
             this.importance(o.importance || importanceDefault);
             
             if (o.parent) {

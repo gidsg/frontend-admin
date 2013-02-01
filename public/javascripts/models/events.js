@@ -137,12 +137,10 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
             url: '/events/list',
             type: 'json',
             success: function(resp) {
-                resp.sort(function(l,r){
-                    return l.startDate < r.startDate ? -1 : 1;
-                });
                 resp.map(function(e){
                     self.loadEvent(e);
                 });
+                console.log(self.people())
                 Common.mediator.emitEvent('models:events:hierarchy:change');
             },
             error: function() {}

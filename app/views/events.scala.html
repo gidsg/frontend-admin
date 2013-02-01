@@ -103,21 +103,27 @@
                     <!-- ko if: content().length === 0 -->
                     <p class="alert">Drag articles here</p>
                     <!-- /ko -->
-                    <p>
-                        <span class="muted">Event date</span> 
-                        <span data-bind="text: _prettyDate"></span>
-                        <span data-bind="text: _prettyTime"></span>                        
-                    </p>
-                     <button class="event-form-toggler btn btn-mini" data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit Event</button>
+                    <div class="event-meta">
+                        <div>
+                            <span class="muted">Explainer:</span> 
+                            <span data-bind="html: explainer() ? explainer : '(none)'"></span>
+                        </div>
+                        <div>
+                            <span class="muted">Event date:</span> 
+                            <span data-bind="text: _prettyDate"></span>
+                            <span data-bind="text: _prettyTime"></span>                        
+                        </div>
+                        <div>
+                            <span class="muted">Created by:</span> 
+                            <span data-bind="text: createdBy"></span>
+                        </div>
+                        <div>
+                            <span class="muted">Updated by</span> 
+                            <span data-bind="text: lastModifiedBy"></span>
+                        </div>
+                    </div>
+                     <button class="event-form-toggler btn btn-mini" data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit</button>
                      <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
-                    <!--p>
-                        <span class="muted">Last edited by</span> 
-                        <span data-bind="text: lastModifiedBy"></span>
-                    </p>
-                    <p>
-                        <span class="muted">Created by</span> 
-                        <span data-bind="text: createdBy"></span>
-                    </p-->
                 </div>
 
                 <form class="event-form" data-bind="if: _editing(), submit: save">
@@ -134,7 +140,12 @@
                     <label>Title (what happend, is happening, or will happen)</label>
                     <input type="text" placeholder="e.g. 'Helicopter crash"
                         data-bind='value: title, valueUpdate: "afterkeydown"' />
-                        
+
+                    <label>Explainer</label>
+                    <textarea class="event-explainer"
+                        data-bind='value: explainer, valueUpdate: "afterkeydown"'>
+                    </textarea>
+
                     <label>When</label>
                     <input type="date"
                         data-bind='value: _prettyDate, valueUpdate: "afterkeydown"' />
