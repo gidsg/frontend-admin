@@ -4,7 +4,7 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
 
         var self = this,
             deBounced,
-            apiHost = 'http://content.guardianapis.com/',
+            apiHost = '//content.guardianapis.com',
             apiParams = {
                 'show-fields': 'all',
                 'page-size': 50,
@@ -33,13 +33,12 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                 
                 var url, propName;
 
-
                 // If term contains slashes, assume it's an article id
                 if (self.articleTerm().match(/\//)) {
-                    var url = apiHost + self.articleTerm() + '?show-fields=all&format=json';
+                    var url = apiHost + '/' + self.articleTerm() + '?show-fields=all&format=json';
                     propName = 'content';
                 } else {
-                    url  = 'http://content.guardianapis.com/search?show-fields=all&page-size=50&format=json&q=';
+                    url  = apiHost + '/search?show-fields=all&page-size=50&format=json&q=';
                     url += encodeURIComponent(self.articleTerm());
                     url += self.sectionTerm() ? '&section=' + encodeURIComponent(self.sectionTerm()) : '';
                     url += self.toneNews() ? '&tag=tone%2Fnews' : '';

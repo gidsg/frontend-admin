@@ -47,16 +47,6 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             owner: this
         });
 
-        // listen out for changes to content array and generate a content api
-        this.content.subscribe(function(content){
-            var apiHost = "http://content.guardianapis.com/search",
-                query = "?page-size=50&format=json&show-fields=all&show-tags=all&show-factboxes=all&show-media=all&show-references=all&api-key=" + Config.apiKey + "&ids="
-                apiUrl = apiHost + query + content.map( function (article) {
-                    return encodeURIComponent(article.id())
-            }).join(',')
-            self._contentApi(apiUrl);
-        });
-        
         // Administrative vars
         this._children    = ko.observableArray();
         this._parentId    = ko.observable();
@@ -137,7 +127,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         };
 
         this.decorateContent = function() {
-            var apiUrl = "http://content.guardianapis.com/search";
+            var apiUrl = "//content.guardianapis.com/search";
             // Find articles that aren't yet decorated with API data..
             var areRaw = _.filter(self.content(), function(a){return ! a.webTitle()});
             // and grab them from the API
