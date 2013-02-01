@@ -35,6 +35,8 @@ object FrontendAdminBuild extends Build {
     jarName in assembly := "frontend-admin.jar",
     mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) => {
         case s: String if s.contains("org/apache/commons/logging/") => MergeStrategy.first
+        case s: String if s.contains("images/") => MergeStrategy.first
+        case s: String if s.contains("css/") => MergeStrategy.first
         case x => old(x)
       }
     }
