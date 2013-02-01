@@ -3,13 +3,7 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
     return function() {
 
         var self = this,
-            deBounced,
-            apiHost = '//content.guardianapis.com',
-            apiParams = {
-                'show-fields': 'all',
-                'page-size': 50,
-                'format': 'json'
-            };
+            deBounced;
 
         this.articles = ko.observableArray();
 
@@ -18,13 +12,6 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
         this.toneNews    = ko.observable();
 
         this.cache = {};
-
-        this.makeUrl = function () {
-            var queryString = Object.keys(apiParams).map(function (key) {
-                return [key, apiParams[key]].join('=')
-            }).join('&')
-            return apiHost + '?' + queryString
-        }
 
         // Grab articles from Content Api
         this.articleSearch = function() {
@@ -35,10 +22,10 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
 
                 // If term contains slashes, assume it's an article id
                 if (self.articleTerm().match(/\//)) {
-                    var url = apiHost + '/' + self.articleTerm() + '?show-fields=all&format=json';
+                    var url = '/api/proxy/' + self.articleTerm() + '?show-fields=all&format=json';
                     propName = 'content';
                 } else {
-                    url  = apiHost + '/search?show-fields=all&page-size=50&format=json&q=';
+                    url  = '/api/proxy/search?show-fields=all&page-size=50&format=json&q=';
                     url += encodeURIComponent(self.articleTerm());
                     url += self.sectionTerm() ? '&section=' + encodeURIComponent(self.sectionTerm()) : '';
                     url += self.toneNews() ? '&tag=tone%2Fnews' : '';

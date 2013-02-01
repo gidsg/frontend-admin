@@ -28,7 +28,7 @@ curl([
 
     // Grab the section definitions
     Reqwest({
-        url: '//content.guardianapis.com/sections?format=json',
+        url: '/api/proxy/sections?format=json',
         type: 'jsonp',
         success: function(resp) {
             if (resp.response) {

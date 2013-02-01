@@ -32,7 +32,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         this.id         = ko.observable();
         this.explainer  = ko.observable();
         this.createdBy  = ko.observable();
-        this.lastModifiedBy = ko.observable(Config.identity.email);
+        this.lastModifiedBy = ko.observable();
 
         this.startDate  = ko.computed({
             read: function() {
@@ -108,7 +108,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                 );
             }, this);
 
-            this.createdBy(o.createdBy || Config.identity.email);
+            this.createdBy(o.createdBy);
         }
 
         this.addArticle = function(article) {
@@ -127,12 +127,12 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         };
 
         this.decorateContent = function() {
-            var apiUrl = "//content.guardianapis.com/search";
+            var apiUrl = "/api/proxy/search";
             // Find articles that aren't yet decorated with API data..
             var areRaw = _.filter(self.content(), function(a){return ! a.webTitle()});
             // and grab them from the API
             if(areRaw.length) {                    
-                apiUrl += "?page-size=50&format=json&show-fields=all&show-tags=all&show-factboxes=all&show-media=all&show-references=all&api-key=" + Config.apiKey;
+                apiUrl += "?page-size=50&format=json&show-fields=all&show-tags=all&api-key=" + Config.apiKey;
                 apiUrl += "&ids=" + areRaw.map(function(article){
                     return encodeURIComponent(article.id())
                 }).join(',');
