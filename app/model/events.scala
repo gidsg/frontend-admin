@@ -19,7 +19,10 @@ case class Event(
   importance: Option[Int] = None,
   content: Seq[Content] = Nil,
   parent: Option[Parent] = None,
-  _rootEvent: Option[Parent] = None //denormalisation to group events together, represents event at the top of this tree
+  _rootEvent: Option[Parent] = None, //denormalisation to group events together, represents event at the top of this tree
+  createdBy: Option[String] = None,
+  lastModifiedBy: Option[String] = None,
+  explainer: Option[String] = None
 )
 
 object Event {

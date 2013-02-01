@@ -9,6 +9,8 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
 
         this.pruneTerm = ko.observable();
 
+        this.people = ko.observable({});
+
         this.selected = ko.observable();
         this.previous = ko.computed(function(e){
             if (this.selected()) {
@@ -63,9 +65,14 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         }, this)
 
         this.loadEvent = function(o) {
+            var event;
             o = o || {};
             o.articleCache = articleCache;
-            self.list.unshift(new Event(o));
+            event = new Event(o);
+            self.list.unshift(event);
+
+            if (event.createdBy()) self.people()[event.createdBy()] = true
+            if (event.lastModifiedBy()) self.people()[event.lastModifiedBy()] = true
         };
 
         this.setSelected = function(current) {
@@ -130,9 +137,6 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
             url: '/events/list',
             type: 'json',
             success: function(resp) {
-                resp.sort(function(l,r){
-                    return l.startDate < r.startDate ? -1 : 1;
-                });
                 resp.map(function(e){
                     self.loadEvent(e);
                 });

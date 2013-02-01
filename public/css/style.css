@@ -126,8 +126,18 @@ input[type=checkbox].status {
     display: none;
 }
 
+textarea.event-explainer {
+    width: 100%;
+    max-width: 400px;
+    height: 100px;
+}
+
 .event-articles{
     margin: 10px 0;
+}
+
+.event-meta {
+    font-size: 0.9em;
 }
 
 .icon-star-empty {

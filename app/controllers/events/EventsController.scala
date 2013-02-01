@@ -18,7 +18,7 @@ object EventController extends Controller with Logging with AuthLogging {
   /* API */
 
   def find() = AuthAction { request =>
-    val results = Events.find().sort(Map("startDate" -> -1)).toSeq.map(Event.fromDbObject)
+    val results = Events.find().sort(Map("startDate" -> 1)).toSeq.map(Event.fromDbObject)
     Ok(Event.toJsonList(results)).as("application/json")
   }
 

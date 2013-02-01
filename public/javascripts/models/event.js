@@ -30,7 +30,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         this.title      = ko.observable();
         this.importance = ko.observable();
         this.id         = ko.observable();
-
+        this.explainer  = ko.observable();
         this.createdBy  = ko.observable();
         this.lastModifiedBy = ko.observable(;
 
@@ -47,16 +47,6 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             owner: this
         });
 
-        // listen out for changes to content array and generate a content api
-        this.content.subscribe(function(content){
-            var apiHost = "http://content.guardianapis.com/search",
-                query = "?page-size=50&format=json&show-fields=all&show-tags=all&show-factboxes=all&show-media=all&show-references=all&api-key=" + Config.apiKey + "&ids="
-                apiUrl = apiHost + query + content.map( function (article) {
-                    return encodeURIComponent(article.id())
-            }).join(',')
-            self._contentApi(apiUrl);
-        });
-        
         // Administrative vars
         this._children    = ko.observableArray();
         this._parentId    = ko.observable();
@@ -89,6 +79,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             }
 
             this.title(o.title || '');
+            this.explainer(o.explainer || '');
             this.importance(o.importance || importanceDefault);
             
             if (o.parent) {
@@ -136,7 +127,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         };
 
         this.decorateContent = function() {
-            var apiUrl = "http://content.guardianapis.com/search";
+            var apiUrl = "//content.guardianapis.com/search";
             // Find articles that aren't yet decorated with API data..
             var areRaw = _.filter(self.content(), function(a){return ! a.webTitle()});
             // and grab them from the API
@@ -186,8 +177,8 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                 }
             })
 
-            console.log('SENT:')
-            console.log(JSON.stringify(self) + "\n\n")
+            //console && console.log('SENT:');
+            //console && console.log(JSON.stringify(self) + "\n\n")
 
             Reqwest({
                 url: url,
@@ -196,8 +187,9 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                 contentType: 'application/json',
                 data: JSON.stringify(self),
                 success: function(resp) {
-                    console.log('RECEIVED:')
-                    console.log(JSON.stringify(resp) + "\n\n")
+                    //console && console.log('RECEIVED:')
+                    //console && console.log(JSON.stringify(resp) + "\n\n")
+                    
                     // Update event using the server response
                     self.init(resp);
                     // Get UI stuff from api/cache
