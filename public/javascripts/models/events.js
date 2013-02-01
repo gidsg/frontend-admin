@@ -140,7 +140,6 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
                 resp.map(function(e){
                     self.loadEvent(e);
                 });
-                console.log(self.people())
                 Common.mediator.emitEvent('models:events:hierarchy:change');
             },
             error: function() {}

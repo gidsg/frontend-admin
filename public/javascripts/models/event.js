@@ -187,8 +187,8 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                 }
             })
 
-            console.log('SENT:')
-            console.log(JSON.stringify(self) + "\n\n")
+            //console && console.log('SENT:');
+            //console && console.log(JSON.stringify(self) + "\n\n")
 
             Reqwest({
                 url: url,
@@ -197,8 +197,9 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                 contentType: 'application/json',
                 data: JSON.stringify(self),
                 success: function(resp) {
-                    console.log('RECEIVED:')
-                    console.log(JSON.stringify(resp) + "\n\n")
+                    //console && console.log('RECEIVED:')
+                    //console && console.log(JSON.stringify(resp) + "\n\n")
+                    
                     // Update event using the server response
                     self.init(resp);
                     // Get UI stuff from api/cache
