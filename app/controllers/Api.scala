@@ -16,7 +16,7 @@ object Api extends Controller with Logging with AuthLogging {
   def proxy(path: String, callback: String) = AuthAction { request =>
     
     val queryString = request.queryString.map { p => 
-       "%s=%s".format(p._1, p._2.head)
+       "%s=%s".format(p._1, p._2.head.urlEncoded)
     }.mkString("&")
     
     val url = "%s/%s?%s&api-key=%s".format(
