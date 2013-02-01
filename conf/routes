@@ -31,3 +31,14 @@ GET     /api/item/*path                  controllers.Api.item(path, callback)
 #Development endpoints
 GET     /dev/switchboard                 controllers.SwitchboardController.render()
 POST    /dev/switchboard                 controllers.SwitchboardController.save()
+
+#Events
+GET	    /events                          controllers.event.EventController.render()
+POST    /events                          controllers.event.EventController.create()
+
+GET	    /events/list                     controllers.event.EventController.find()
+
+GET     /events*eventId                  controllers.event.EventController.read(eventId)
+POST    /events*eventId                  controllers.event.EventController.update(eventId)
+DELETE  /events*eventId                  controllers.event.EventController.delete(eventId)
+

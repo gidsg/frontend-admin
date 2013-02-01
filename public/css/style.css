@@ -1,3 +1,7 @@
+body {
+    padding: 10px;
+}
+
 .dropdown-menu {
     position: absolute;
     display: block;
@@ -28,11 +32,10 @@ input.invalid {
 fieldset, 
 input[type=text] {
     box-sizing:border-box;
-    width: 100%;
 }
 
 input[type=text] {
-    padding: 20px 6px;
+    padding: 14px 6px;
 }
 
 fieldset#controls { 
@@ -55,4 +58,140 @@ input[type=checkbox].status {
     height: 33px;
     float: left;
     margin-right: 10px;
+}
+
+/** Events Editor */
+
+/** events */
+
+.articles,
+.events {
+    margin: 10px 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 600px;
+    padding: 0 8px 0 0;
+}
+
+.events > .event-wrapper {
+    border-top: 1px solid #eee;
+    padding: 8px 0;
+}
+
+.events > .event-wrapper:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+.event {
+    padding: 0 4px;
+}
+
+.event-header {
+}
+
+.event-header-selected {
+    padding: 9px 0 0 0;
+}
+
+.event-header-selected .event-title {
+    font-size: 1.3em;
+}
+
+.event-children {
+    padding-left: 20px;    
+}
+
+.event-title {
+    color: #51A351;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.event-article-count {
+    color: #999;
+    font-size: 0.8em;
+}
+
+.event-parent {
+    color: #ccc;
+    font-weight: bold;
+}
+
+.event-form,
+.event-form-toggler {
+    margin: 8px 0;    
+}
+
+.editing .event-form-toggler {
+    display: none;
+}
+
+textarea.event-explainer {
+    width: 100%;
+    max-width: 400px;
+    height: 100px;
+}
+
+.event-articles{
+    margin: 10px 0;
+}
+
+.event-meta {
+    font-size: 0.9em;
+}
+
+.icon-star-empty {
+    opacity: 0.2;
+}
+
+/** articles, in all uses */
+
+.article {
+    display: block;
+    overflow: hidden;
+    padding: 0 0 8px 0;
+    -webkit-transition: opacity 0.5s;
+       -moz-transition: opacity 0.5s;
+        -ms-transition: opacity 0.5s;
+         -o-transition: opacity 0.5s;
+            transition: opacity 0.5s;
+}
+
+.article-star {float: left; display: block; width: 18px; }
+
+.article-title { font-size: 1em; color: #005689;}
+.article-id { font-size: 1em; color: #999; margin-bottom: 0; font-size: 0.9em; }
+
+.event-date, .article-date { font-size: 1em; color: #ccc; margin-bottom: 0; font-size: 0.8em; line-height: 0.99em; }
+
+/** search results */
+
+.articles .article {
+    cursor: move;
+}
+
+.articles .article:hover {
+    background-color: #eee;
+}
+
+/** scaffolding */
+.storify {
+    overflow: hidden;
+    display: table;
+}
+
+.storify input[type="text"]{
+    background-color: #fff;
+    color: #000;    
+}
+.storify { 
+    margin-top: 20px;
+}
+input#tone-news { 
+    float: left;
+    margin-right: 5px;
+}
+
+label[for="tone-news"] { 
+    font-size: 12px;
 }

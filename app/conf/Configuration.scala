@@ -19,6 +19,10 @@ object Configuration {
     lazy val bucket = configuration.getStringProperty("aws.bucket").getOrElse(throw new RuntimeException("AWS bucket is not setup"))
   }
 
+  object mongo {
+    lazy val connection = configuration.getStringProperty("mongo.connection.password").getOrElse(throw new RuntimeException("Mongo connection not configured"))
+  }
+
   lazy val configKey = configuration.getStringProperty("config.file").getOrElse(throw new RuntimeException("Config file name is not setup"))
   lazy val switchesKey = configuration.getStringProperty("switches.file").getOrElse(throw new RuntimeException("Switches file name is not setup"))
 
