@@ -32,7 +32,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         this.id         = ko.observable();
 
         this.createdBy  = ko.observable();
-        this.lastModifiedBy = ko.observable(Config.identity.email);
+        this.lastModifiedBy = ko.observable(;
 
         this.startDate  = ko.computed({
             read: function() {
@@ -117,7 +117,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                 );
             }, this);
 
-            this.createdBy(o.createdBy || Config.identity.email);
+            this.createdBy(o.createdBy);
         }
 
         this.addArticle = function(article) {
