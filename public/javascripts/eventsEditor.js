@@ -13,6 +13,13 @@ curl([
     Config,
     Common
 ) {
+
+
+    // this fixes the article and event lists to the height of the viewport
+    var h = (window.innerHeight - 200) + 'px';
+    document.querySelector('.articles').style.maxHeight = h;
+    document.querySelector('.events').style.maxHeight = h;
+
     var 
         articles = new Articles(),
         events = new Events(articles.cache),
