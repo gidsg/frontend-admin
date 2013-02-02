@@ -94,7 +94,7 @@ input[type=checkbox].status {
 }
 
 .event-header-selected .event-title {
-    font-size: 1.3em;
+    font-size: 1.2em;
 }
 
 .event-children {
@@ -102,14 +102,15 @@ input[type=checkbox].status {
 }
 
 .event-title {
-    color: #51A351;
+    color: #214583;
     font-size: 1em;
     cursor: pointer;
 }
 
 .event-article-count {
-    color: #999;
+    color: red;
     font-size: 0.8em;
+
 }
 
 .event-parent {
@@ -150,31 +151,61 @@ textarea.event-explainer {
     display: block;
     overflow: hidden;
     padding: 0 0 8px 0;
-    -webkit-transition: opacity 0.5s;
-       -moz-transition: opacity 0.5s;
-        -ms-transition: opacity 0.5s;
-         -o-transition: opacity 0.5s;
-            transition: opacity 0.5s;
+    -webkit-transition: opacity 0.2s;
+       -moz-transition: opacity 0.2s;
+        -ms-transition: opacity 0.2s;
+         -o-transition: opacity 0.2s;
+            transition: opacity 0.2s;
 }
 
 .article-star {float: left; display: block; width: 18px; }
 
-.article-title { font-size: 1em; color: #005689;}
+
+.icon-star:hover, .icon-star-empty:hover { cursor: pointer; }
+
+.article-title { font-size: 12px; color: #005689; display: inline-block; width: 90%; }
 .article-id { font-size: 1em; color: #999; margin-bottom: 0; font-size: 0.9em; }
 
-.event-date, .article-date { font-size: 1em; color: #ccc; margin-bottom: 0; font-size: 0.8em; line-height: 0.99em; }
+.event-date, .article-date { color: #ccc; margin-bottom: 0; font-size: 12px; line-height: 0.99em; }
+.event-articles .article-date { margin-left: 18px; } 
 
 /** search results */
 
+.storify-articles {
+    padding-left: 7px; 
+    border-right: 1px solid #dedede;
+    background-color: #f4f4ee;
+    border-color: rgba(102,102,102,0.2);
+}
+
 .articles .article {
     cursor: move;
+    padding-left: 3px;
 }
 
 .articles .article:hover {
-    background-color: #eee;
+    background-color: #fff;
 }
 
+/** only display close/delete on hover */
+.article .close { display: none; color: red; text-shadow: 1px 1px #ff0; }
+.article:hover .close { display: block; }
+
 /** scaffolding */
+.storify * {
+    font-family: 'Merriweather', serif;
+}
+
+.storify h3 {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.4em;
+    color: #666;
+    padding-left: 2px;
+    text-shadow: 1px 1px #fff;
+}
+
 .storify {
     overflow: hidden;
     display: table;
@@ -184,9 +215,7 @@ textarea.event-explainer {
     background-color: #fff;
     color: #000;    
 }
-.storify { 
-    margin-top: 20px;
-}
+
 input#tone-news { 
     float: left;
     margin-right: 5px;
@@ -195,3 +224,6 @@ input#tone-news {
 label[for="tone-news"] { 
     font-size: 12px;
 }
+
+button.create { float: right; margin-right: 14px; }
+

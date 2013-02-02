@@ -2,17 +2,13 @@
 
 @main("Events editor", env, isAuthed = true, identity) {
 
-<div class="alert" style="text-align: center">This is an experimental system to manage Events</div>
-
 <div class="storify row-fluid">
-
-  <div class="storify-articles span6">
-
+  <div class="storify-articles span4">
     <form class="form-inline muted">
-         <h3> Articles
-        <input type="text" class="input-small" placeholder="Search" 
+        <h3>Articles</h3>
+        <input type="text"  placeholder="Search" 
             data-bind='event: {keyup: articles.articleSearch}, value: articles.articleTerm, valueUpdate: "afterkeydown"'/>
-
+<!--
         <select data-bind='
             value: articles.sectionTerm,
             options: sections,
@@ -21,13 +17,12 @@
             valueUpdate: "afterkeydown",
             optionsCaption: "Section",
             event: {change: articles.articleSearch}
-        '></select>
+            '></select> -->
         <label class="checkbox">
-            <input id="tone-news" type="checkbox" value="news" 
+            <!--<input id="tone-news" type="checkbox" value="news" 
                 data-bind="checked: articles.toneNews, event: {click: articles.articleSearch}"/>
-            tone/news
+                tone/news-->
         </label>
-        </h3>
     </form>
 
     <div class="articles" data-bind='foreach: articles.articles'>
@@ -39,13 +34,12 @@
     </div>
   </div>
 
-  <div class="storify-events span6">
+  <div class="storify-events span8">
     <form class="form-inline muted">
-        <h3> Events
-            <input type="text" class="input-small" placeholder="Search"
-                data-bind='event: {keyup: events.pruneTrees}, value: events.pruneTerm, valueUpdate: "afterkeydown"'/>
-            <button class="btn btn-mini" data-bind="event: {click: events.createEvent}">Create a new event</button>
-        </h3>
+        <h3>Events</h3>
+        <input type="text" placeholder="Search"
+            data-bind='event: {keyup: events.pruneTrees}, value: events.pruneTerm, valueUpdate: "afterkeydown"'/>
+        <button class="btn btn-mini create btn-success" data-bind="event: {click: events.createEvent}">Create a new event</button>
     </form>
     <div data-bind="text: events.length() === 0 ? 'Loading...' : ''"></div>
     <div class="events" data-bind="template: {name: 'event_template', foreach: events.trees}"></div>
@@ -56,7 +50,7 @@
 <script type="text/html" id="event_template">
   <!-- ko if: !_hidden() -->
     <div data-bind="css: {'event-wrapper': !$root.events.selected()}">
-
+            
         <div class="event" 
             data-bind="makeDropabble: true, if: !$root.events.selected() || $root.events.selected() === $data">
 
@@ -73,27 +67,27 @@
                     text: title().length > 0 ? title : 'New Event',
                     event: {click: $root.events.setSelected},
                 "></span>
-                <span class="event-date" data-bind="text: _humanDate"></span>
                 <span class="event-article-count" 
                     data-bind="text: content().length + ' article' + (content().length !== 1 ? 's' : '')"></span>
+                <span class="event-date" data-bind="text: _humanDate"></span>
             </div>
-
             <div data-bind="if: $root.events.selected() === $data">
                 <div class="event-detail" data-bind="ifnot: _editing()">
                     <div class="event-articles" data-bind="foreach: content">
                         <!-- ko if: webTitle -->
-                        <button type="button" class="close"
-                            data-bind='click: $parent.removeArticle' class="close">×</button>
-
-                        <div class="article-star" data-bind="
-                            click: $parent.bumpContent,
-                            css: {
-                                'icon-star-empty': importance() <= 50,
-                                'icon-star': importance() > 50
-                            }
-                        "></div>
-
                         <div class="article">
+                            
+                            <button type="button" class="close"
+                                data-bind='click: $parent.removeArticle' class="close">×</button>
+
+                            <div class="article-star" data-bind="
+                                click: $parent.bumpContent,
+                                css: {
+                                    'icon-star-empty': importance() <= 50,
+                                    'icon-star': importance() > 50
+                                }
+                            "></div>
+
                             <a class="article-title" target="_blank"
                                 data-bind="text: webTitle, attr: {href: mDot}"></a>
                             <div class="article-date"  data-bind="text: _humanDate"></div>
@@ -123,20 +117,11 @@
                         </div>
                     </div>
                      <button class="event-form-toggler btn btn-mini" data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit</button>
-                     <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
+                     <button class="btn btn-mini btn-success" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
                 </div>
 
                 <form class="event-form" data-bind="if: _editing(), submit: save">
                   
-                    <label>Which event does this follow?</label>
-                    <select data-bind='
-                        value: _parentId, 
-                        options: $root.events.previous(),
-                        optionsText: "title",
-                        optionsValue: "id",
-                        optionsCaption: "(none)"
-                    '></select>
-
                     <label>Title (what happend, is happening, or will happen)</label>
                     <input type="text" placeholder="e.g. 'Helicopter crash"
                         data-bind='value: title, valueUpdate: "afterkeydown"' />
@@ -153,6 +138,15 @@
                     <label>Time</label>
                     <input type="time"
                         data-bind='value: _prettyTime, valueUpdate: "afterkeydown"' />
+
+                    <label>Which event does this follow?</label>
+                    <select data-bind='
+                        value: _parentId, 
+                        options: $root.events.previous(),
+                        optionsText: "title",
+                        optionsValue: "id",
+                        optionsCaption: "(none)"
+                    '></select>
 
                     <div>
                         <button class="btn btn-success btn-mini" type="submit" data-bind="enable: _isValid">Save event</button>
