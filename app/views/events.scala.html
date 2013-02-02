@@ -39,7 +39,7 @@
         <h3>Events</h3>
         <input type="text" placeholder="Search"
             data-bind='event: {keyup: events.pruneTrees}, value: events.pruneTerm, valueUpdate: "afterkeydown"'/>
-        <button class="btn btn-mini" data-bind="event: {click: events.createEvent}">Create a new event</button>
+        <button class="btn btn-mini create btn-success" data-bind="event: {click: events.createEvent}">Create a new event</button>
     </form>
     <div data-bind="text: events.length() === 0 ? 'Loading...' : ''"></div>
     <div class="events" data-bind="template: {name: 'event_template', foreach: events.trees}"></div>
@@ -117,7 +117,7 @@
                         </div>
                     </div>
                      <button class="event-form-toggler btn btn-mini" data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit</button>
-                     <button class="btn btn-mini" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
+                     <button class="btn btn-mini btn-success" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
                 </div>
 
                 <form class="event-form" data-bind="if: _editing(), submit: save">

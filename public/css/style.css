@@ -224,3 +224,6 @@ input#tone-news {
 label[for="tone-news"] { 
     font-size: 12px;
 }
+
+button.create { float: right; margin-right: 14px; }
+
