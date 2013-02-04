@@ -69,8 +69,12 @@ input[type=checkbox].status {
     margin: 10px 0;
     overflow-y: auto;
     overflow-x: hidden;
-    max-height: 600px;
+    max-height: 72vh;
     padding: 0 8px 0 0;
+}
+
+@media all and (min-height: 800px) {
+    .articles, .events { max-height: 78vh; }
 }
 
 .events > .event-wrapper {
