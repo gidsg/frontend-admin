@@ -25,7 +25,7 @@ object SwitchboardController extends Controller with AuthLogging with Logging {
     Switch("square-images", false, "If this switch is turned on then square images willl be used for trailblock thumbnails."),
     Switch("network-front-appeal", false, "Switch to show the appeal trailblock on the network front."),
     Switch("witness-video", true, "Switch this switch off to disable witness video embeds."),
-    Switch("story-package", true, "Switch this switch off to experimental story-packages."),
+    Switch("story-package", true, "Switch this switch off to disable experimental story-packages."),
 
     Switch("integration-test-switch", true, "Switch that is only used while running tests. You never need to change this switch")
   )
