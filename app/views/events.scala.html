@@ -4,10 +4,10 @@
 
 <div class="storify row-fluid">
   <div class="storify-articles span4">
-    <form class="form-inline muted">
+    <form class="form-inline muted" onsubmit="return false">
         <h3>Articles</h3>
-        <input type="text"  placeholder="Search" 
-            data-bind='event: {keyup: articles.articleSearch}, value: articles.articleTerm, valueUpdate: "afterkeydown"'/>
+        <input type="text" placeholder="Search" 
+            data-bind='event: {keyup: articles.articleSearch, afterpaste: articles.articleSearch}, value: articles.articleTerm, valueUpdate: "afterkeydown"'/>
 <!--
         <select data-bind='
             value: articles.sectionTerm,
@@ -35,7 +35,7 @@
   </div>
 
   <div class="storify-events span8">
-    <form class="form-inline muted">
+    <form class="form-inline muted" onsubmit="return false">
         <h3>Events</h3>
         <input type="text" placeholder="Search"
             data-bind='event: {keyup: events.pruneTrees}, value: events.pruneTerm, valueUpdate: "afterkeydown"'/>
