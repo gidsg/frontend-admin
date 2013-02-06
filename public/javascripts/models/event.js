@@ -122,11 +122,12 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         };
 
         this.addArticleById = function(id) {
+            id = self.urlPath(id);
             var included = _.some(self.content(), function(item){
                 return item.id() === id;
             });
             if (!included) {
-                self.content.unshift(new Article({id: self.urlPath(id)}));
+                self.content.unshift(new Article({id: id}));
                 self.backgroundSave();
             }
         };
