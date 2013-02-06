@@ -14,14 +14,15 @@ curl([
     Common
 ) {
 
+    if(!Common.hasVh()) {
+        //this fixes the article and event lists to the height of the viewport
+        //If CSS3 vh units are not supported
+        var h = (window.innerHeight - 200) + 'px';
+        document.querySelector('.articles').style.maxHeight = h;
+        document.querySelector('.events').style.maxHeight = h;
+    }
 
-    // this fixes the article and event lists to the height of the viewport
-    var h = (window.innerHeight - 200) + 'px';
-    document.querySelector('.articles').style.maxHeight = h;
-    document.querySelector('.events').style.maxHeight = h;
-
-    var 
-        articles = new Articles(),
+    var articles = new Articles(),
         events = new Events(articles.cache),
         dragged,
         deBounced,
@@ -42,7 +43,7 @@ curl([
                 var sections = resp.response.results || [];
                 sections.sort(function(l,r) {
                     return l.webTitle < r.webTitle ? -1 : 1;
-                })
+                });
                 viewModel.sections(sections);
             }
             //viewModel.articles.sectionTerm('news');

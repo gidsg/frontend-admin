@@ -26,7 +26,7 @@
         </label>
     </form>
 
-    <div class="articles" data-bind='foreach: articles.articles'>
+    <div class="articles scrollable" data-bind='foreach: articles.articles'>
         <div class="article" draggable="true" data-bind="makeDraggable: true">
             <a class="article-title" target="_blank"
                 data-bind="html: webTitle, attr: {href: mDot}"></a>
@@ -43,7 +43,7 @@
         <button class="btn btn-mini create btn-success" data-bind="event: {click: events.createEvent}">Create a new event</button>
     </form>
     <div data-bind="text: events.length() === 0 ? 'Loading...' : ''"></div>
-    <div class="events" data-bind="template: {name: 'event_template', foreach: events.trees}"></div>
+    <div class="events scrollable" data-bind="template: {name: 'event_template', foreach: events.trees}"></div>
   </div>
 
 </div>
