@@ -55,7 +55,6 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         this._tentative   = ko.observable(!opts || !opts.id); // No id means it's a new un-persisted event,
         this._editing     = ko.observable(this._tentative()); // so mark as editable
         this._hidden      = ko.observable();
-        this._hasNewArticle = ko.observable();
 
         this.init = function (o) {
             o = o || {};
@@ -103,9 +102,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             }
 
             this._isValid = ko.computed(function () {
-                return (
-                    this.title().length > 0
-                );
+                return !!this.generateId();
             }, this);
 
             this.createdBy(o.createdBy);
@@ -295,9 +292,10 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
     function slugify (str) {
         str = str
             .replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'')
-            .replace(/\s+/g,' ')
             .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-'); // unfair on utf-8 IMHO
+            .replace(/([^\w]+|-+)/g, '-') // unfair on utf-8 IMHO
+            .replace(/(^-|-$)/, '');
+        console.log('===' + str + '===')
         return str;
     }
 
