@@ -55,6 +55,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         this._tentative   = ko.observable(!opts || !opts.id); // No id means it's a new un-persisted event,
         this._editing     = ko.observable(this._tentative()); // so mark as editable
         this._hidden      = ko.observable();
+        this._oldTitle    = ko.observable();
 
         this.init = function (o) {
             o = o || {};
@@ -78,6 +79,8 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             }
 
             this.title(o.title || '');
+            this._oldTitle(o.title || '');
+ 
             this.explainer(o.explainer || '');
             this.importance(o.importance || importanceDefault);
             
@@ -102,7 +105,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             }
 
             this._isValid = ko.computed(function () {
-                return !!this.generateId();
+                return !!this.slugify(this.title());
             }, this);
 
             this.createdBy(o.createdBy);
@@ -165,11 +168,18 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         };
 
         this.save =  function(a) {
-            // We post to the 'old' id
-            var url = endpoint + (self._tentative() ? '' : '/' + self.id());
+            var url = endpoint;
 
-            // ..but we generate the posted id, as the user may have edited the slug, date, etc.
-            self.id(self.generateId());
+            // Post to the persisted id - even if we're changing the id
+            if (self.id()) {
+                url += '/' + self.id();
+            } 
+
+            // Generate an ID if the title has changed. This also covers new events.
+            // IDs get a random part for "uniquness"
+            if (self.title() !== self._oldTitle()) {
+                self.id(this.slugify(this.title() + '-' + Math.floor(Math.random()*1000000)));
+            }
 
             // Sort by importance then by date.  Both descending. This'll probably need changing.
             this.content.sort(function (left, right) {
@@ -223,10 +233,6 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             }
         };
 
-        this.generateId = function () {
-            return slugify(this.title()); // TODO - decide id scheme
-        };
-
         this.toggleEditing = function() {
             this._editing(!this._editing());
         };
@@ -267,6 +273,15 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             return a;
         };
 
+        this.slugify = function (str) {
+            str = str
+                .replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'')
+                .toLowerCase()
+                .replace(/[^\w]+/g, '-') // unfair on utf-8 IMHO
+                .replace(/(^-|-$)/g, '');
+            return str;
+        }
+
         this.init(opts);
     };
 
@@ -288,16 +303,6 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
 
         return copy;
     };
-
-    function slugify (str) {
-        str = str
-            .replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'')
-            .toLowerCase()
-            .replace(/([^\w]+|-+)/g, '-') // unfair on utf-8 IMHO
-            .replace(/(^-|-$)/, '');
-        console.log('===' + str + '===')
-        return str;
-    }
 
     return Event;
 })
