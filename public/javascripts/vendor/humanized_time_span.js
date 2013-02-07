@@ -102,9 +102,6 @@ function humanized_time_span(date, ref_date, date_formats, time_units, max_secon
     return time_ago_text;
   }
  
-  if (seconds_difference > 604800) {
-    return render_date(get_format()) + " - " + date.toDateString();
-  } else {
-    return render_date(get_format());
-  }
+  return date.toDateString() + " - " + render_date(get_format())
+
 }
