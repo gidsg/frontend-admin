@@ -21,7 +21,7 @@
 // THE SOFTWARE.
 
 
-function humanized_time_span(date, ref_date, date_formats, time_units) {
+function humanized_time_span(date, ref_date, date_formats, time_units, max_seconds) {
   //Date Formats must be be ordered smallest -> largest and must end in a format with ceiling of null
   date_formats = date_formats || {
     past: [
@@ -50,7 +50,8 @@ function humanized_time_span(date, ref_date, date_formats, time_units) {
     [60, 'minutes'],
     [1, 'seconds']
   ];
-  
+ 
+  var original_date = date; 
   date = new Date(date);
   ref_date = ref_date ? new Date(ref_date) : new Date();
   var seconds_difference = (ref_date - date) / 1000;
@@ -100,6 +101,10 @@ function humanized_time_span(date, ref_date, date_formats, time_units) {
     }
     return time_ago_text;
   }
-          
-  return render_date(get_format());
+ 
+  if (seconds_difference > 604800) {
+    return render_date(get_format()) + " - " + date.toDateString();
+  } else {
+    return render_date(get_format());
+  }
 }
