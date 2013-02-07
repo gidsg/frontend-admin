@@ -24,7 +24,6 @@ curl([
 
     var articles = new Articles(),
         events = new Events(articles.cache),
-        dragged,
         deBounced,
         self = this;
 
@@ -55,16 +54,13 @@ curl([
     articles.articleSearch();
 
     function onDragStart(event) {
-        event.dataTransfer.setData('article', '1');
         event.target.style.opacity = '0.3';  // this / e.target is the source node.
-        dragged = ko.dataFor(event.target);
     }
 
     function onDragEnd(event) {
         setTimeout(function(){
             event.target.style.opacity = '1';
         }, 1000);
-        dragged = false;
     }
 
     function onDragOver(event) {
@@ -78,10 +74,12 @@ curl([
     }
 
     function onDrop(event) {
-        var el = event.currentTarget;
         event.preventDefault();
+        var id = event.dataTransfer.getData('Text');
+        var el = event.currentTarget;
         var target = ko.dataFor(el);
-        target.addArticle(dragged)
+        target.addArticleById(id)
+
         el.style.background = '#CEE8C3';
         setTimeout(function(){
             el.style.background = 'inherit';  
