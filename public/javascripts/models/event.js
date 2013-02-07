@@ -113,11 +113,22 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
 
         this.addArticle = function(article) {
             var included = _.some(self.content(), function(item){
-                return item.id() === article.id()
+                return item.id() === article.id();
             });
             if (!included) {
                 self.content.unshift(article);
-                this.backgroundSave();
+                self.backgroundSave();
+            }
+        };
+
+        this.addArticleById = function(id) {
+            id = self.urlPath(id);
+            var included = _.some(self.content(), function(item){
+                return item.id() === id;
+            });
+            if (!included) {
+                self.content.unshift(new Article({id: id}));
+                self.backgroundSave();
             }
         };
 
@@ -177,8 +188,8 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                 }
             })
 
-            //console && console.log('SENT:');
-            //console && console.log(JSON.stringify(self) + "\n\n")
+            console && console.log('SENT:');
+            console && console.log(JSON.stringify(self) + "\n\n")
 
             Reqwest({
                 url: url,
@@ -187,8 +198,8 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                 contentType: 'application/json',
                 data: JSON.stringify(self),
                 success: function(resp) {
-                    //console && console.log('RECEIVED:')
-                    //console && console.log(JSON.stringify(resp) + "\n\n")
+                    console && console.log('RECEIVED:')
+                    console && console.log(JSON.stringify(resp) + "\n\n")
                     
                     // Update event using the server response
                     self.init(resp);
@@ -249,6 +260,14 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                 }
             });
             self.backgroundSave();
+        };
+
+        this.urlPath = function(url) {
+            var a = document.createElement('a');
+            a.href = url;
+            a = a.pathname + a.search;
+            a = a.indexOf('/') === 0 ? a.substr(1) : a;
+            return a;
         };
 
         this.init(opts);
