@@ -11,6 +11,12 @@ import tools.Mongo.Events
 
 case class Parent(id: String, title: Option[String] = None)
 case class Content(id: String, importance: Int)
+case class Person(
+  id: String,
+  name: Option[String],
+  imageUrl: Option[String] = None,
+  explainer: Option[String] = None
+)
 
 case class Event(
   id: String,
@@ -22,7 +28,8 @@ case class Event(
   _rootEvent: Option[Parent] = None, //denormalisation to group events together, represents event at the top of this tree
   createdBy: Option[String] = None,
   lastModifiedBy: Option[String] = None,
-  explainer: Option[String] = None
+  explainer: Option[String] = None,
+  people: Seq[Person] = Nil
 )
 
 object Event {
