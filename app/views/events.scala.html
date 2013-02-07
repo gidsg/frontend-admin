@@ -36,11 +36,25 @@
   </div>
 
   <div class="storify-events span8">
-    <form class="form-inline muted" onsubmit="return false">
+    <form class="form-inline" onsubmit="return false">
         <h3>Events</h3>
-        <input type="text" placeholder="Search"
-            data-bind='event: {keyup: events.pruneTrees}, value: events.pruneTerm, valueUpdate: "afterkeydown"'/>
-        <button class="btn btn-mini create btn-success" data-bind="event: {click: events.createEvent}">Create a new event</button>
+
+        <input type="text" placeholder="Search" data-bind='
+            event: {keyup: events.pruneTrees}, 
+            value: events.pruneTerm, 
+            valueUpdate: "afterkeydown",
+            disable: $root.events.selected()
+        '/>
+
+        <!-- ko if: !$root.events.selected() -->
+        <button class="btn btn-mini create btn-success" data-bind="event: {click: events.createEvent}
+        ">Create an event</button>
+        <!-- /ko -->
+
+        <!-- ko if: $root.events.selected() && !$root.events.selected()._editing() -->
+        <button class="btn btn-mini create btn-success" data-bind="click: $root.events.createEventFollowOn">Create a FOLLOW-ON event</button>
+        <!-- /ko -->
+
     </form>
     <div data-bind="text: events.length() === 0 ? 'Loading...' : ''"></div>
     <div class="events scrollable" data-bind="template: {name: 'event_template', foreach: events.trees}"></div>
@@ -52,8 +66,10 @@
   <!-- ko if: !_hidden() -->
     <div data-bind="css: {'event-wrapper': !$root.events.selected()}">
             
-        <div class="event" 
-            data-bind="makeDropabble: true, if: !$root.events.selected() || $root.events.selected() === $data">
+        <div class="event" data-bind="
+            makeDropabble: !_editing(), 
+            if: !$root.events.selected() || $root.events.selected() === $data
+        ">
 
             <div class="event-header" data-bind="
                 css: {'event-header-selected': $root.events.selected() === $data}">
@@ -118,7 +134,7 @@
                         </div>
                     </div>
                      <button class="event-form-toggler btn btn-mini" data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit</button>
-                     <button class="btn btn-mini btn-success" data-bind="click: $root.events.createEventFollowOn">Create a "follow on" event</button>
+
                 </div>
 
                 <form class="event-form" data-bind="if: _editing(), submit: save">
@@ -139,15 +155,6 @@
                     <label>Time</label>
                     <input type="time"
                         data-bind='value: _prettyTime, valueUpdate: "afterkeydown"' />
-
-                    <label>Which event does this follow?</label>
-                    <select data-bind='
-                        value: _parentId, 
-                        options: $root.events.previous(),
-                        optionsText: "title",
-                        optionsValue: "id",
-                        optionsCaption: "(none)"
-                    '></select>
 
                     <div>
                         <button class="btn btn-success btn-mini" type="submit" data-bind="enable: _isValid">Save event</button>
