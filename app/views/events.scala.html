@@ -156,6 +156,15 @@
                     <input type="time"
                         data-bind='value: _prettyTime, valueUpdate: "afterkeydown"' />
 
+                    <label>Which event does this follow?</label>
+                    <select data-bind='
+                        value: _parentId, 
+                        options: $root.events.previous(),
+                        optionsText: "title",
+                        optionsValue: "id",
+                        optionsCaption: "(none)"
+                    '></select>
+
                     <div>
                         <button class="btn btn-success btn-mini" type="submit" data-bind="enable: _isValid">Save event</button>
                         <button class="btn btn-mini" type="submit" value="cancel"

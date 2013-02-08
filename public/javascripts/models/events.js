@@ -12,6 +12,15 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         this.people = ko.observable({});
 
         this.selected = ko.observable();
+        this.previous = ko.computed(function(e){
+            if (this.selected()) {
+                return _.filter(this.list(), function(e){
+                    return e.startDate() < self.selected().startDate()
+                });
+            } else {
+                return [];
+            }
+        }, this);
 
         this.growTrees = function() {
             var eventsById = {},
