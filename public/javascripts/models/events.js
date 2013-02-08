@@ -95,7 +95,7 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
 
         this.deleteEvent = function(event){
             
-            var result = window.confirm("Are you sure you want to delete this event?");
+            var result = window.confirm("Are you sure you want to DELETE this event? Once deleted it will be gone FOREVER!");
             if (!result) return;
 
             var url = endpoint + '/' + event.id();
