@@ -188,8 +188,8 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                 }
             })
 
-            console && console.log('SENT:');
-            console && console.log(JSON.stringify(self) + "\n\n")
+            //console && console.log('SENT:');
+            //console && console.log(JSON.stringify(self) + "\n\n")
 
             Reqwest({
                 url: url,
@@ -198,8 +198,8 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                 contentType: 'application/json',
                 data: JSON.stringify(self),
                 success: function(resp) {
-                    console && console.log('RECEIVED:')
-                    console && console.log(JSON.stringify(resp) + "\n\n")
+                    //console && console.log('RECEIVED:')
+                    //console && console.log(JSON.stringify(resp) + "\n\n")
                     
                     // Update event using the server response
                     self.init(resp);
@@ -212,7 +212,11 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                     Common.mediator.emitEvent('models:event:save:success');
                 },
                 error: function() {
-                    Common.mediator.emitEvent('models:event:save:error');
+                    if (self._tentative()) {
+                        Common.mediator.emitEvent('models:event:save:error:duplicate');
+                    } else {
+                        Common.mediator.emitEvent('models:event:save:error');
+                    }
                 }
             });
         };

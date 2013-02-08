@@ -122,8 +122,9 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         this.cancelEditing = function(event) {
             event._editing(false);
             if (event._tentative()) {
-                self.list.remove(event);
                 self.selected(false);
+                self.list.remove(event);
+                Common.mediator.emitEvent('models:events:hierarchy:change');
             }
         }
 
