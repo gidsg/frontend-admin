@@ -38,6 +38,13 @@
   <div class="storify-events span8">
     <form class="form-inline muted" onsubmit="return false">
         <h3>Events</h3>
+        <p>
+        <small>
+        Events are things that are happening in the <b>real world</b>.
+        Try and phrase events you create in the form of a factual statement -  Eg, 'Chris Huhne resigns as MP', 'Michael Gove gives speech about Ebbac
+        reforms'.
+        </small>
+        </p>
         <input type="text" placeholder="Search"
             data-bind='event: {keyup: events.pruneTrees}, value: events.pruneTerm, valueUpdate: "afterkeydown"'/>
         <button class="btn btn-mini create btn-success" data-bind="event: {click: events.createEvent}">Create a new event</button>
@@ -123,7 +130,7 @@
 
                 <form class="event-form" data-bind="if: _editing(), submit: save">
                   
-                    <label>Title (what happend, is happening, or will happen)</label>
+                    <label>Title (what happend, is happening, or might happen?)</label>
                     <input type="text" placeholder="e.g. 'Helicopter crash"
                         data-bind='value: title, valueUpdate: "afterkeydown"' />
 
