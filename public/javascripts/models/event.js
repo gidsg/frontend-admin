@@ -54,6 +54,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         this._contentApi  = ko.observable();
         this._tentative   = ko.observable(!opts || !opts.id); // No id means it's a new un-persisted event,
         this._editing     = ko.observable(this._tentative()); // so mark as editable
+        this._editParent  = ko.observable();
         this._hidden      = ko.observable();
         this._oldTitle    = ko.observable();
 
@@ -242,6 +243,10 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
 
         this.toggleEditing = function() {
             this._editing(!this._editing());
+        };
+
+        this.toggleEditParent = function() {
+            this._editParent(!this._editParent());
         };
 
         this.bump = function() {

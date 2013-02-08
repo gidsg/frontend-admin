@@ -109,10 +109,10 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
             });
         };
 
-        this.createEventFollowOn = function(parent) {
+        this.createEventFollowOn = function() {
             var event = new Event({
                 articleCache: articleCache,
-                parent: {id: parent.id()}
+                parent: {id: self.selected().id()}
             });
             self.list.unshift(event);
             self.selected(event)

@@ -121,9 +121,8 @@ input[type=checkbox].status {
     font-weight: bold;
 }
 
-.event-form,
 .event-form-toggler {
-    margin: 8px 0;    
+    margin: 20px 0;    
 }
 
 .editing .event-form-toggler {
