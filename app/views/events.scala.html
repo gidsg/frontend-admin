@@ -111,6 +111,13 @@
                                     'icon-star': importance() > 50
                                 }
                             "></div>
+                        
+                            <span title="color: dark = serious, light = entertaining" data-bind="
+                                css: {
+                                      'color-light': colour() <= 3,
+                                      'color-dark': colour() > 3
+                                     },
+                                click: $parent.setColour">&nbsp;</span>
 
                             <a class="article-title" target="_blank"
                                 data-bind="text: webTitle, attr: {href: mDot}"></a>

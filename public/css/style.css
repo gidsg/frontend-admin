@@ -229,3 +229,22 @@ label[for="tone-news"] {
 
 button.create { float: right; margin-right: 14px; }
 
+.color-light, .color-dark { 
+    display: inline-block;
+    width: 8px; 
+    height: 8px;
+    font-size: 1px;
+    line-height: 19px;
+    border: 1px solid #ccc;
+    background-color: #cde;
+}
+
+.color-light:hover, .color-dark:hover { 
+    cursor: pointer;
+}
+
+.color-dark { 
+    background-color: #369;    
+}
+
+

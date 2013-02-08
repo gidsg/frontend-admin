@@ -10,6 +10,7 @@ define(['Knockout'], function (ko) {
         this.webTitle   = ko.observable(opts.webTitle   || '');
         this.webPublicationDate = ko.observable(opts.webPublicationDate);
         this.importance = ko.observable(opts.importance || 50);
+        this.colour     = ko.observable(opts.colour);
 
         if (opts.fields)
             this.trailText  = ko.observable(opts.fields.trailText  || '');

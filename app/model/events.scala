@@ -8,9 +8,8 @@ import org.joda.time.format.ISODateTimeFormat
 import com.mongodb.casbah.Imports._
 import tools.Mongo.Events
 
-
 case class Parent(id: String, title: Option[String] = None)
-case class Content(id: String, importance: Int)
+case class Content(id: String, importance: Int, colour: Int = 3)
 
 case class Event(
   id: String,

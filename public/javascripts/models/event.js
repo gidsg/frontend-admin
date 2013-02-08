@@ -65,7 +65,8 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             (o.content || []).map(function(a){
                 var cached = opts.articleCache[a.id];
                 if (cached) {
-                    cached.importance = a.importance;
+                    cached.importance = a.importance; // updating the cached article with incoming update
+                    cached.colour = a.colour;
                     a = cached;
                 }
                 self.content.push(new Article(a));
@@ -199,8 +200,8 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                 }
             });
 
-            //console && console.log('SENT:');
-            //console && console.log(JSON.stringify(self) + "\n\n")
+            console && console.log('SENT:');
+            console && console.log(JSON.stringify(self) + "\n\n")
 
             new Reqwest({
                 url: url,
@@ -209,8 +210,8 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                 contentType: 'application/json',
                 data: JSON.stringify(self),
                 success: function(resp) {
-                    //console && console.log('RECEIVED:')
-                    //console && console.log(JSON.stringify(resp) + "\n\n")
+                    console && console.log('RECEIVED:')
+                    console && console.log(JSON.stringify(resp) + "\n\n")
                     
                     // Update event using the server response
                     self.init(resp);
@@ -278,6 +279,23 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             });
             self.backgroundSave();
         };
+    
+        this.setColour = function(item) {
+            var id = item.id();
+            self.content().forEach(function(i){
+                if (i.id() === id) {
+                    if (item.colour() > 2) {
+                        console.log(item, 'setting to 1');
+                        i.colour(1)
+                    }
+                    else { 
+                        console.log(item, 'setting to 5');
+                        i.colour(5)
+                    }
+                }
+            }); 
+            self.backgroundSave();
+        }
 
         this.urlPath = function(url) {
             var a = document.createElement('a');
