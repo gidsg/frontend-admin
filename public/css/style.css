@@ -190,7 +190,7 @@ textarea.event-explainer {
 }
 
 /** only display close/delete on hover */
-.article .close { display: none; color: red; text-shadow: 1px 1px #ff0; }
+.article .close { display: none; color: red; text-shadow: 1px 1px #ccc; opacity: 1.0 }
 .article:hover .close { display: block; }
 
 /** scaffolding */
