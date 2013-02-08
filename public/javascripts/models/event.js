@@ -3,11 +3,11 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
     // zero pad the date getters
     Date.prototype.getHoursPadded = function() {
         return ("0" + this.getHours()).slice(-2);
-    }
+    };
     
     Date.prototype.getMinutesPadded = function() {
         return ("0" + this.getMinutes()).slice(-2);
-    }
+    };
 
     var Event = function(opts) {
 
@@ -36,14 +36,14 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
 
         this.startDate  = ko.computed({
             read: function() {
-                      return this._prettyDate() + 'T' + this._prettyTime() + ':00.000Z'; 
-                  },
+                return this._prettyDate() + 'T' + this._prettyTime() + ':00.000Z';
+            },
             write: function(value) {
-                      var d = new Date(value);
-                      this._prettyDate(d.toISOString().match(/^\d{4}-\d{2}-\d{2}/)[0]);
-                      this._prettyTime(d.getHoursPadded() +':'+ d.getMinutesPadded());
-                      this._humanDate(humanized_time_span(d));
-                  },
+                var d = new Date(value);
+                this._prettyDate(d.toISOString().match(/^\d{4}-\d{2}-\d{2}/)[0]);
+                this._prettyTime(d.getHoursPadded() +':'+ d.getMinutesPadded());
+                this._humanDate(humanized_time_span(d));
+            },
             owner: this
         });
 
@@ -54,8 +54,9 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         this._contentApi  = ko.observable();
         this._tentative   = ko.observable(!opts || !opts.id); // No id means it's a new un-persisted event,
         this._editing     = ko.observable(this._tentative()); // so mark as editable
+        this._editParent  = ko.observable();
         this._hidden      = ko.observable();
-        this._hasNewArticle = ko.observable();
+        this._oldTitle    = ko.observable();
 
         this.init = function (o) {
             o = o || {};
@@ -68,26 +69,28 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                     a = cached;
                 }
                 self.content.push(new Article(a));
-            })
+            });
 
             if (0 === bumped.length) {
                 self.content().map(function(a){
                     if (a.importance() > importanceDefault) {
                         bumped.push(a.id());
                     }
-                })
+                });
             }
 
             this.title(o.title || '');
+            this._oldTitle(o.title || '');
+ 
             this.explainer(o.explainer || '');
             this.importance(o.importance || importanceDefault);
             
             if (o.parent) {
-                this._parentId(o.parent.id) 
-                this._parentTitle(o.parent.title) 
+                this._parentId(o.parent.id);
+                this._parentTitle(o.parent.title);
             } else {
-                this._parentId(undefined)
-                this._parentTitle(undefined)
+                this._parentId(undefined);
+                this._parentTitle(undefined);
             }
 
             if(o.id) {
@@ -103,13 +106,11 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             }
 
             this._isValid = ko.computed(function () {
-                return (
-                    this.title().length > 0
-                );
+                return !!this.slugify(this.title());
             }, this);
 
             this.createdBy(o.createdBy);
-        }
+        };
 
         this.addArticle = function(article) {
             var included = _.some(self.content(), function(item){
@@ -140,26 +141,30 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         this.decorateContent = function() {
             var apiUrl = "/api/proxy/search";
             // Find articles that aren't yet decorated with API data..
-            var areRaw = _.filter(self.content(), function(a){return ! a.webTitle()});
+            var areRaw = _.filter(self.content(), function(a){
+                return ! a.webTitle();
+            });
             // and grab them from the API
-            if(areRaw.length) {                    
+            if(areRaw.length) {
                 apiUrl += "?page-size=50&format=json&show-fields=all&show-tags=all&api-key=" + Config.apiKey;
                 apiUrl += "&ids=" + areRaw.map(function(article){
-                    return encodeURIComponent(article.id())
+                    return encodeURIComponent(article.id());
                 }).join(',');
 
-                Reqwest({
+                new Reqwest({
                     url: apiUrl,
                     type: 'jsonp',
                     success: function(resp) {
                         if (resp.response && resp.response.results) {
                             resp = resp.response.results;
                             resp.map(function(ra){
-                                var c = _.find(areRaw,function(a){return a.id() === ra.id});
+                                var c = _.find(areRaw,function(a){
+                                    return a.id() === ra.id;
+                                });
                                 c.webTitle(ra.webTitle);
                                 c.webPublicationDate(ra.webPublicationDate);
                                 opts.articleCache[ra.id] = ra;
-                            })
+                            });
                         }
                     },
                     error: function() {}
@@ -167,39 +172,45 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             }
         };
 
-        this.save =  function(a) {
-            // We post to the 'old' id
-            var url = endpoint + (self._tentative() ? '' : '/' + self.id());
+        this.save =  function() {
+            var url = endpoint;
 
-            // ..but we generate the posted id, as the user may have edited the slug, date, etc.
-            self.id(self.generateId());
+            // Post to the persisted id - even if we're changing the id
+            if (self.id()) {
+                url += '/' + self.id();
+            }
+
+            // Generate an ID if the title has changed. This also covers new events.
+            // IDs get a random part for "uniquness"
+            if (self.title() !== self._oldTitle()) {
+                self.id(this.slugify(this.title() + '-' + Math.floor(Math.random()*1000000)));
+            }
 
             // Sort by importance then by date.  Both descending. This'll probably need changing.
             this.content.sort(function (left, right) {
-                var 
-                    li = left.importance(),
+                var li = left.importance(),
                     ri = right.importance(),
                     ld = left.webPublicationDate(),
                     rd = right.webPublicationDate();
                 if (li === ri) {
-                    return (ld > rd) ? -1 : 1
+                    return (ld > rd) ? -1 : 1;
                 } else {
-                    return (li > ri) ? -1 : 1
+                    return (li > ri) ? -1 : 1;
                 }
-            })
+            });
 
-            console && console.log('SENT:');
-            console && console.log(JSON.stringify(self) + "\n\n")
+            //console && console.log('SENT:');
+            //console && console.log(JSON.stringify(self) + "\n\n")
 
-            Reqwest({
+            new Reqwest({
                 url: url,
                 method: 'post',
                 type: 'json',
                 contentType: 'application/json',
                 data: JSON.stringify(self),
                 success: function(resp) {
-                    console && console.log('RECEIVED:')
-                    console && console.log(JSON.stringify(resp) + "\n\n")
+                    //console && console.log('RECEIVED:')
+                    //console && console.log(JSON.stringify(resp) + "\n\n")
                     
                     // Update event using the server response
                     self.init(resp);
@@ -208,11 +219,15 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                     // Mark event as real
                     self._tentative(false);
                     // Stop editing
-                    self._editing(false)
+                    self._editing(false);
                     Common.mediator.emitEvent('models:event:save:success');
                 },
                 error: function() {
-                    Common.mediator.emitEvent('models:event:save:error');
+                    if (self._tentative()) {
+                        Common.mediator.emitEvent('models:event:save:error:duplicate');
+                    } else {
+                        Common.mediator.emitEvent('models:event:save:error');
+                    }
                 }
             });
         };
@@ -226,19 +241,19 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             }
         };
 
-        this.generateId = function () {
-            return slugify(this.title()); // TODO - decide id scheme
-        };
-
         this.toggleEditing = function() {
             this._editing(!this._editing());
         };
 
+        this.toggleEditParent = function() {
+            this._editParent(!this._editParent());
+        };
+
         this.bump = function() {
             if (self.importance() > importanceDefault) {
-                self.importance(importanceDefault)
+                self.importance(importanceDefault);
             } else {
-                self.importance(importanceBumped)                
+                self.importance(importanceBumped);
             }
             self.backgroundSave();
         };
@@ -246,14 +261,16 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         this.bumpContent = function(item) {
             var id = item.id();
             if (_.contains(bumped, id)) {
-                bumped = _.without(bumped, id)
+                bumped = _.without(bumped, id);
             } else {
-                bumped.unshift(id)
+                bumped.unshift(id);
                 bumped = bumped.slice(0,maxBumpedArticles);
             }
-            // Now adjust the importance of all content items accordingly 
+            // Now adjust the importance of all content items accordingly
             self.content().map(function(a){
-                if (_.some(bumped, function(b){return a.id() === b})) {
+                if (_.some(bumped, function(b){
+                    return a.id() === b;
+                })) {
                     a.importance(importanceBumped);
                 } else {
                     a.importance(importanceDefault);
@@ -268,6 +285,15 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             a = a.pathname + a.search;
             a = a.indexOf('/') === 0 ? a.substr(1) : a;
             return a;
+        };
+
+        this.slugify = function (str) {
+            str = str
+                .replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'')
+                .toLowerCase()
+                .replace(/[^\w]+/g, '-') // unfair on utf-8 IMHO
+                .replace(/(^-|-$)/g, '');
+            return str;
         };
 
         this.init(opts);
@@ -292,14 +318,5 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         return copy;
     };
 
-    function slugify (str) {
-        str = str
-            .replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'')
-            .replace(/\s+/g,' ')
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-'); // unfair on utf-8 IMHO
-        return str;
-    }
-
     return Event;
-})
+});
