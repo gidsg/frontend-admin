@@ -26,6 +26,8 @@ object SwitchboardController extends Controller with AuthLogging with Logging {
     Switch("network-front-appeal", false, "Switch to show the appeal trailblock on the network front."),
     Switch("witness-video", true, "Switch this switch off to disable witness video embeds."),
     Switch("story-package", true, "Switch this switch off to disable experimental story-packages."),
+    Switch("storytelling-chronological01", false, "Switch this switch off to disable experimental story-packages chronological v1."),
+    Switch("storytelling-chronological02", false, "Switch this switch off to disable experimental story-packages chronological v2."),
 
     Switch("integration-test-switch", true, "Switch that is only used while running tests. You never need to change this switch")
   )
