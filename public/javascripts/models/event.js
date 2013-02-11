@@ -1,4 +1,4 @@
-define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (Article, ko, Config, Common, Reqwest) {
+define(['models/article', 'models/agent', 'Knockout', 'Config', 'Common', 'Reqwest'], function (Article, Agent, ko, Config, Common, Reqwest) {
 
     // zero pad the date getters
     Date.prototype.getHoursPadded = function() {
@@ -31,6 +31,7 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
         this.importance = ko.observable();
         this.id         = ko.observable();
         this.explainer  = ko.observable();
+        this.agents     = ko.observableArray(); // people, organisations etc.
         this.createdBy  = ko.observable();
         this.lastModifiedBy = ko.observable();
 
@@ -80,6 +81,12 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                 });
             }
 
+            // populate agents
+            self.agents.removeAll(); 
+            (o.agents || []).map(function(a){
+                self.agents.push(new Agent(a));
+            });
+
             this.title(o.title || '');
             this._oldTitle(o.title || '');
  
@@ -111,7 +118,17 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             }, this);
 
             this.createdBy(o.createdBy);
-        };
+        }
+
+        this.addAgent = function(agent) {
+            this.agents.unshift(agent);
+            //self.backgroundSave();
+        }
+        
+        this.removeAgent = function(agent) {
+            this.agents.remove(agent);
+            //self.backgroundSave();
+        }
 
         this.addArticle = function(article) {
             var included = _.some(self.content(), function(item){
@@ -200,8 +217,8 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                 }
             });
 
-            //console && console.log('SENT:');
-            //console && console.log(JSON.stringify(self) + "\n\n")
+            console && console.log('SENT:');
+            console && console.log(JSON.stringify(self) + "\n\n")
 
             new Reqwest({
                 url: url,
@@ -210,8 +227,8 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
                 contentType: 'application/json',
                 data: JSON.stringify(self),
                 success: function(resp) {
-                    //console && console.log('RECEIVED:')
-                    //console && console.log(JSON.stringify(resp) + "\n\n")
+                    console && console.log('RECEIVED:')
+                    console && console.log(JSON.stringify(resp) + "\n\n")
                     
                     // Update event using the server response
                     self.init(resp);
