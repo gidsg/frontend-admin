@@ -231,20 +231,21 @@ button.create { float: right; margin-right: 14px; }
 
 .color-light, .color-dark { 
     display: inline-block;
-    width: 8px; 
-    height: 8px;
+    width: 9px; 
+    height: 9px;
     font-size: 1px;
     line-height: 19px;
     border: 1px solid #ccc;
-    background-color: #cde;
+    background-color: #999;
 }
 
 .color-light:hover, .color-dark:hover { 
     cursor: pointer;
 }
 
-.color-dark { 
-    background-color: #369;    
+.color-light:hover, .color-light { 
+    background-color: #FFDB4D;    
 }
+
 
 
