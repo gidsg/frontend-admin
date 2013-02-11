@@ -84,6 +84,10 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
             } 
         };
 
+        this.clearSelected = function() {
+            self.selected(undefined);
+        };
+
         this.createEvent = function() {
             var event = new Event({
                 articleCache: articleCache
@@ -112,7 +116,10 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         this.createEventFollowOn = function() {
             var event = new Event({
                 articleCache: articleCache,
-                parent: {id: self.selected().id()}
+                parent: {
+                    id: self.selected().id(),
+                    title: self.selected().title()
+                }
             });
             self.list.unshift(event);
             self.selected(event)
