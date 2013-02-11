@@ -11,6 +11,9 @@ import tools.Mongo.Events
 case class Parent(id: String, title: Option[String] = None)
 case class Content(id: String, importance: Int, colour: Int = 3)
 
+// Agents are people and organisations who play a role in the story. We want to tell their backstory.
+case class Agent(id: String, name: String, role: String, sameAs: Seq[String] = Nil)
+
 case class Event(
   id: String,
   startDate: DateTime,
@@ -21,6 +24,7 @@ case class Event(
   _rootEvent: Option[Parent] = None, //denormalisation to group events together, represents event at the top of this tree
   createdBy: Option[String] = None,
   lastModifiedBy: Option[String] = None,
+  agents: Seq[Agent] = Nil,
   explainer: Option[String] = None
 )
 
