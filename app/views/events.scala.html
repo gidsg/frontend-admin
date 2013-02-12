@@ -38,7 +38,6 @@
   <div class="storify-events span8">
     <form class="form-inline" onsubmit="return false">
         <h3>Events</h3>
-
         <p>
         <small>
         Events are things that are happening in the <b>real world</b>.
@@ -90,7 +89,7 @@
                     text: title().length > 0 ? title : 'New Event',
                     event: {click: $root.events.setSelected},
                 "></span>
-                <span class="event-article-count" 
+                <span class="count" 
                     data-bind="text: content().length + ' article' + (content().length !== 1 ? 's' : '')"></span>
                 <span class="event-date" data-bind="text: _humanDate"></span>
             </div>
@@ -149,10 +148,16 @@
                     </div>
                     
                     <!-- Agents -->
-                    <h3>Agents</h3>
+
+
+                    <h3>
+                        Agents
+                        <span class="count" data-bind="text: agents().length + ' agent' + (agents().length !== 1 ? 's' : '')"></span>
+                    </h3>
                     <p>
                         <small>
-                            Agents are <strong>people</strong> and <strong>organisations</strong> that appear in the story. Nb. We don't have an editing interface for agents yet.
+                            Agents are <strong>people</strong> and <strong>organisations</strong> that appear in the story. <em>Nb. We don't have an
+                                editing interface for agents yet.</em>
                         </small>     
                     </p>
                     <div data-bind="foreach: agents">
@@ -183,7 +188,7 @@
                          data-bind="click: $root.events.deleteEvent, visible: !_tentative()"
                      >Delete event</button>
 
-                </div>
+                  </div>
 
                 <form class="event-form" data-bind="if: _editing(), submit: save">
                   
