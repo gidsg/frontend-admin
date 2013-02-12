@@ -117,10 +117,12 @@ define(['models/article', 'models/agent', 'Knockout', 'Config', 'Common', 'Reqwe
                 return !!this.slugify(this.title());
             }, this);
 
-            this.createdBy(o.createdBy);
+            this.createdBy(o.createdBy || Config.identity.email);
+            this.lastModifiedBy(o.lastModifiedBy || undefined);
         }
 
         this.addAgent = function(agent) {
+            console.log(agent);
             this.agents.unshift(agent);
             //self.backgroundSave();
         }
@@ -203,6 +205,9 @@ define(['models/article', 'models/agent', 'Knockout', 'Config', 'Common', 'Reqwe
             if (self.title() !== self._oldTitle()) {
                 self.id(this.slugify(this.title() + '-' + Math.floor(Math.random()*1000000)));
             }
+            
+            //  
+            this.lastModifiedBy(Config.identity.email);
 
             // Sort by importance then by date.  Both descending. This'll probably need changing.
             this.content.sort(function (left, right) {
