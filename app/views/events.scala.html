@@ -50,17 +50,23 @@
             event: {keyup: events.pruneTrees}, 
             value: events.pruneTerm, 
             valueUpdate: "afterkeydown",
-            disable: $root.events.selected()
+            visible: !$root.events.selected()
         '/>
 
-        <!-- ko if: !$root.events.selected() -->
-        <button class="btn btn-mini create btn-success" data-bind="event: {click: events.createEvent}
-        ">Create an event</button>
-        <!-- /ko -->
+        <button class="btn btn-mini" data-bind="
+            click: events.clearSelected,
+            visible: $root.events.selected()
+        ">Show all events</button>
 
-        <!-- ko if: $root.events.selected() && !$root.events.selected()._editing() -->
-        <button class="btn btn-mini create btn-success" data-bind="click: $root.events.createEventFollowOn">Create a FOLLOW-ON event</button>
-        <!-- /ko -->
+        <button class="btn btn-mini create btn-success" data-bind="
+            click: events.createEvent,
+            visible: !$root.events.selected()
+        ">Create an event</button>
+
+        <button class="btn btn-mini create btn-success" data-bind="
+            click: $root.events.createEventFollowOn,
+            visible: $root.events.selected() && !$root.events.selected()._editing()
+        ">Create a FOLLOW-ON event</button>
 
     </form>
     <div data-bind="text: events.length() === 0 ? 'Loading...' : ''"></div>
@@ -160,20 +166,23 @@
                     <input type="text" placeholder="e.g. 'Helicopter crash"
                         data-bind='value: title, valueUpdate: "afterkeydown"' />
 
-                    <label>
+                    <label data-bind='visible: !_editParent()'>
                         <span data-bind="
-                            text: _parentTitle() ? 'Follows: ' + _parentTitle() : 'This has no previous event'
+                            text: _parentId() ? 'Follows: ' + _parentTitle() : 'This has no previous event'
                         "></span>
                         <small class="muted">[<a data-bind="click: toggleEditParent">change</a>]</small>
                     </label>
-                    <select data-bind='
-                        visible: _editParent(),
-                        value: _parentId, 
-                        options: $root.events.previous(),
-                        optionsText: "title",
-                        optionsValue: "id",
-                        optionsCaption: "(select a previous event)"
-                    '></select>
+
+                    <label data-bind='if: _editParent()'>
+                        Follows:
+                        <select data-bind='
+                            value: _parentId, 
+                            options: $root.events.previous(),
+                            optionsText: "title",
+                            optionsValue: "id",
+                            optionsCaption: "(select a previous event)"
+                        '></select>
+                    </label>
 
                     <label>Explainer</label>
                     <textarea class="event-explainer"
