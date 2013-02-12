@@ -26,6 +26,11 @@ case class Event(
   lastModifiedBy: Option[String] = None,
   agents: Seq[Agent] = Nil,
   explainer: Option[String] = None
+
+    // Predicates :-
+    //  mentions: Seq[Agent|Place] 
+    //  isAbout: <-- attach to articles 
+
 )
 
 object Event {

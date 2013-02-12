@@ -147,19 +147,35 @@
                             <span data-bind="text: lastModifiedBy"></span>
                         </div>
                     </div>
+                    
+                    <!-- Agents -->
                     <h3>Agents</h3>
                     <p>
                         <small>
-                            Agents are people and organisations that appear in the story.
+                            Agents are <strong>people</strong> and <strong>organisations</strong> that appear in the story. Nb. We don't have an editing interface for agents yet.
                         </small>     
                     </p>
-                    <div class="" data-bind="foreach: agents">
-                        <ul>
-                            <li>
-                                <span class="" data-bind="text: name"></span>
-                                <span class="" data-bind="text: explainer"></span>
-                            </li>
-                         </ul>
+                    <div data-bind="foreach: agents">
+                        <dl>
+                            <dt>
+                                <p><span data-bind="text: name"></span></p>
+                            </dt>
+                            <dd>
+                                <p data-bind="text: explainer"></p>
+                                <!-- ko if: $data.sameAs().length > 0 -->
+                                <p>
+                                    <small>
+                                        seeAlso - The property seeAlso specifies a resource that might provide additional information about the
+                                        subject resource.
+                                        <!-- http://www.w3.org/TR/2000/CR-rdf-schema-20000327/#s2.3.4 -->
+                                    </small>
+                                </p>
+                                    <ul data-bind="foreach: $data.sameAs">
+                                        <li><a data-bind="attr: {href: $data}, text: $data"></a></li>
+                                    </ul>
+                                <!-- /ko -->
+                            </dd>
+                         </dl>
                     </div>
                     <button class="event-form-toggler btn btn-mini" data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit</button>
 
@@ -198,25 +214,6 @@
                     <label>Time</label>
                     <input type="time"
                         data-bind='value: _prettyTime, valueUpdate: "afterkeydown"' />
-
-                    <h3>Agents</h3>
-                    <p>
-                        <small>
-                            Agents are people and organisations that appear in the story.
-                        </small>     
-                    </p>
-                    
-                    <button class="btn btn-mini" data-bind="">Add</button>
-
-                    <div class="" data-bind="foreach: agents">
-                        <ul>
-                            <li>
-                                <input class="" data-bind="value: name, valueUpdate: name">
-                                <input class="" data-bind="value: explainer, valueUpdate: explainere">
-                            </li>
-                         </ul>
-                    </div>
-                    
 
                     <div>
                         <button class="btn btn-success btn-mini" type="submit" data-bind="enable: _isValid">Save event</button>
