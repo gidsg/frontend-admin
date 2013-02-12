@@ -65,7 +65,8 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             (o.content || []).map(function(a){
                 var cached = opts.articleCache[a.id];
                 if (cached) {
-                    cached.importance = a.importance;
+                    cached.importance = a.importance; // updating the cached article with incoming update
+                    cached.colour = a.colour;
                     a = cached;
                 }
                 self.content.push(new Article(a));
@@ -282,6 +283,21 @@ define(['models/article', 'Knockout', 'Config', 'Common', 'Reqwest'], function (
             });
             self.backgroundSave();
         };
+    
+        this.setColour = function(item) {
+            var id = item.id();
+            self.content().forEach(function(i){
+                if (i.id() === id) {
+                    if (item.colour() > 2) {
+                        i.colour(1)
+                    }
+                    else { 
+                        i.colour(5)
+                    }
+                }
+            }); 
+            self.backgroundSave();
+        }
 
         this.urlPath = function(url) {
             var a = document.createElement('a');

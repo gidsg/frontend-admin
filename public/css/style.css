@@ -169,7 +169,7 @@ textarea.event-explainer {
 .article-id { font-size: 1em; color: #999; margin-bottom: 0; font-size: 0.9em; }
 
 .event-date, .article-date { color: #ccc; margin-bottom: 0; font-size: 12px; line-height: 0.99em; }
-.event-articles .article-date { margin-left: 18px; } 
+.event-articles .article-date { margin-left: 33px; } 
 
 /** search results */
 
@@ -228,4 +228,24 @@ label[for="tone-news"] {
 }
 
 button.create { float: right; margin-right: 14px; }
+
+.color-light, .color-dark { 
+    display: inline-block;
+    width: 9px; 
+    height: 9px;
+    font-size: 1px;
+    line-height: 19px;
+    border: 1px solid #ccc;
+    background-color: #999;
+}
+
+.color-light:hover, .color-dark:hover { 
+    cursor: pointer;
+}
+
+.color-light:hover, .color-light { 
+    background-color: #FFDB4D;    
+}
+
+
 
