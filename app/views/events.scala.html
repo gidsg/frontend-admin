@@ -117,15 +117,15 @@
                                 }
                             "></div>
                         
+
+                            <a class="article-title" target="_blank"
+                                data-bind="text: webTitle, attr: {href: mDot}"></a>
                             <span title="color: dark = serious, light = entertaining" data-bind="
                                 css: {
                                       'color-light': colour() <= 2,
                                       'color-dark': colour() > 2
                                      },
-                                click: $parent.setColour">&nbsp;</span>
-
-                            <a class="article-title" target="_blank"
-                                data-bind="text: webTitle, attr: {href: mDot}"></a>
+                                click: $parent.setColour">*</span>
                             <div class="article-date"  data-bind="text: _humanDate"></div>
                         </div>
                         <!-- /ko -->
