@@ -9,7 +9,7 @@
         <input type="text" placeholder="Search" 
             data-bind='event: {keyup: articles.articleSearch, mousedown: articles.articleSearch, afterpaste: articles.articleSearch}, value:
             articles.articleTerm, valueUpdate: ["afterkeydown", "afterpaste"]'/>
-<!--
+        <!--
         <select data-bind='
             value: articles.sectionTerm,
             options: sections,
@@ -147,7 +147,21 @@
                             <span data-bind="text: lastModifiedBy"></span>
                         </div>
                     </div>
-                     <button class="event-form-toggler btn btn-mini" data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit</button>
+                    <h3>Agents</h3>
+                    <p>
+                        <small>
+                            Agents are people and organisations that appear in the story.
+                        </small>     
+                    </p>
+                    <div class="" data-bind="foreach: agents">
+                        <ul>
+                            <li>
+                                <span class="" data-bind="text: name"></span>
+                                <span class="" data-bind="text: explainer"></span>
+                            </li>
+                         </ul>
+                    </div>
+                    <button class="event-form-toggler btn btn-mini" data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit</button>
 
                 </div>
 
@@ -184,6 +198,25 @@
                     <label>Time</label>
                     <input type="time"
                         data-bind='value: _prettyTime, valueUpdate: "afterkeydown"' />
+
+                    <h3>Agents</h3>
+                    <p>
+                        <small>
+                            Agents are people and organisations that appear in the story.
+                        </small>     
+                    </p>
+                    
+                    <button class="btn btn-mini" data-bind="">Add</button>
+
+                    <div class="" data-bind="foreach: agents">
+                        <ul>
+                            <li>
+                                <input class="" data-bind="value: name, valueUpdate: name">
+                                <input class="" data-bind="value: explainer, valueUpdate: explainere">
+                            </li>
+                         </ul>
+                    </div>
+                    
 
                     <div>
                         <button class="btn btn-success btn-mini" type="submit" data-bind="enable: _isValid">Save event</button>

@@ -122,7 +122,7 @@ define(['models/article', 'models/agent', 'Knockout', 'Config', 'Common', 'Reqwe
         }
 
         this.addAgent = function(agent) {
-            console.log(agent);
+            //console.log(agent);
             this.agents.unshift(agent);
             //self.backgroundSave();
         }

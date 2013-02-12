@@ -1,4 +1,4 @@
-define(['Knockout'], function (ko) {
+oefine(['Knockout'], function (ko) {
 
     var Agent = function(opts) {
 
@@ -6,8 +6,8 @@ define(['Knockout'], function (ko) {
 
         this.id         = ko.observable(opts.id || '');
         this.name       = ko.observable(opts.name || '');
-        this.role       = ko.observable(opts.role || '');
-        this.sameAs     = ko.observableArray(); // TODO 
+        this.explainer  = ko.observable(opts.explainer || '');
+        this.sameAs     = ko.observableArray(); // TODO - We want to associate this person with a set of external identifiers (Eg, guardian tag or wikipedia url)
 
     };
 

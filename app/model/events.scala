@@ -12,7 +12,7 @@ case class Parent(id: String, title: Option[String] = None)
 case class Content(id: String, importance: Int, colour: Int = 3)
 
 // Agents are people and organisations who play a role in the story. We want to tell their backstory.
-case class Agent(id: Option[String], name: Option[String] = None, role: Option[String] = None, sameAs: Seq[String] = Nil)
+case class Agent(id: Option[String], name: Option[String] = None, explainer: Option[String] = None, sameAs: Seq[String] = Nil)
 
 case class Event(
   id: String,
