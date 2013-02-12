@@ -154,6 +154,10 @@ define(['models/article', 'models/agent', 'Knockout', 'Config', 'Common', 'Reqwe
         };
 
         this.removeArticle = function(article) {
+            
+            var result = window.confirm("Are you sure you want to DELETE this article?");
+            if (!result) return;
+            
             self.content.remove(article);
             self.backgroundSave();
         };

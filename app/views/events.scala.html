@@ -177,7 +177,11 @@
                             </dd>
                          </dl>
                     </div>
+                    
                     <button class="event-form-toggler btn btn-mini" data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit</button>
+                    <button class="btn btn-danger btn-mini" type="submit" value="delete"
+                         data-bind="click: $root.events.deleteEvent, visible: !_tentative()"
+                     >Delete event</button>
 
                 </div>
 
