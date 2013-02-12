@@ -156,8 +156,7 @@
                     </h3>
                     <p>
                         <small>
-                            Agents are <strong>people</strong> and <strong>organisations</strong> that appear in the story. <em>Nb. We don't have an
-                                editing interface for agents yet.</em>
+                            Agents are <strong>people</strong> and <strong>organisations</strong> that appear in the story. 
                         </small>     
                     </p>
                     <div data-bind="foreach: agents">
@@ -168,12 +167,6 @@
                             <dd>
                                 <p data-bind="text: explainer"></p>
                                 <!-- ko if: $data.sameAs().length > 0 -->
-                                <p>
-                                    <small>
-                                        seeAlso - The property seeAlso specifies a resource that might provide additional information about the
-                                        subject resource.
-                                    </small>
-                                </p>
                                     <ul data-bind="foreach: $data.sameAs">
                                         <li><a data-bind="attr: {href: $data}, text: $data"></a></li>
                                     </ul>
@@ -191,7 +184,6 @@
                     <p>
                         <small>
                             Places are physical <strong>locations</strong> (man-made, natural, or otherwise) where the event happened. 
-                            <em>Nb. We don't have an  editing interface for places yet.</em>
                         </small>     
                     </p>
                     <ul data-bind="foreach: places">
