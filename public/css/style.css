@@ -192,7 +192,7 @@ textarea.event-explainer {
 
 /** only display close/delete on hover */
 .article .close { display: none; color: red; text-shadow: 1px 1px #ccc; opacity: 1.0 }
-.article:hover .close { display: block; }
+.article:hover .close { display: inline-block; }
 
 /** scaffolding */
 .storify * {
@@ -234,10 +234,8 @@ button.create { float: right; margin-right: 14px; }
     display: inline-block;
     width: 9px; 
     height: 9px;
-    font-size: 1px;
-    line-height: 19px;
-    border: 1px solid #ccc;
-    background-color: #999;
+    font-size: 15px;
+    vertical-align: middle;
 }
 
 .color-light:hover, .color-dark:hover { 
@@ -245,7 +243,7 @@ button.create { float: right; margin-right: 14px; }
 }
 
 .color-light:hover, .color-light { 
-    background-color: #FFDB4D;    
+    color: #FFDB4D;    
 }
 
 
