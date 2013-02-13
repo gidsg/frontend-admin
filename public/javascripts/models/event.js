@@ -57,7 +57,7 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
 
             self.content.removeAll();
             (o.content || []).map(function(a){
-                var cached = opts.articleCache ? opts.articleCache[a.id] || undefined;
+                var cached = opts.articleCache ? opts.articleCache[a.id] : undefined;
                 if (cached) {
                     cached.importance = a.importance; // updating the cached article with incoming update
                     cached.colour = a.colour;

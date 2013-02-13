@@ -23,7 +23,7 @@ curl([
     }
 
     var articles = new Articles(),
-        story = new Story(articles.cache),
+        story = new Story({articleCache: articles.cache}),
         deBounced,
         self = this;
 
