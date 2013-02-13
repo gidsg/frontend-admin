@@ -10,10 +10,6 @@ curl(['models/event', 'Knockout']).then(
                 e = new Event;
             });
 
-            it('should have an id property', function() {
-                expect(e.id).toBeDefined();
-            });
-
             xit('should prettify the start date & time', function() {})
             
             // init 
@@ -49,6 +45,7 @@ curl(['models/event', 'Knockout']).then(
             
             // toJSON
             xit('should serialise a JSON object', function() {})
+
         });
     },
 
