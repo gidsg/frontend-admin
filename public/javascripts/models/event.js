@@ -26,15 +26,13 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
         this._prettyTime = ko.observable();
 
         // Event 'schema' poperties
-        this.content    = ko.observableArray();
         this.title      = ko.observable();
         this.importance = ko.observable();
-        this.id         = ko.observable();
-        this.explainer  = ko.observable();
+        
+        // Collections
         this.agents     = ko.observableArray(); // people, organisations etc.
+        this.content    = ko.observableArray();
         this.places     = ko.observableArray(); // locations 
-        this.createdBy  = ko.observable();
-        this.lastModifiedBy = ko.observable();
 
         this.startDate  = ko.computed({
             read: function() {
@@ -50,17 +48,12 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
         });
 
         // Administrative vars
-        this._children    = ko.observableArray();
-        this._parentId    = ko.observable();
-        this._parentTitle = ko.observable();
-        this._contentApi  = ko.observable();
         this._tentative   = ko.observable(!opts || !opts.id); // No id means it's a new un-persisted event,
         this._editing     = ko.observable(this._tentative()); // so mark as editable
-        this._editParent  = ko.observable();
         this._hidden      = ko.observable();
-        this._oldTitle    = ko.observable();
 
         this.init = function (o) {
+
             o = o || {};
 
             self.content.removeAll();
@@ -74,7 +67,7 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
                 self.content.push(new Article(a));
             });
 
-            if (0 === bumped.length) {
+            if (bumped.length === 0) {
                 self.content().map(function(a){
                     if (a.importance() > importanceDefault) {
                         bumped.push(a.id());
@@ -95,37 +88,20 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
             });
 
             this.title(o.title || '');
-            this._oldTitle(o.title || '');
- 
-            this.explainer(o.explainer || '');
             this.importance(o.importance || importanceDefault);
-            
-            if (o.parent) {
-                this._parentId(o.parent.id);
-                this._parentTitle(o.parent.title);
-            } else {
-                this._parentId(undefined);
-                this._parentTitle(undefined);
-            }
-
-            if(o.id) {
-                this.id(o.id);
-            }
 
             if (o.startDate) {
                 this.startDate(new Date(o.startDate)); // today
             } else {
                 var d = new Date();
-                d.setHours(0, 0, 0, 0);
+                d.setHours(0, 0, 0, 0); // TODO verify this is required
                 this.startDate(d);
             }
 
             this._isValid = ko.computed(function () {
-                return !!this.slugify(this.title());
+                return !!this.slugify(this.title()); // TODO validate
             }, this);
 
-            this.createdBy(o.createdBy || Config.identity.email);
-            this.lastModifiedBy(o.lastModifiedBy || undefined);
         }
         
         this.addArticle = function(article) {
@@ -138,7 +114,7 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
             }
         };
 
-        this.addArticleById = function(id) {
+        this.addArticleById = function(id) { // merge with addArticle
             id = self.urlPath(id);
             var included = _.some(self.content(), function(item){
                 return item.id() === id;
