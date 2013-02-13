@@ -51,7 +51,7 @@ curl([
     });
 
     // Do an initial article search
-    articles.articleSearch();
+    articles.search();
 
     function onDragStart(event) {
         event.target.style.opacity = '0.3';  // this / e.target is the source node.

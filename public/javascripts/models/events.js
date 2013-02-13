@@ -31,13 +31,13 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
                 i;
             self.trees.removeAll();
             for (i = 0; i < len; ++i) {
-                list[i]._children.removeAll();
-                eventsById[list[i].id()] = list[i];
+                //list[i]._children.removeAll();
+                //eventsById[list[i].id()] = list[i];
             }
             for (i = 0; i < len; ++i) {
-                parentId = list[i]._parentId();
-                addTo = (parentId && eventsById[parentId]) ? eventsById[parentId]._children : self.trees;
-                addTo.push(list[i]);
+                //parentId = list[i]._parentId();
+                //addTo = (parentId && eventsById[parentId]) ? eventsById[parentId]._children : self.trees;
+                //addTo.push(list[i]);
             }
         };
 
@@ -71,8 +71,8 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
             event = new Event(o);
             self.list.unshift(event);
 
-            if (event.createdBy()) self.people()[event.createdBy()] = true
-            if (event.lastModifiedBy()) self.people()[event.lastModifiedBy()] = true
+            //if (event.createdBy()) self.people()[event.createdBy()] = true
+            //if (event.lastModifiedBy()) self.people()[event.lastModifiedBy()] = true
         };
 
         this.setSelected = function(current) {
