@@ -43,3 +43,11 @@ GET     /events*eventId                  controllers.event.EventController.read(
 POST    /events*eventId                  controllers.event.EventController.update(eventId)
 DELETE  /events*eventId                  controllers.event.EventController.delete(eventId)
 
+#Stories
+GET     /story*storyId                   controllers.event.StoryController.read(storyId)
+DELETE  /story*storyId                   controllers.event.StoryController.delete(storyId)
+
+GET     /story                           controllers.event.StoryController.find(title: String ?= "")
+POST    /story                           controllers.event.StoryController.create()
+POST    /story*storyId                   controllers.event.StoryController.update(storyId)
+
