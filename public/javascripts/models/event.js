@@ -16,7 +16,6 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
             importanceDefault = 50,
             saveInterval = 100, // milliseconds
             bumped = [],
-            endpoint = '/events',
             deBounced,
             self = this;
 
@@ -58,7 +57,7 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
 
             self.content.removeAll();
             (o.content || []).map(function(a){
-                var cached = opts.articleCache[a.id];
+                var cached = opts.articleCache ? opts.articleCache[a.id] || undefined;
                 if (cached) {
                     cached.importance = a.importance; // updating the cached article with incoming update
                     cached.colour = a.colour;
@@ -168,78 +167,6 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
             }
         };
 
-        this.save =  function() {
-            var url = endpoint;
-
-            // Post to the persisted id - even if we're changing the id
-            if (self.id()) {
-                url += '/' + self.id();
-            }
-
-            // Generate an ID if the title has changed. This also covers new events.
-            // IDs get a random part for "uniquness"
-            if (self.title() !== self._oldTitle()) {
-                self.id(this.slugify(this.title() + '-' + Math.floor(Math.random()*1000000)));
-            }
-            
-            //  
-            this.lastModifiedBy(Config.identity.email);
-
-            // Sort by importance then by date.  Both descending. This'll probably need changing.
-            this.content.sort(function (left, right) {
-                var li = left.importance(),
-                    ri = right.importance(),
-                    ld = left.webPublicationDate(),
-                    rd = right.webPublicationDate();
-                if (li === ri) {
-                    return (ld > rd) ? -1 : 1;
-                } else {
-                    return (li > ri) ? -1 : 1;
-                }
-            });
-
-            console && console.log('SENT:');
-            console && console.log(JSON.stringify(self) + "\n\n")
-
-            new Reqwest({
-                url: url,
-                method: 'post',
-                type: 'json',
-                contentType: 'application/json',
-                data: JSON.stringify(self),
-                success: function(resp) {
-                    console && console.log('RECEIVED:')
-                    console && console.log(JSON.stringify(resp) + "\n\n")
-                    
-                    // Update event using the server response
-                    self.init(resp);
-                    // Get UI stuff from api/cache
-                    self.decorateContent();
-                    // Mark event as real
-                    self._tentative(false);
-                    // Stop editing
-                    self._editing(false);
-                    Common.mediator.emitEvent('models:event:save:success');
-                },
-                error: function() {
-                    if (self._tentative()) {
-                        Common.mediator.emitEvent('models:event:save:error:duplicate');
-                    } else {
-                        Common.mediator.emitEvent('models:event:save:error');
-                    }
-                }
-            });
-        };
-        
-        this.backgroundSave = function() {
-            if(!self._editing()) {
-                clearTimeout(deBounced);
-                deBounced = setTimeout(function(){
-                    self.save();
-                }, saveInterval);
-            }
-        };
-
         this.toggleEditing = function() {
             this._editing(!this._editing());
         };
@@ -311,25 +238,6 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
         };
 
         this.init(opts);
-    };
-
-    Event.prototype.toJSON = function() {
-        var copy = ko.toJS(this),
-            prop;
-
-        // Turn parentId into parent obj
-        if (copy._parentId) {
-            copy.parent = {id: copy._parentId};
-        }
-
-        // Strip administrative properties starting '_'
-        for (prop in copy) {
-            if (0 === prop.indexOf('_')) {
-                delete copy[prop];
-            }
-        }
-
-        return copy;
     };
 
     return Event;
