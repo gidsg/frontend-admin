@@ -51,6 +51,31 @@ object Mongo {
 
     table
   }
+
+  lazy val Stories = {
+    val table = client("story")
+
+    table.underlying.ensureIndex(
+      Map("id" -> 1),
+      Map("background" -> true, "name" -> "Event ID index", "unique" -> true)
+    )
+
+    table.underlying.ensureIndex(
+      Map("events.content.id" -> 1),
+      Map("background" -> true, "name" -> "Content ID index")
+    )
+
+    table.underlying.ensureIndex(
+      Map("createdBy.date" -> 1),
+      Map("background" -> true, "name" -> "Start date ID index")
+    )
+
+    // Write operations wait for the server to flush data to disk
+    // http://api.mongodb.org/scala/casbah/2.1.2/scaladoc/com/mongodb/casbah/WriteConcern$.html
+    table.setWriteConcern(com.mongodb.WriteConcern.FSYNC_SAFE)
+
+    table
+  }
 }
 
 
