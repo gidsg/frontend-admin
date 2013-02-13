@@ -12,20 +12,37 @@ import com.mongodb
 case class Modified(email: String, date: DateTime)
 
 //TODO rename the SContent (and other classes) after we have deleted copies in Event
-case class SContent(id: String, importance: Int)
-case class SPerson(
-  id: String,
-  name: Option[String],
-  imageUrl: Option[String] = None,
-  explainer: Option[String] = None
+case class SContent(
+  id: String, 
+  importance: Int = 50, 
+  colour: Int = 3
+)
+
+/**
+  *  Agents are people and organisations who play a role in the story. We want to tell their backstory.
+  *  - We use the foaf:Agent property to describe the person/org, xmlns.com/foaf/spec/#term_Agent
+  *  - We use the rdfs:sameAs property to externally reference, http://www.w3.org/TR/2000/CR-rdf-schema-20000327/#s2.3.4
+  */
+case class SAgent(
+  id: Option[String],
+  name: Option[String] = None,
+  explainer: Option[String] = None,
+  sameAs: Seq[String] = Nil
+)
+
+// Places are locations (or things on the landscape - lakes, mountains, churches) where the event happened
+case class SPlace(
+  id: Option[String],
+  sameAs: Seq[String] = Nil
 )
 
 case class SEvent(
   startDate: DateTime,
   title: String,
-  importance: Option[Int] = None,
+  importance: Int = 50,
   content: Seq[SContent] = Nil,
-  people: Seq[SPerson] = Nil
+  agents: Seq[SAgent] = Nil,
+  places: Seq[SPlace] = Nil
 )
 
 case class Story(
