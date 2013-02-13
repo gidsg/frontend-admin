@@ -42,7 +42,8 @@ case class SEvent(
   importance: Int = 50,
   content: Seq[SContent] = Nil,
   agents: Seq[SAgent] = Nil,
-  places: Seq[SPlace] = Nil
+  places: Seq[SPlace] = Nil,
+  explainer: Option[String] = None
 )
 
 case class Story(
@@ -50,7 +51,8 @@ case class Story(
   title: String,
   events: Seq[SEvent] = Nil,
   createdBy: Option[Modified] = None,
-  modifiedBy: Seq[Modified] = Nil
+  modifiedBy: Seq[Modified] = Nil,
+  explainer: Option[String] = None
 )
 
 object Story {
