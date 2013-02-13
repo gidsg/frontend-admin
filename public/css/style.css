@@ -110,9 +110,10 @@ input[type=checkbox].status {
     cursor: pointer;
 }
 
-.event-article-count {
+.count {
     color: red;
-    font-size: 0.8em;
+    font-size: 11px;
+    font-weight: normal;
 
 }
 
@@ -121,9 +122,8 @@ input[type=checkbox].status {
     font-weight: bold;
 }
 
-.event-form,
 .event-form-toggler {
-    margin: 8px 0;    
+    margin: 20px 0;    
 }
 
 .editing .event-form-toggler {
@@ -170,7 +170,7 @@ textarea.event-explainer {
 .article-id { font-size: 1em; color: #999; margin-bottom: 0; font-size: 0.9em; }
 
 .event-date, .article-date { color: #ccc; margin-bottom: 0; font-size: 12px; line-height: 0.99em; }
-.event-articles .article-date { margin-left: 18px; } 
+.event-articles .article-date { margin-left: 33px; } 
 
 /** search results */
 
@@ -191,8 +191,8 @@ textarea.event-explainer {
 }
 
 /** only display close/delete on hover */
-.article .close { display: none; color: red; text-shadow: 1px 1px #ff0; }
-.article:hover .close { display: block; }
+.article .close { display: none; color: red; text-shadow: 1px 1px #ccc; opacity: 1.0 }
+.article:hover .close { display: inline-block; }
 
 /** scaffolding */
 .storify * {
@@ -229,4 +229,22 @@ label[for="tone-news"] {
 }
 
 button.create { float: right; margin-right: 14px; }
+
+.color-light, .color-dark { 
+    display: inline-block;
+    width: 9px; 
+    height: 9px;
+    font-size: 15px;
+    vertical-align: middle;
+}
+
+.color-light:hover, .color-dark:hover { 
+    cursor: pointer;
+}
+
+.color-light:hover, .color-light { 
+    color: #FFDB4D;    
+}
+
+
 

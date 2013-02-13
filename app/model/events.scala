@@ -8,15 +8,18 @@ import org.joda.time.format.ISODateTimeFormat
 import com.mongodb.casbah.Imports._
 import tools.Mongo.Events
 
-
 case class Parent(id: String, title: Option[String] = None)
-case class Content(id: String, importance: Int)
-case class Person(
-  id: String,
-  name: Option[String],
-  imageUrl: Option[String] = None,
-  explainer: Option[String] = None
-)
+case class Content(id: String, importance: Int, colour: Int = 3)
+
+/**
+  *  Agents are people and organisations who play a role in the story. We want to tell their backstory.
+  *  - We use the foaf:Agent property to describe the person/org, xmlns.com/foaf/spec/#term_Agent
+  *  - We use the rdfs:sameAs property to externally reference, http://www.w3.org/TR/2000/CR-rdf-schema-20000327/#s2.3.4
+  */
+case class Agent(id: Option[String], name: Option[String] = None, explainer: Option[String] = None, sameAs: Seq[String] = Nil)
+
+// Places are locations (or things on the landscape - lakes, mountains, churches) where the event happened
+case class Place(id: Option[String], sameAs: Seq[String] = Nil)
 
 case class Event(
   id: String,
@@ -28,8 +31,9 @@ case class Event(
   _rootEvent: Option[Parent] = None, //denormalisation to group events together, represents event at the top of this tree
   createdBy: Option[String] = None,
   lastModifiedBy: Option[String] = None,
-  explainer: Option[String] = None,
-  people: Seq[Person] = Nil
+  agents: Seq[Agent] = Nil,
+  places: Seq[Place] = Nil,
+  explainer: Option[String] = None
 )
 
 object Event {
@@ -71,7 +75,7 @@ object Event {
       val deleteOk = Events.remove(Map("id" -> eventId)).getLastError.ok()
 
       //TODO somebody please think of the children
-      // fix broken parents on child events
+      // fix broken parents on child events  <------ MC perhaps just make ophans visible to the user?
 
       deleteOk
     }

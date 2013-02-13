@@ -94,6 +94,10 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         };
 
         this.deleteEvent = function(event){
+            
+            var result = window.confirm("Are you sure you want to DELETE this event? Once deleted it will be gone FOREVER!");
+            if (!result) return;
+
             var url = endpoint + '/' + event.id();
             self.list.remove(event);
             self.selected(false);
@@ -109,10 +113,10 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
             });
         };
 
-        this.createEventFollowOn = function(parent) {
+        this.createEventFollowOn = function() {
             var event = new Event({
                 articleCache: articleCache,
-                parent: {id: parent.id()}
+                parent: {id: self.selected().id()}
             });
             self.list.unshift(event);
             self.selected(event)
@@ -122,8 +126,9 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         this.cancelEditing = function(event) {
             event._editing(false);
             if (event._tentative()) {
-                self.list.remove(event);
                 self.selected(false);
+                self.list.remove(event);
+                Common.mediator.emitEvent('models:events:hierarchy:change');
             }
         }
 
