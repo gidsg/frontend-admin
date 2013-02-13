@@ -120,6 +120,7 @@
 
                             <a class="article-title" target="_blank"
                                 data-bind="text: webTitle, attr: {href: mDot}"></a>
+
                             <span title="color: dark = serious, light = entertaining" data-bind="
                                 css: {
                                       'color-light': colour() <= 2,
@@ -155,15 +156,13 @@
                     
                     <!-- Agents -->
 
-
                     <h3>
-                        Agents
+                        People and Organisations
                         <span class="count" data-bind="text: agents().length + ' agent' + (agents().length !== 1 ? 's' : '')"></span>
                     </h3>
                     <p>
                         <small>
-                            Agents are <strong>people</strong> and <strong>organisations</strong> that appear in the story. <em>Nb. We don't have an
-                                editing interface for agents yet.</em>
+                            Agents are <strong>people</strong> and <strong>organisations</strong> that appear in the story. 
                         </small>     
                     </p>
                     <div data-bind="foreach: agents">
@@ -174,13 +173,6 @@
                             <dd>
                                 <p data-bind="text: explainer"></p>
                                 <!-- ko if: $data.sameAs().length > 0 -->
-                                <p>
-                                    <small>
-                                        seeAlso - The property seeAlso specifies a resource that might provide additional information about the
-                                        subject resource.
-                                        <!-- http://www.w3.org/TR/2000/CR-rdf-schema-20000327/#s2.3.4 -->
-                                    </small>
-                                </p>
                                     <ul data-bind="foreach: $data.sameAs">
                                         <li><a data-bind="attr: {href: $data}, text: $data"></a></li>
                                     </ul>
@@ -189,6 +181,25 @@
                          </dl>
                     </div>
                     
+                    <!-- Places -->
+
+                    <h3>
+                        Places
+                        <span class="count" data-bind="text: places().length + ' place' + (places().length !== 1 ? 's' : '')"></span>
+                    </h3>
+                    <p>
+                        <small>
+                            Places are physical <strong>locations</strong> (man-made, natural, or otherwise) where the event happened. 
+                        </small>     
+                    </p>
+                    <ul data-bind="foreach: places">
+                        <ul data-bind="foreach: $data.sameAs">
+                            <li><a data-bind="attr: {href: $data}, text: $data"></a></li>
+                        </ul>
+                    </ul>
+
+                    <!-- edit/delete/submit -->
+
                     <button class="event-form-toggler btn btn-mini" data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit</button>
                     <button class="btn btn-danger btn-mini" type="submit" value="delete"
                          data-bind="click: $root.events.deleteEvent, visible: !_tentative()"

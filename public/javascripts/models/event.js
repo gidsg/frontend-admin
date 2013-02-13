@@ -1,4 +1,4 @@
-define(['models/article', 'models/agent', 'Knockout', 'Config', 'Common', 'Reqwest'], function (Article, Agent, ko, Config, Common, Reqwest) {
+define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 'Common', 'Reqwest'], function (Article, Agent, Place, ko, Config, Common, Reqwest) {
 
     // zero pad the date getters
     Date.prototype.getHoursPadded = function() {
@@ -32,6 +32,7 @@ define(['models/article', 'models/agent', 'Knockout', 'Config', 'Common', 'Reqwe
         this.id         = ko.observable();
         this.explainer  = ko.observable();
         this.agents     = ko.observableArray(); // people, organisations etc.
+        this.places     = ko.observableArray(); // locations 
         this.createdBy  = ko.observable();
         this.lastModifiedBy = ko.observable();
 
@@ -87,6 +88,12 @@ define(['models/article', 'models/agent', 'Knockout', 'Config', 'Common', 'Reqwe
                 self.agents.push(new Agent(a));
             });
 
+            // populate places            
+            self.places.removeAll(); 
+            (o.places || []).map(function(p){
+                self.places.push(new Place(p));
+            });
+
             this.title(o.title || '');
             this._oldTitle(o.title || '');
  
@@ -120,18 +127,7 @@ define(['models/article', 'models/agent', 'Knockout', 'Config', 'Common', 'Reqwe
             this.createdBy(o.createdBy || Config.identity.email);
             this.lastModifiedBy(o.lastModifiedBy || undefined);
         }
-
-        this.addAgent = function(agent) {
-            //console.log(agent);
-            this.agents.unshift(agent);
-            //self.backgroundSave();
-        }
         
-        this.removeAgent = function(agent) {
-            this.agents.remove(agent);
-            //self.backgroundSave();
-        }
-
         this.addArticle = function(article) {
             var included = _.some(self.content(), function(item){
                 return item.id() === article.id();

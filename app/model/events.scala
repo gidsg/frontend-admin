@@ -11,8 +11,15 @@ import tools.Mongo.Events
 case class Parent(id: String, title: Option[String] = None)
 case class Content(id: String, importance: Int, colour: Int = 3)
 
-// Agents are people and organisations who play a role in the story. We want to tell their backstory.
+/**
+  *  Agents are people and organisations who play a role in the story. We want to tell their backstory.
+  *  - We use the foaf:Agent property to describe the person/org, xmlns.com/foaf/spec/#term_Agent
+  *  - We use the rdfs:sameAs property to externally reference, http://www.w3.org/TR/2000/CR-rdf-schema-20000327/#s2.3.4
+  */
 case class Agent(id: Option[String], name: Option[String] = None, explainer: Option[String] = None, sameAs: Seq[String] = Nil)
+
+// Places are locations (or things on the landscape - lakes, mountains, churches) where the event happened
+case class Place(id: Option[String], sameAs: Seq[String] = Nil)
 
 case class Event(
   id: String,
@@ -25,12 +32,8 @@ case class Event(
   createdBy: Option[String] = None,
   lastModifiedBy: Option[String] = None,
   agents: Seq[Agent] = Nil,
+  places: Seq[Place] = Nil,
   explainer: Option[String] = None
-
-    // Predicates :-
-    //  mentions: Seq[Agent|Place] 
-    //  isAbout: <-- attach to articles 
-
 )
 
 object Event {
