@@ -7,21 +7,21 @@
     <form class="form-inline muted" onsubmit="return false">
         <h3>Articles</h3>
         <input type="text" placeholder="Search" 
-            data-bind='event: {keyup: articles.articleSearch, mousedown: articles.articleSearch, afterpaste: articles.articleSearch}, value:
-            articles.articleTerm, valueUpdate: ["afterkeydown", "afterpaste"]'/>
+            data-bind='event: {keyup: articles.search, mousedown: articles.articleSearch, afterpaste: articles.articleSearch}, value:
+            articles.term, valueUpdate: ["afterkeydown", "afterpaste"]'/>
         <!--
         <select data-bind='
-            value: articles.sectionTerm,
+            value: articles.term,
             options: sections,
             optionsText: "webTitle",
             optionsValue: "id",
             valueUpdate: "afterkeydown",
             optionsCaption: "Section",
-            event: {change: articles.articleSearch}
+            event: {change: articles.search}
             '></select> -->
         <label class="checkbox">
             <!--<input id="tone-news" type="checkbox" value="news" 
-                data-bind="checked: articles.toneNews, event: {click: articles.articleSearch}"/>
+                data-bind="checked: articles.toneNews, event: {click: articles.search}"/>
                 tone/news-->
         </label>
     </form>

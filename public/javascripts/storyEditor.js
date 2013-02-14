@@ -29,7 +29,7 @@ curl([
     viewModel.pendingSave = ko.observable(false);
 
     // Do an initial article search
-    viewModel.articles.articleSearch();
+    viewModel.articles.search();
 
     function onDragStart(event) {
         event.target.style.opacity = '0.3';  // this / e.target is the source node.

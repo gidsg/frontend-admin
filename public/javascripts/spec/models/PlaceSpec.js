@@ -11,7 +11,14 @@ curl(['models/place', 'Knockout']).then(
             });
 
             it('should have an id property', function() {
-                expect(place.id).toBeDefined();
+                expect(place.id()).toBeDefined();
+            });
+            
+            it('should hydrate the model on construction', function() {
+                var o = { id: "foo", sameAs: [ "dog", "egg" ] }
+                  , place = new Place(o);
+                expect(place.id()).toBe("foo");
+                expect(place.sameAs().length).toEqual(2);
             });
 
         });
