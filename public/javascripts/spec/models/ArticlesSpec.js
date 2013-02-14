@@ -10,10 +10,6 @@ curl(['models/articles', 'Knockout']).then(
                 articles = new Articles();
             });
 
-            it('should property', function() {
-                expect(articles).toBeDefined();
-            });
-
             // TODO each of these should populate self.articles & self.cache
             it('should search the Content API for a search term', function() {
 
