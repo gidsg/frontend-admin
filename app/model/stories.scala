@@ -27,6 +27,7 @@ case class SAgent(
   id: Option[String],
   name: Option[String] = None,
   explainer: Option[String] = None,
+  keyPlayer: Int = 0,
   sameAs: Seq[String] = Nil
 )
 

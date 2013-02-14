@@ -7,6 +7,7 @@ define(['Knockout'], function (ko) {
         this.id         = ko.observable(opts.id || '');
         this.name       = ko.observable(opts.name || '');
         this.explainer  = ko.observable(opts.explainer || '');
+        this.keyPlayer  = ko.observable(opts.keyPlayer || '');
         this.sameAs     = ko.observableArray(opts.sameAs);
 
     };
