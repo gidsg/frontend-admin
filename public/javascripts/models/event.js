@@ -33,6 +33,7 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
         this.agents     = ko.observableArray(); // people, organisations etc.
         this.content    = ko.observableArray();
         this.places     = ko.observableArray(); // locations 
+        this.sameAs     = ko.observableArray(); // Eg. cross-reference with wikipedia, PA, BBC etc. 
 
         this.startDate  = ko.computed({
             read: function() {
