@@ -1,18 +1,20 @@
 curl([
-    'models/story',
+    'models/stories',
     'models/articles',
     'Knockout',
     'Reqwest',
     'Config',
     'Common'
 ]).then(function(
-    Story,
+    Stories,
     Articles,
     ko,
     Reqwest,
     Config,
     Common
 ) {
+    var viewModel = {},
+        self = this;
 
     if(!Common.hasVh()) {
         //this fixes the article and event lists to the height of the viewport
@@ -22,36 +24,12 @@ curl([
         document.querySelector('.story').style.maxHeight = h;
     }
 
-    var articles = new Articles(),
-        story = new Story({articleCache: articles.cache}),
-        deBounced,
-        self = this;
-
-    var viewModel = {
-        story: story,
-        articles: articles,
-        sections: ko.observableArray()
-    };
-
-    // Grab the section definitions
-    Reqwest({
-        url: '/api/proxy/sections?format=json',
-        type: 'jsonp',
-        success: function(resp) {
-            if (resp.response) {
-                var sections = resp.response.results || [];
-                sections.sort(function(l,r) {
-                    return l.webTitle < r.webTitle ? -1 : 1;
-                });
-                viewModel.sections(sections);
-            }
-            //viewModel.articles.sectionTerm('news');
-        },
-        error: function() {}
-    });
+    viewModel.articles = new Articles();
+    viewModel.stories  = new Stories({articleCache: viewModel.articles.cache});
+    viewModel.pendingSave = ko.observable(false);
 
     // Do an initial article search
-    articles.articleSearch();
+    viewModel.articles.articleSearch();
 
     function onDragStart(event) {
         event.target.style.opacity = '0.3';  // this / e.target is the source node.
@@ -78,7 +56,7 @@ curl([
         var id = event.dataTransfer.getData('Text');
         var el = event.currentTarget;
         var target = ko.dataFor(el);
-        target.addArticleById(id)
+        target.addArticle(id)
 
         el.style.background = '#CEE8C3';
         setTimeout(function(){
@@ -101,6 +79,39 @@ curl([
         }
     };
 
+    // Binding for contentEditable
+    ko.bindingHandlers.htmlValue = {
+        init: function(element, valueAccessor, allBindingsAccessor) {
+            ko.utils.registerEventHandler(element, "keyup", function() {
+                var modelValue = valueAccessor();
+                var elementValue = element.innerHTML;
+                if (ko.isWriteableObservable(modelValue)) {
+                    modelValue(elementValue);
+                }
+                else { //handle non-observable one-way binding
+                    var allBindings = allBindingsAccessor();
+                    if (allBindings['_ko_property_writers'] && allBindings['_ko_property_writers'].htmlValue) allBindings['_ko_property_writers'].htmlValue(elementValue);
+                }
+            })
+        },
+        update: function(element, valueAccessor) {
+            var value = ko.utils.unwrapObservable(valueAccessor()) || "";
+            if (element.innerHTML !== value) {
+                element.innerHTML = value;
+            } else {
+                Common.mediator.emitEvent('models:story:haschanges');
+            }
+        }
+    };
+
+    Common.mediator.addListener('models:story:haschanges', function(){
+        viewModel.pendingSave(true)
+        viewModel.stories.selected().backgroundSave();
+    });
+
+    Common.mediator.addListener('models:story:save:success', function(){
+        viewModel.pendingSave(false)
+    });
 
     // Render
     ko.applyBindings(viewModel);

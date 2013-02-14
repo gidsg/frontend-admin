@@ -29,55 +29,72 @@
     <div class="articles scrollable" data-bind='foreach: articles.articles'>
         <div class="article" draggable="true" data-bind="makeDraggable: true">
             <a class="article-title" target="_blank"
-                data-bind="html: webTitle, attr: {href: mDot}"></a>
+                data-bind="html: webTitle, attr: {href: _mDot}"></a>
             <div class="article-date"  data-bind="text: _humanDate"></div>
         </div>
     </div>
   </div>
 
   <div class="storify-events span8">
-    <form class="form-inline" onsubmit="return false">
-        <h3>Events</h3>
-        <p>
-        <small>
-        Events are things that are happening in the <b>real world</b>.
-        Try and phrase events you create in the form of a factual statement -  Eg, 'Chris Huhne resigns as MP', 'Michael Gove gives speech about Ebbac reforms'.
-        </small>
-        </p>
+    <!-- ko if: !$root.stories.selected() -->
+        <h3>Stories</h3>
+        <button class="btn btn-mini create btn-success" data-bind="
+            event: {click: stories.createStory}
+        ">Start a Story</button>
+        <div class="stories" data-bind="
+            template: {name: 'story_closed_template', foreach: stories.stories}
+        "></div>
+        <div data-bind="text: stories.length() === 0 ? 'Loading stories...' : ''"></div>
+    <!-- /ko -->
 
-        <input type="text" placeholder="Search" data-bind='
-            event: {keyup: story.pruneTrees}, 
-            value: story.pruneTerm, 
-            valueUpdate: "afterkeydown",
-            disable: $root.story.selected()
-        '/>
+    <!-- ko with: $root.stories.selected() -->
+        <div class="stories" data-bind="template: {name: 'story_open_template'}"></div>
+    <!-- /ko -->
 
-        <!-- ko if: !$root.story.selected() -->
-        <button class="btn btn-mini create btn-success" data-bind="event: {click: story.createEvent}
-        ">Create an event</button>
-        <!-- /ko -->
-
-        <!-- ko if: $root.story.selected() && !$root.story.selected()._editing() -->
-        <button class="btn btn-mini create btn-success" data-bind="click: $root.story.createEventFollowOn">Create a FOLLOW-ON event</button>
-        <!-- /ko -->
-
-    </form>
-    <div data-bind="text: story.length() === 0 ? 'Loading...' : ''"></div>
-    <div class="events scrollable" data-bind="template: {name: 'event_template', foreach: story.events}"></div>
   </div>
-
 </div>
 
-<script type="text/html" id="event_template">
-  <!-- ko if: !_hidden() -->
-    <div data-bind="css: {'event-wrapper': !$root.story.selected()}">
-            
-        <div class="event" data-bind="
-            makeDropabble: !_editing(), 
-            if: !$root.story.selected() || $root.story.selected() === $data
-        ">
+<!-- template: story in closed state -->
+<script type="text/html" id="story_closed_template">
+    <div class="story-wrap">
+        <div class="story-title" data-bind="
+            text: title().length > 0 ? title : '(Un-titled story)',
+            event: {click: $root.stories.setSelected}
+        "></div>
+    </div>
+</script>
 
-            <div class="event-header" data-bind="if: !_editing()">
+<!-- template: story in open state -->
+<script type="text/html" id="story_open_template">
+    <div class="story-wrap">
+        <button class="btn btn-mini" data-bind="
+            event: {click: $root.stories.clearSelected},
+            disable: $root.pendingSave()
+        ">&laquo; Back to Stories</button>
+
+        <h3 class="story-title" contentEditable="true" data-bind="
+            htmlValue: title
+        "></h3>
+
+        <p>
+            <span data-bind="text: length() === 0 ? 'Has no events yet' : 'Has ' + length() 
+                + ' event' + (length() > 1 ? 's' : '')"></span>
+            <span data-bind="if: !_selected()">- <a data-bind="event: {click: createEvent}">add an event</a></span>
+        </p>
+
+        <p class="events" data-bind="template: {name: 'event_template', foreach: events}"></p>
+
+        <p>
+            <button class="btn btn-mini" data-bind="event: {click: $root.stories.deleteSelected}">Delete this story</button>
+        </p>
+    </div>
+</script>
+
+<!-- template: event -->
+<script type="text/html" id="event_template">
+        <div class="event" data-bind="makeDropabble: true, css: {well: $parent._selected() === $data}">
+
+            <div class="event-header">
                 <i data-bind="
                     click: bump,
                     css: {
@@ -87,117 +104,63 @@
                 "></i>
                 <span class="event-title" data-bind="
                     text: title().length > 0 ? title : 'New Event',
-                    event: {click: $root.story.setSelected},
+                    event: {click: $parent.setSelected},
                 "></span>
-                <span class="count" 
-                    data-bind="text: content().length + ' article' + (content().length !== 1 ? 's' : '')"></span>
+                <span class="count" data-bind="
+                    text: content().length + ' article' + (content().length !== 1 ? 's' : '')
+                "></span>
                 <span class="event-date" data-bind="text: _humanDate"></span>
             </div>
 
-            <div data-bind="if: $root.story.selected() === $data">
-                <div class="event-detail" data-bind="ifnot: _editing()">
-                    <div class="event-articles" data-bind="foreach: content">
-                        <!-- ko if: webTitle -->
-                        <div class="article">
-                            
-                            <button type="button" class="close"
-                                data-bind='click: $parent.removeArticle' class="close">×</button>
 
-                            <div class="article-star" data-bind="
-                                click: $parent.bumpContent,
-                                css: {
-                                    'icon-star-empty': importance() <= 50,
-                                    'icon-star': importance() > 50
-                                }
-                            "></div>
+            <!-- Show acticles is event is selected -->
+            <div data-bind="if: $parent._selected() === $data">
+
+                <div class="event-articles" data-bind="foreach: content">
+
+                    <div class="article">
+                        <button type="button" class="close" data-bind='click: $parent.removeArticle' class="close">×</button>
+
+                        <div class="article-star" data-bind="
+                            click: $parent.bumpContent,
+                            css: {
+                                'icon-star-empty': importance() <= 50,
+                                'icon-star': importance() > 50
+                            }
+                        "></div>
                         
 
-                            <a class="article-title" target="_blank"
-                                data-bind="text: webTitle, attr: {href: mDot}"></a>
+                        <a class="article-title" target="_blank"
+                            data-bind="text: webTitle, attr: {href: _mDot}"></a>
 
-                            <span title="color: dark = serious, light = entertaining" data-bind="
-                                css: {
-                                      'color-light': colour() <= 2,
-                                      'color-dark': colour() > 2
-                                     },
-                                click: $parent.setColour">*</span>
-                            <div class="article-date"  data-bind="text: _humanDate"></div>
-                        </div>
-                        <!-- /ko -->
+                        <span title="color: dark = serious, light = entertaining" data-bind="
+                            css: {
+                                'color-light': colour() <= 2,
+                                'color-dark': colour() > 2
+                            },
+                            click: $parent.setColour">*</span>
+                        <div class="article-date"  data-bind="text: _humanDate"></div>
                     </div>
-                    <!-- ko if: content().length === 0 -->
+
+                </div>
+                
+                <!-- ko if: content().length === 0 -->
                     <p class="alert">Drag articles here</p>
-                    <!-- /ko -->
-                    <div class="event-meta">
-                        <div>
-                            <span class="muted">Event date:</span> 
-                            <span data-bind="text: _prettyDate"></span>
-                            <span data-bind="text: _prettyTime"></span>                        
-                        </div>
+                <!-- /ko -->
+                
+                <div class="event-meta">
+                    <div>
+                        <span class="muted">Event date:</span> 
+                        <span data-bind="text: _prettyDate"></span>
+                        <span data-bind="text: _prettyTime"></span>                        
                     </div>
-                    
-                    <!-- Agents -->
+                </div>
+    
+                <button class="btn btn-danger btn-mini" type="submit" value="delete" data-bind="
+                    click: $parent.deleteEvent
+                ">Delete event</button>
 
-                    <h3>
-                        People and Organisations
-                        <span class="count" data-bind="text: agents().length + ' agent' + (agents().length !== 1 ? 's' : '')"></span>
-                    </h3>
-                    <p>
-                        <small>
-                            Agents are <strong>people</strong> and <strong>organisations</strong> that appear in the story. <em>Nb. We don't have an
-                                editing interface for agents yet.</em>
-                        </small>     
-                    </p>
-                    <div data-bind="foreach: agents">
-                        <dl>
-                            <dt>
-                                <p><span data-bind="text: name"></span></p>
-                            </dt>
-                            <dd>
-                                <p data-bind="text: explainer"></p>
-                                <!-- ko if: $data.sameAs().length > 0 -->
-                                <p>
-                                    <small>
-                                        seeAlso - The property seeAlso specifies a resource that might provide additional information about the
-                                        subject resource.
-                                    </small>
-                                </p>
-                                    <ul data-bind="foreach: $data.sameAs">
-                                        <li><a data-bind="attr: {href: $data}, text: $data"></a></li>
-                                    </ul>
-                                <!-- /ko -->
-                            </dd>
-                         </dl>
-                    </div>
-                    
-                    <!-- Places -->
-
-                    <h3>
-                        Places
-                        <span class="count" data-bind="text: places().length + ' place' + (places().length !== 1 ? 's' : '')"></span>
-                    </h3>
-                    <p>
-                        <small>
-                            Places are physical <strong>locations</strong> (man-made, natural, or otherwise) where the event happened. 
-                            <em>Nb. We don't have an  editing interface for places yet.</em>
-                        </small>     
-                    </p>
-                    <ul data-bind="foreach: places">
-                        <ul data-bind="foreach: $data.sameAs">
-                            <li><a data-bind="attr: {href: $data}, text: $data"></a></li>
-                        </ul>
-                    </ul>
-
-                    <!-- edit/delete/submit -->
-
-                    <button class="event-form-toggler btn btn-mini" data-bind="event: {click: toggleEditing}" href="javascript:void(0)">Edit</button>
-                    <button class="btn btn-danger btn-mini" type="submit" value="delete"
-                         data-bind="click: $root.story.deleteEvent, visible: !_tentative()"
-                     >Delete event</button>
-
-                  </div>
-
-                <form class="event-form" data-bind="if: _editing(), submit: $root.story.save">
+                <form class="event-form" data-bind="if: false">
                   
                     <label>Title (what happend, is happening, or might happen?)</label>
                     <input type="text" placeholder="e.g. 'Helicopter crash"
@@ -213,19 +176,14 @@
 
                     <div>
                         <button class="btn btn-success btn-mini" type="submit" data-bind="enable: _isValid">Save event</button>
-                        <button class="btn btn-mini" type="submit" value="cancel"
-                            data-bind="click: $root.story.cancelEditing" 
-                        >Cancel</button>
+
                         <button class="btn btn-danger btn-mini" type="submit" value="delete"
-                            data-bind="click: $root.story.deleteEvent, visible: !_tentative()"
+                            data-bind="click: $root.stories.deleteSelected"
                         >Delete event</button>
                     </div>
                 </form>
 
-            </div>
         </div>
-    </div>
-  <!-- /ko -->
 </script>
 
 <script src="@routes.Assets.at("javascripts/storyEditor.js")" type="text/javascript"></script>

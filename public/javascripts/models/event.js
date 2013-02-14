@@ -14,24 +14,45 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
         var maxBumpedArticles = 2,
             importanceBumped  = 100,
             importanceDefault = 50,
-            saveInterval = 100, // milliseconds
             bumped = [],
-            deBounced,
             self = this;
 
-        // Input values that get post processed
+        opts = opts || {};
+
+        // General 'schema' poperties
+        this.title      = ko.observable(opts.title || '(New Event)');
+        this.importance = ko.observable(opts.importance || importanceDefault);
+        
+        // Content
+        this.content = ko.observableArray();
+        (opts.content || []).map(function(a){
+            var cached = opts.articleCache ? opts.articleCache[a.id] : undefined;
+            if (cached) {
+                cached.importance = a.importance; // updating the cached article with incoming update
+                cached.colour = a.colour;
+                a = cached;
+            }
+            self.content.push(new Article(a));
+        });
+
+        // Agents
+        this.agents     = ko.observableArray(); // people, organisations etc.
+        self.agents.removeAll(); 
+        (opts.agents || []).map(function(a){
+            self.agents.push(new Agent(a));
+        });
+
+        // Places
+        this.places     = ko.observableArray(); // locations 
+        self.places.removeAll(); 
+        (opts.places || []).map(function(p){
+            self.places.push(new Place(p));
+        });
+
+        // Dates
         this._humanDate  = ko.observable();
         this._prettyDate = ko.observable();
         this._prettyTime = ko.observable();
-
-        // Event 'schema' poperties
-        this.title      = ko.observable();
-        this.importance = ko.observable();
-        
-        // Collections
-        this.agents     = ko.observableArray(); // people, organisations etc.
-        this.content    = ko.observableArray();
-        this.places     = ko.observableArray(); // locations 
 
         this.startDate  = ko.computed({
             read: function() {
@@ -46,91 +67,55 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
             owner: this
         });
 
+        if (opts.startDate) {
+            this.startDate(new Date(opts.startDate)); // today
+        } else {
+            var d = new Date();
+            d.setHours(0, 0, 0, 0); // TODO verify this is required
+            this.startDate(d);
+        }
+
         // Administrative vars
         this._tentative   = ko.observable(!opts || !opts.id); // No id means it's a new un-persisted event,
         this._editing     = ko.observable(this._tentative()); // so mark as editable
         this._hidden      = ko.observable();
 
-        this.init = function (o) {
-
-            o = o || {};
-
-            self.content.removeAll();
-            (o.content || []).map(function(a){
-                var cached = opts.articleCache ? opts.articleCache[a.id] : undefined;
-                if (cached) {
-                    cached.importance = a.importance; // updating the cached article with incoming update
-                    cached.colour = a.colour;
-                    a = cached;
+        if (bumped.length === 0) {
+            self.content().map(function(a){
+                if (a.importance() > importanceDefault) {
+                    bumped.push(a.id());
                 }
-                self.content.push(new Article(a));
             });
-
-            if (bumped.length === 0) {
-                self.content().map(function(a){
-                    if (a.importance() > importanceDefault) {
-                        bumped.push(a.id());
-                    }
-                });
-            }
-
-            // populate agents
-            self.agents.removeAll(); 
-            (o.agents || []).map(function(a){
-                self.agents.push(new Agent(a));
-            });
-
-            // populate places            
-            self.places.removeAll(); 
-            (o.places || []).map(function(p){
-                self.places.push(new Place(p));
-            });
-
-            this.title(o.title || '');
-            this.importance(o.importance || importanceDefault);
-
-            if (o.startDate) {
-                this.startDate(new Date(o.startDate)); // today
-            } else {
-                var d = new Date();
-                d.setHours(0, 0, 0, 0); // TODO verify this is required
-                this.startDate(d);
-            }
-
-            this._isValid = ko.computed(function () {
-                return !!this.slugify(this.title()); // TODO validate
-            }, this);
-
         }
+
+        this._isValid = ko.computed(function () {
+            return true; // TODO validate
+        }, this);
         
         this.addArticle = function(article) {
-            var included = _.some(self.content(), function(item){
-                return item.id() === article.id();
-            });
-            if (!included) {
-                self.content.unshift(article);
-                self.backgroundSave();
+            var id, 
+                included;
+            if (typeof article === 'string') {
+                id = self.urlPath(article);
+                article = new Article({id: id})
+            } else { // We assume it's an Article. Check using its constructor? 
+                id = article.id(); 
             }
-        };
-
-        this.addArticleById = function(id) { // merge with addArticle
-            id = self.urlPath(id);
-            var included = _.some(self.content(), function(item){
+            included = _.some(self.content(), function(item){
                 return item.id() === id;
             });
             if (!included) {
-                self.content.unshift(new Article({id: id}));
-                self.backgroundSave();
+                self.content.unshift(article);
+                self.decorateContent();
+                Common.mediator.emitEvent('models:story:haschanges');
             }
         };
 
         this.removeArticle = function(article) {
-            
             var result = window.confirm("Are you sure you want to DELETE this article?");
             if (!result) return;
-            
             self.content.remove(article);
-            self.backgroundSave();
+            Common.mediator.emitEvent('models:story:haschanges');
         };
 
         this.decorateContent = function() {
@@ -167,21 +152,13 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
             }
         };
 
-        this.toggleEditing = function() {
-            this._editing(!this._editing());
-        };
-
-        this.toggleEditParent = function() {
-            this._editParent(!this._editParent());
-        };
-
         this.bump = function() {
             if (self.importance() > importanceDefault) {
                 self.importance(importanceDefault);
             } else {
                 self.importance(importanceBumped);
             }
-            self.backgroundSave();
+            Common.mediator.emitEvent('models:story:haschanges');
         };
 
         this.bumpContent = function(item) {
@@ -202,7 +179,7 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
                     a.importance(importanceDefault);
                 }
             });
-            self.backgroundSave();
+            Common.mediator.emitEvent('models:story:haschanges');
         };
     
         this.setColour = function(item) {
@@ -216,8 +193,8 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
                         i.colour(5)
                     }
                 }
-            }); 
-            self.backgroundSave();
+            });
+            Common.mediator.emitEvent('models:story:haschanges');
         }
 
         this.urlPath = function(url) {
@@ -227,17 +204,18 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
             a = a.indexOf('/') === 0 ? a.substr(1) : a;
             return a;
         };
+    };
 
-        this.slugify = function (str) {
-            str = str
-                .replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'')
-                .toLowerCase()
-                .replace(/[^\w]+/g, '-') // unfair on utf-8 IMHO
-                .replace(/(^-|-$)/g, '');
-            return str;
-        };
-
-        this.init(opts);
+    Event.prototype.toJSON = function() {
+        var copy = ko.toJS(this),
+            prop;
+        // Strip temp vars starting '_'
+        for (prop in copy) {
+            if (0 === prop.indexOf('_')) {
+                delete copy[prop];
+            }
+        }
+        return copy;
     };
 
     return Event;
