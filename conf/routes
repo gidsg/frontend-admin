@@ -51,3 +51,10 @@ GET     /story                           controllers.event.StoryController.find(
 POST    /story                           controllers.event.StoryController.create()
 POST    /story*storyId                   controllers.event.StoryController.update(storyId)
 
+#Places
+GET     /entity*entityId                   controllers.event.EntityController.read(entityId)
+DELETE  /entity*entityId                   controllers.event.EntityController.delete(entityId)
+
+POST    /entity                           controllers.event.EntityController.create()
+POST    /entity*entityId                  controllers.event.EntityController.update(entityId)
+

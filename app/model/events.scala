@@ -19,7 +19,7 @@ case class Content(id: String, importance: Int, colour: Int = 3)
 case class Agent(id: Option[String], name: Option[String] = None, explainer: Option[String] = None, sameAs: Seq[String] = Nil)
 
 // Places are locations (or things on the landscape - lakes, mountains, churches) where the event happened
-case class Place(id: Option[String], sameAs: Seq[String] = Nil)
+case class xPlace(id: Option[String], sameAs: Seq[String] = Nil)
 
 case class Event(
   id: String,
@@ -32,7 +32,7 @@ case class Event(
   createdBy: Option[String] = None,
   lastModifiedBy: Option[String] = None,
   agents: Seq[Agent] = Nil,
-  places: Seq[Place] = Nil,
+  places: Seq[xPlace] = Nil,
   explainer: Option[String] = None
 )
 

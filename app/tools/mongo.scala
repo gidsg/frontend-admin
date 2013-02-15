@@ -4,7 +4,6 @@ import com.mongodb.casbah.{MongoURI, MongoConnection}
 import com.mongodb.casbah.Imports._
 import conf.Configuration
 
-
 object Mongo {
 
   private lazy val connectionUri = Configuration.mongo.connection
@@ -76,6 +75,22 @@ object Mongo {
 
     table
   }
+
+  lazy val Entities = {
+    val table = client("entity")
+
+    table.underlying.ensureIndex(
+      Map("id" -> 1),
+      Map("background" -> true, "name" -> "ID index", "unique" -> true)
+    )
+
+    // Write operations wait for the server to flush data to disk
+    // http://api.mongodb.org/scala/casbah/2.1.2/scaladoc/com/mongodb/casbah/WriteConcern$.html
+    table.setWriteConcern(com.mongodb.WriteConcern.FSYNC_SAFE)
+
+    table
+  }
+
 }
 
 
