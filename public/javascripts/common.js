@@ -34,6 +34,12 @@ define(['EventEmitter'], function (Mediator) {
             document.body.removeChild(elem);
 
             return (compStyle == height);
+        }, 
+
+        stripTags: function (html) {
+            var tmp = document.createElement("DIV");
+            tmp.innerHTML = html;
+            return tmp.textContent || tmp.innerText;
         }
     };
 

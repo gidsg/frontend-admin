@@ -18,7 +18,7 @@ define(['models/story', 'Knockout', 'Common', 'Reqwest'], function (Story, ko, C
             o = o || {};
             o.articleCache = opts.articleCache;
             story = new Story(o);
-            self.stories.unshift(story);
+            self.stories.push(story);
             return story; 
         };
 
