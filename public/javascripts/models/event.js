@@ -44,6 +44,8 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
 
         // Places
         this.places     = ko.observableArray(); // locations 
+        this.sameAs     = ko.observableArray(); // Eg. cross-reference with wikipedia, PA, BBC etc. 
+        
         self.places.removeAll(); 
         (opts.places || []).map(function(p){
             self.places.push(new Place(p));
