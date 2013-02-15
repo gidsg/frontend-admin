@@ -46,12 +46,12 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         };
 
         this.setSelected = function(current) {
-            if (current === self._selected()) {
-                self._selected(undefined);
-            } else {
-                current.decorateContent();
-                self._selected(current);
-            } 
+            current.decorateContent();
+            self._selected(current);
+        };
+
+        this.clearSelected = function(current) {
+            self._selected(undefined);
         };
 
         this.createEvent = function() {
@@ -63,11 +63,11 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         };
 
         this.deleteEvent = function(event){            
-            var result = window.confirm("Are you sure you want to DELETE this event? Once deleted it will be gone FOREVER!");
+            var result = window.confirm("Permanently delete this event?");
             if (!result) return;
             self.events.remove(event);
             self._selected(false);
-            Common.mediator.emitEvent('models:story:updated');
+            Common.mediator.emitEvent('models:story:haschanges');
         };
 
         this.cancelEditing = function(event) {

@@ -39,7 +39,7 @@ object StoryController extends Controller with Logging with AuthLogging {
 
   def delete(storyId: String) = AuthAction{ request =>
     // storyId will have leading /
-    Story.mongo.delete(storyId)
+    Story.mongo.delete(storyId.drop(1))
     Ok(status("deleted: " + storyId)).as("application/json")
   }
 
