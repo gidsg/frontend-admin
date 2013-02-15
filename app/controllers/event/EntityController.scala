@@ -8,14 +8,24 @@ import model.{Modified, Entity}
 import org.joda.time.DateTime
 
 object EntityController extends Controller with Logging with AuthLogging {
+  
+  def find(id: String) = AuthAction{ request =>
+    val results = Entity.mongo.find(id)
+    Ok(Entity.toJsonList(results)).as("application/json")
+  }
+  
+  def findByType(rdfType: String) = AuthAction{ request =>
+    val results = Entity.mongo.findByRdfType(rdfType)
+    Ok(Entity.toJsonList(results)).as("application/json")
+  }
 
   def create() = AuthAction{ request =>
-
     request.body.asJson.map(_.toString).map(Entity.fromJson)
       .map(entity => Ok(Entity.toJsonString(Entity.mongo.createNew(entity))).as("application/json"))
       .getOrElse(BadRequest(status("Invalid Json")).as("application/json"))
   }
 
+  // def update(entityId: String) = AuthAction{ request =>
   def update(entityId: String) = AuthAction{ request =>
     // entityId has leading /
     Entity.mongo.get(entityId.drop(1)).map{ oldEntity =>

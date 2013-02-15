@@ -51,10 +51,17 @@ GET     /story                           controllers.event.StoryController.find(
 POST    /story                           controllers.event.StoryController.create()
 POST    /story*storyId                   controllers.event.StoryController.update(storyId)
 
-#Places
+#Entities
 GET     /entity*entityId                   controllers.event.EntityController.read(entityId)
 DELETE  /entity*entityId                   controllers.event.EntityController.delete(entityId)
 
+GET     /entity                           controllers.event.EntityController.find(id: String ?= "")
 POST    /entity                           controllers.event.EntityController.create()
 POST    /entity*entityId                  controllers.event.EntityController.update(entityId)
+
+#People (proxies to Entity)
+GET     /people                           controllers.event.EntityController.findByType(rdfType: String = "http://schema.org/Person")
+GET     /places                           controllers.event.EntityController.findByType(rdfType: String = "http://schema.org/Place")
+GET     /organisations                    controllers.event.EntityController.findByType(rdfType: String = "http://schema.org/Organization")
+
 
