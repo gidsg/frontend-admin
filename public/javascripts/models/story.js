@@ -6,8 +6,11 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
             deBounced,
             self = this;
 
-        this.id = ko.observable();
-        this.title = ko.observable();
+        opts = opts || {};
+
+        this.id = ko.observable(opts.id);
+        this.title = ko.observable(opts.title || 'Story Title');
+        this.explainer = ko.observable(opts.explainer || 'none');
         this.events = ko.observableArray();
 
         // Temporary
@@ -22,28 +25,17 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
             return this.events().length;
         }, this)
 
-        this.init = function (o) {
-            o = o || {};
-
-            this.title(o.title || 'Title');
-
-            if (o.id) {
-                this.id(o.id);
-            }
-
-            self.events.removeAll();
-            (o.events || []).map(function(a){
-                self.loadEvent(a);
-            });
-        };
-
         this.loadEvent = function(o) {
             var event;
             o = o || {};
             o.articleCache = opts.articleCache;
             event = new Event(o);
-            self.events.push(event);
+            self.events.unshift(event);
         };
+
+        (opts.events || []).map(function(a){
+            self.loadEvent(a);
+        });
 
         this.setSelected = function(current) {
             current.decorateContent();
@@ -58,12 +50,12 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
             var event = new Event({
                 articleCache: opts.articleCache
             });
-            self.events.unshift(event);
+            self.events.push(event);
             self._selected(event);
         };
 
         this.deleteEvent = function(event){            
-            var result = window.confirm("Permanently delete this event?");
+            var result = window.confirm("Permanently delete this chapter?");
             if (!result) return;
             self.events.remove(event);
             self._selected(false);
@@ -85,9 +77,6 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
             if (self.id()) {
                 url += '/' + self.id();
             }
-
-            // Clean up the title
-            //self.title(self.sanitize(self.title))
 
             // Generate an ID if the title has changed. This also covers new events.
             // IDs get a random part for "uniquness"
@@ -122,18 +111,8 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
                 success: function(resp) {
                     console && console.log('RECEIVED:')
                     console && console.log(JSON.stringify(resp) + "\n\n")
-                    
-                    // Update event using the server response
-                    //self.init(resp);
-
-                    // Get UI stuff from api/cache
-                    //self.decorateContent();
-
                     // Mark event as real
                     self._tentative(false);
-
-                    // Stop editing
-                    //self._editing(false);
                     Common.mediator.emitEvent('models:story:save:success');
                 },
                 error: function() {
@@ -147,16 +126,9 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         };
 
         this.delete =  function() {
-            var url = endpoint;
-
-            // Post to the persisted id - even if we're changing the id
             if (self.id()) {
-                url += '/' + self.id();
-
-                console && console.log('DELETE');
-
                 new Reqwest({
-                    url: url,
+                    url: endpoint + '/' + self.id(),
                     method: 'delete',
                     type: 'json',
                     contentType: 'application/json',
@@ -199,8 +171,6 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
             // Show success
         };
         Common.mediator.addListener('models:events:save:success', this.eventSaveSuccess);
-
-        this.init(opts);
     };
 
     Story.prototype.toJSON = function() {

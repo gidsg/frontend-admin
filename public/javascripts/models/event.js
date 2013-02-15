@@ -20,7 +20,8 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
         opts = opts || {};
 
         // General 'schema' poperties
-        this.title      = ko.observable(opts.title || '(New Event)');
+        this.title      = ko.observable(opts.title || 'Chapter Title');
+        this.explainer  = ko.observable(opts.explainer || 'none');
         this.importance = ko.observable(opts.importance || importanceDefault);
         
         // Content
@@ -54,7 +55,7 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
         // Dates
         this._humanDate  = ko.observable();
         this._prettyDate = ko.observable();
-        this._prettyTime = ko.observable();
+        this._prettyTime = ko.observable();        
 
         this.startDate  = ko.computed({
             read: function() {
@@ -67,6 +68,9 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
                 this._humanDate(humanized_time_span(d));
             },
             owner: this
+        });
+        this.startDate.subscribe(function(val){
+            Common.mediator.emitEvent('models:story:haschanges');
         });
 
         if (opts.startDate) {

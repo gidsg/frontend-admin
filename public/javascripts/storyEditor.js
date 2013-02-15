@@ -128,8 +128,10 @@ curl([
     };
 
     Common.mediator.addListener('models:story:haschanges', function(){
-        viewModel.pendingSave(true)
-        viewModel.stories.selected().backgroundSave();
+        if (viewModel.stories.selected()) {
+            viewModel.stories.selected().backgroundSave();            
+            viewModel.pendingSave(true)
+        }
     });
 
     Common.mediator.addListener('models:story:save:success', function(){

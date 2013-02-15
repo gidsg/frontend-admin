@@ -1,4 +1,4 @@
-define(['Knockout'], function (ko) {
+define(['Knockout', 'Common'], function (ko, Common) {
 
     var Article = function(opts) {
 
@@ -10,6 +10,12 @@ define(['Knockout'], function (ko) {
         this.webPublicationDate = ko.observable(opts.webPublicationDate);
         this.importance = ko.observable(opts.importance || 50);
         this.colour     = ko.observable(opts.colour);
+
+        this.tone       = ko.observable(opts.tone);
+        this.tone.subscribe(function(val){
+            Common.mediator.emitEvent('models:story:haschanges');
+        });
+
 
         if (opts.fields)
             this.trailText  = ko.observable(opts.fields.trailText  || '');

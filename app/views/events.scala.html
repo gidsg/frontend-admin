@@ -30,7 +30,7 @@
         <div class="article" draggable="true" data-bind="makeDraggable: true">
             <a class="article-title" target="_blank"
                 data-bind="html: webTitle, attr: {href: _mDot}"></a>
-            <div class="article-date"  data-bind="text: _humanDate"></div>
+            <div class="article-meta"  data-bind="text: _humanDate"></div>
         </div>
     </div>
   </div>
@@ -78,125 +78,136 @@
         <h3 class="story-title" contentEditable="true" data-bind="textEditable: title"></h3>
 
         <p>
-            <span data-bind="text: length() === 0 ? 'Has no events yet' : 'Has ' + length() 
-                + ' event' + (length() > 1 ? 's' : '')"></span>
-            <span data-bind="if: !_selected()">- <a data-bind="event: {click: createEvent}">add an event</a></span>
+            <div class="muted">Chapters:</div>
+            <div class="events" data-bind="template: {name: 'event_template', foreach: events}"></div>
+            <a data-bind="
+                event: {click: createEvent},
+                text: length() === 0 ? 'add the first chapter' : 'add another chapter'
+            "></a>
         </p>
 
-        <p class="events" data-bind="template: {name: 'event_template', foreach: events}"></p>
+        <p>
+            <div class="muted">Overall Synopsis:</div>
+            <div contentEditable="true" data-bind="htmlEditable: explainer"></div>
+        </p>
 
         <p>
-            <button class="btn btn-mini" data-bind="event: {click: $root.stories.deleteSelected}">Delete this story</button>
+            <button class="btn btn-mini" data-bind="
+                event: {click: $root.stories.deleteSelected}
+            ">Delete this story</button>
         </p>
     </div>
 </script>
 
 <!-- template: event -->
 <script type="text/html" id="event_template">
-        <div class="event" data-bind="makeDropabble: true, css: {well: $parent._selected() === $data}">
+    <div class="event" data-bind="makeDropabble: true, css: {well: $parent._selected() === $data}">
+        <i data-bind="
+            click: bump,
+            css: {
+                'icon-star-empty': importance() <= 50,
+                'icon-star': importance() > 50
+            }
+        "></i>
 
-            <div class="event-header">
-                <i data-bind="
-                    click: bump,
-                    css: {
-                        'icon-star-empty': importance() <= 50,
-                        'icon-star': importance() > 50
-                    }
-                "></i>
+        <!-- An UNselected event: -->
+        <!-- ko if: $parent._selected() !== $data -->
+            <span class="event-title" data-bind="
+                text: title().length > 0 ? title : '(untitled chapter)',
+                event: {click: $parent.setSelected}
+            "></span>
+            <span class="count" data-bind="
+                text: content().length + ' article' + (content().length !== 1 ? 's' : '')
+            "></span>
+            <span class="event-meta" data-bind="text: _humanDate"></span>
+        <!-- /ko -->
 
-                <!-- ko if: $parent._selected() === $data -->
-                    <span class="event-title" contentEditable="true" data-bind="
-                        textEditable: title().length > 0 ? title : 'New Event'
-                    "></span>
-                    <span class="muted">
-                        | <a data-bind="click: $parent.clearSelected">close</a>
-                        | <a data-bind="click: $parent.deleteEvent">delete</a>
-                    </span>
-                <!-- /ko -->
-                
-                <!-- ko if: $parent._selected() !== $data -->
-                    <span class="event-title" data-bind="
-                        text: title().length > 0 ? title : 'New Event',
-                        event: {click: $parent.setSelected}
-                    "></span>
-                    <span class="count" data-bind="
-                        text: content().length + ' article' + (content().length !== 1 ? 's' : '')
-                    "></span>
-                    <span class="event-date" data-bind="text: _humanDate"></span>
-                <!-- /ko -->
-                
-            </div>
+        <!-- An SELCTED event: -->
+        <!-- ko if: $parent._selected() === $data -->
+            <span class="event-title" contentEditable="true" data-bind="
+                textEditable: title().length > 0 ? title : '(untitled chapter)'
+            "></span>
+            <span class="muted">
+                | <a data-bind="click: $parent.clearSelected">collapse</a>
+            </span>
 
-            <!-- Show acticles etc. if event is selected -->
-            <div data-bind="if: $parent._selected() === $data">
+            <div class="event-innards">
 
-                <p class="event-meta">
-                    <div>
-                        <span class="muted">Event date:</span> 
-                        <span data-bind="text: _prettyDate"></span>
-                        <span data-bind="text: _prettyTime"></span>                        
-                    </div>
+                <p>
+                    <div class="muted">Articles</div>
+                    <div class="event-articles" data-bind="
+                        template: {name: 'event_article_template', foreach: content}
+                    "></div>
+                    <!-- ko if: content().length === 0 -->
+                        <div>drag articles here</div>
+                    <!-- /ko -->
+                <p>
+
+                <p>
+                    <div class="muted">Chapter Synopsis:</div>
+                    <div contentEditable="true" data-bind="htmlEditable: explainer"></div>
                 </p>
-    
-                <div class="event-articles" data-bind="foreach: content">
 
-                    <div class="article">
-                        <button type="button" class="close" data-bind='click: $parent.removeArticle' class="close">×</button>
+                <span class="muted">Takes place on</span>
+                <input type="date" class="input-medium" data-bind='value: _prettyDate, valueUpdate:     "afterkeydown"'/>
+                <span class="muted">at</span>
+                <input type="time" class="input-medium" data-bind='value: _prettyTime, valueUpdate: "afterkeydown"'/>
+                <span class="muted">|</span>
+                <a data-bind="click: $parent.deleteEvent">delete chapter</a>
+            </div>
+        <!-- /ko -->
+    </div>
+</script>
 
-                        <div class="article-star" data-bind="
-                            click: $parent.bumpContent,
-                            css: {
-                                'icon-star-empty': importance() <= 50,
-                                'icon-star': importance() > 50
-                            }
-                        "></div>
-
-                        <a class="article-title" target="_blank"
-                            data-bind="text: webTitle, attr: {href: _mDot}"></a>
-
-                        <span title="color: dark = serious, light = entertaining" data-bind="
-                            css: {
-                                'color-light': colour() <= 2,
-                                'color-dark': colour() > 2
-                            },
-                            click: $parent.setColour">*</span>
-                        <div class="article-date"  data-bind="text: _humanDate"></div>
-                    </div>
-
-                </div>
-                
-                <!-- ko if: content().length === 0 -->
-                    <p class="alert">Drag articles here</p>
-                <!-- /ko -->
-                
-                <form class="event-form" data-bind="if: false">
-                  
-                    <label>Title (what happend, is happening, or might happen?)</label>
-                    <input type="text" placeholder="e.g. 'Helicopter crash"
-                        data-bind='value: title, valueUpdate: "afterkeydown"' />
-
-                    <label>When</label>
-                    <input type="date"
-                        data-bind='value: _prettyDate, valueUpdate: "afterkeydown"' />
-
-                    <label>Time</label>
-                    <input type="time"
-                        data-bind='value: _prettyTime, valueUpdate: "afterkeydown"' />
-
-                    <div>
-                        <button class="btn btn-success btn-mini" type="submit" data-bind="enable: _isValid">Save event</button>
-
-                        <button class="btn btn-danger btn-success" type="submit"
-                            data-bind="click: $root.stories.clearSelected"
-                        >Close</button>
-
-                        <button class="btn btn-danger btn-mini" type="submit"
-                            data-bind="click: $root.stories.deleteSelected"
-                        >Delete event</button>
-                    </div>
-                </form>
-
+<!-- template: articles within events -->
+<script type="text/html" id="event_article_template">
+    <div class="article">
+        <button type="button" class="close" data-bind='click: $parent.removeArticle' class="close">×</button>
+        <div class="article-star" data-bind="
+            click: $parent.bumpContent,
+            css: {
+                'icon-star-empty': importance() <= 50,
+                'icon-star': importance() > 50
+            }
+        "></div>
+        <a class="article-title" target="_blank" data-bind="text: webTitle, attr: {href: _mDot}"></a>
+        <span title="color: dark = serious, light = entertaining" data-bind="
+            css: {
+                'color-light': colour() <= 2,
+                'color-dark': colour() > 2
+            },
+            click: $parent.setColour">*</span>
+        <div class="article-meta">
+            <span data-bind="text: _humanDate"></span>
+            <span class="article-tone-picker">
+                <label data-bind="css: {picked: tone() ==='overview'}">
+                    <span class="pipe">|</span>
+                    <span class="value">overview</span>
+                    <input type="radio" name="tone" value="overview" data-bind="checked: tone" />
+                </label>
+                <label data-bind="css: {picked: tone() ==='background'}">
+                    <span class="pipe">|</span>
+                    <span class="value">background</span>
+                    <input type="radio" name="tone" value="background" data-bind="checked: tone" />
+                </label>
+                <label data-bind="css: {picked: tone() ==='analysis'}">
+                    <span class="pipe">|</span>
+                    <span class="value">analysis</span>
+                    <input type="radio" name="tone" value="analysis" data-bind="checked: tone" />
+                </label>
+                <label data-bind="css: {picked: tone() ==='reaction'}">
+                    <span class="pipe">|</span>
+                    <span class="value">reaction</span>
+                    <input type="radio" name="tone" value="reaction" data-bind="checked: tone" />
+                </label>
+                <label data-bind="">
+                    <span class="pipe">|</span>
+                    <span class="value">none</span>
+                    <input type="radio" name="tone" value="" data-bind="checked: tone" />
+                </label>
+            </span>
         </div>
+    </div>
 </script>
 
 <script src="@routes.Assets.at("javascripts/storyEditor.js")" type="text/javascript"></script>
