@@ -11,7 +11,7 @@ import com.mongodb
 
 case class Entity(
     id: String,
-    rdfType: Option[String] = None, // Eg, http://schema.org/Person
+    //rdfType: Option[String] = None, // Eg, http://schema.org/Person
     properties: Map[String, String] // very simple model, just a bunch of key values at the moment, Eg, 'geo:latitude' => '-0.12'
 ) extends Enumeration
 
@@ -41,9 +41,9 @@ object Entity {
       entity
     }
     
-    def find(id:String) = Entities.find(Map("id" -> "(?i)%s".format(id).r.pattern)).toSeq.map(fromDbObject)
+    def find(id:String) = Entities.find(Map("id" -> "(?i)%s".format(id).r.pattern)).limit(1000).toSeq.map(fromDbObject)
     
-    def findByRdfType(rdfType:String) = Entities.find(Map("rdfType" -> "(?i)%s".format(rdfType).r.pattern)).toSeq.map(fromDbObject)
+    def findByRdfType(rdfType:String) = Entities.find(Map("properties.rdf:type" -> "(?i)%s".format(rdfType).r.pattern)).limit(1000).toSeq.map(fromDbObject)
 
     def update(entityId: String, entity: Entity) = {
       Entities.update(Map("id" -> entityId), toDbObject(entity), upsert = false)

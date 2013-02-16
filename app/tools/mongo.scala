@@ -83,7 +83,7 @@ object Mongo {
       Map("id" -> 1),
       Map("background" -> true, "name" -> "ID index", "unique" -> true)
     )
-
+    
     // Write operations wait for the server to flush data to disk
     // http://api.mongodb.org/scala/casbah/2.1.2/scaladoc/com/mongodb/casbah/WriteConcern$.html
     table.setWriteConcern(com.mongodb.WriteConcern.FSYNC_SAFE)
