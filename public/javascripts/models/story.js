@@ -9,7 +9,7 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         opts = opts || {};
 
         this.id = ko.observable(opts.id);
-        this.title = ko.observable(opts.title || 'Story Title');
+        this.title = ko.observable(opts.title || '');
         this.explainer = ko.observable(opts.explainer || 'none');
         this.events = ko.observableArray();
 
@@ -17,13 +17,24 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         this._oldTitle = ko.observable();
         this._selected = ko.observable();
 
-        this._tentative   = ko.observable(!opts || !opts.id); // No id means it's a new un-persisted event,
+        this._tentative   = ko.observable(opts._tentative); // No id means it's a new un-persisted event,
         this._editing     = ko.observable(this._tentative()); // so mark as editable
         this._hidden      = ko.observable();
 
         this.length = ko.computed(function(){
             return this.events().length;
         }, this)
+
+        // Lsisteners on editable observables
+        this._title_editing = ko.observable(opts._tentative);
+        this._title_edit    = function() { this._title_editing(true) };
+
+        this._explainer_editing = ko.observable(false);
+        this._explainer_edit    = function() { this._explainer_editing(true) };
+
+        this.title.subscribe(    function(){Common.mediator.emitEvent('models:story:haschanges')});
+        this.explainer.subscribe(function(){Common.mediator.emitEvent('models:story:haschanges')});
+
 
         this.loadEvent = function(o) {
             var event;
@@ -48,7 +59,8 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
 
         this.createEvent = function() {
             var event = new Event({
-                articleCache: opts.articleCache
+                articleCache: opts.articleCache,
+                _tentative: true
             });
             self.events.push(event);
             self._selected(event);

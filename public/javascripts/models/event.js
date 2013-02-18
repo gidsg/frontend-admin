@@ -20,7 +20,7 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
         opts = opts || {};
 
         // General 'schema' poperties
-        this.title      = ko.observable(opts.title || 'Chapter Title');
+        this.title      = ko.observable(opts.title || '');
         this.explainer  = ko.observable(opts.explainer || 'none');
         this.importance = ko.observable(opts.importance || importanceDefault);
         
@@ -69,9 +69,6 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
             },
             owner: this
         });
-        this.startDate.subscribe(function(val){
-            Common.mediator.emitEvent('models:story:haschanges');
-        });
 
         if (opts.startDate) {
             this.startDate(new Date(opts.startDate)); // today
@@ -82,9 +79,19 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
         }
 
         // Administrative vars
-        this._tentative   = ko.observable(!opts || !opts.id); // No id means it's a new un-persisted event,
-        this._editing     = ko.observable(this._tentative()); // so mark as editable
+        this._tentative   = ko.observable(opts._tentative);
         this._hidden      = ko.observable();
+
+        // Lsisteners on editable observables
+        this._title_editing = ko.observable(opts._tentative);
+        this._title_edit    = function() { this._title_editing(true) };
+
+        this._explainer_editing = ko.observable(false);
+        this._explainer_edit    = function() { this._explainer_editing(true) };
+
+        this.title.subscribe(    function(){Common.mediator.emitEvent('models:story:haschanges')});
+        this.explainer.subscribe(function(){Common.mediator.emitEvent('models:story:haschanges')});
+        this.startDate.subscribe(function(){Common.mediator.emitEvent('models:story:haschanges')});
 
         if (bumped.length === 0) {
             self.content().map(function(a){
@@ -144,12 +151,14 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
                         if (resp.response && resp.response.results) {
                             resp = resp.response.results;
                             resp.map(function(ra){
-                                var c = _.find(areRaw,function(a){
-                                    return a.id() === ra.id;
-                                });
-                                c.webTitle(ra.webTitle);
-                                c.webPublicationDate(ra.webPublicationDate);
-                                opts.articleCache[ra.id] = ra;
+                                if (ra.id && ra.webTitle) {
+                                    var c = _.find(areRaw,function(a){
+                                        return a.id() === ra.id;
+                                    });
+                                    c.webTitle(ra.webTitle);
+                                    c.webPublicationDate(ra.webPublicationDate);
+                                    opts.articleCache[ra.id] = ra;
+                                }
                             });
                         }
                     },

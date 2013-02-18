@@ -23,7 +23,7 @@ define(['Knockout', 'Common'], function (ko, Common) {
         // Temp vars
         this._mDot      = ko.observable(mDotHost + opts.id || '');    
         this._humanDate = ko.computed(function(){
-            return humanized_time_span(this.webPublicationDate());
+            return this.webPublicationDate() ? humanized_time_span(this.webPublicationDate()) : '-';
         }, this);
 
     };

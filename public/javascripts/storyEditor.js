@@ -79,54 +79,6 @@ curl([
         }
     };
 
-    // Binding for contentEditable - accepts html tags
-    ko.bindingHandlers.htmlEditable = {
-        init: function(element, valueAccessor, allBindingsAccessor) {
-            ko.utils.registerEventHandler(element, "keyup", function() {
-                var modelValue = valueAccessor();
-                var elementValue = element.innerHTML;
-                if (ko.isWriteableObservable(modelValue)) {
-                    modelValue(elementValue);
-                }
-                else { //handle non-observable one-way binding
-                    var allBindings = allBindingsAccessor();
-                    if (allBindings['_ko_property_writers'] && allBindings['_ko_property_writers'].htmlEditable) allBindings['_ko_property_writers'].htmlEditable(elementValue);
-                }
-            })
-        },
-        update: function(element, valueAccessor) {
-            var value = ko.utils.unwrapObservable(valueAccessor()) || "";
-            if (element.innerHTML !== value) {
-                element.innerHTML = value;
-            } else {
-                Common.mediator.emitEvent('models:story:haschanges');
-            }
-        }
-    };
-
-    // Binding for contentEditable - does NOT accept html tags
-    ko.bindingHandlers.textEditable = {
-        init: function(element, valueAccessor, allBindingsAccessor) {
-            ko.utils.registerEventHandler(element, "keyup", function() {
-                element.innerHTML = Common.stripTags(element.innerHTML);
-                var modelValue = valueAccessor();
-                var elementValue = Common.stripTags(element.innerHTML);
-                if (ko.isWriteableObservable(modelValue)) {
-                    modelValue(elementValue);
-                }
-            })
-        },
-        update: function(element, valueAccessor) {
-            var value = ko.utils.unwrapObservable(valueAccessor()) || "";
-            value = Common.stripTags(value);
-            if (element.innerHTML !== value) {
-                element.innerHTML = value;
-            } else {
-                Common.mediator.emitEvent('models:story:haschanges');
-            }
-        }
-    };
-
     Common.mediator.addListener('models:story:haschanges', function(){
         if (viewModel.stories.selected()) {
             viewModel.stories.selected().backgroundSave();            
