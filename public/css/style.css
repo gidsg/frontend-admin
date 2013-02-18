@@ -26,7 +26,7 @@ input.invalid {
 }
 
 .saving{
-    cursor:wait;
+    cursor: wait;
 }
 
 fieldset, 
@@ -86,7 +86,8 @@ input[type=checkbox].status {
 }
 
 .event {
-    padding: 0 4px;
+    padding: 7px 4px;
+    margin-bottom: 2px;
 }
 
 .event.well {
@@ -140,10 +141,15 @@ textarea.event-explainer {
 
 /** articles, in all uses */
 
+.article:hover { 
+    background-color: white;
+}
+
 .article {
     display: block;
     overflow: hidden;
     padding: 0 0 4px 0;
+    margin-bottom: 10px;
     -webkit-transition: opacity 0.2s;
        -moz-transition: opacity 0.2s;
         -ms-transition: opacity 0.2s;
@@ -214,24 +220,42 @@ textarea.event-explainer {
     color: #000;    
 }
 
+.article .article-tone-picker {
+    padding: 0 0 5px 17px;
+    position: absolute;
+}
 
-.article-tone {display: inline; color: green;}
+.article:hover .article-tone-picker { z-index: 10; border-bottom: 1px solid #ccc;
+    box-shadow: 0px 30px 40px rgba(0,0,0,.2);
+    width: 90%; background-color: white; }
+
 .article:hover .article-tone {display: none;}
 
 .article-tone-picker label {display: none;}
 .article:hover .article-tone-picker label {display: inline;}
 
-.article-tone-picker label.picked {
-    display: inline;
-}
+
 
 .article-tone-picker .value {
-    color: #8AB59A;
-    text-transform: uppercase;
+    color: #333;
+    font-size: 10px;
+    text-transform: capitalize;
+    padding: 0 2px; 
+    display: inline-block;
 }
 
 .article-tone-picker .picked .value {
-    color: green;
+    color: red;
+}
+
+.article-tone-picker label.picked {
+    color: red;
+}
+
+.article-tone-picker .value:hover {
+    color: #fff;
+    background-color: #333;
+    cursor: pointer; 
 }
 
 label { 
@@ -249,7 +273,7 @@ button.create {  }
 
 .hoverable:hover { color: red; cursor: pointer; }
 
-.saving { display: inline; float: right; margin-right: 32px; }
+.saving { display: inline; right: 0; position: fixed;  margin-right: 42px; }
 .saving span {
         display: inline-block; 
         background-image: url(/assets/images/ajax-loader.gif);
@@ -274,4 +298,28 @@ button.create {  }
 }
 
 
+.eventwell {
+    border-left: 1px solid #dedede;
+    padding: 10px;
+    margin: 10px 0 10px -7px;
+}
 
+.cta { 
+    color: #5bb75b;
+}
+
+.cta:hover { 
+    background-color: #ffe;
+    cursor: pointer;
+}
+
+.add-chapter {
+    display: inline-block;
+    margin: 10px 0 0 22px;
+}
+
+.synopsis, .story-title, input.story-title { 
+    margin-left: 22px;
+}
+
+textarea.synopsis { width: 90%; min-height: 120px; }

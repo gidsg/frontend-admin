@@ -87,7 +87,7 @@
                 text: title() ? title : '(no title)',
                 click: _title_edit
                 "></p>
-            <input placeholder="Story Title" data-bind="
+            <input placeholder="Story Title" class="story-title" data-bind="
                 visible: _title_editing,
                 value: title,
                 hasfocus: _title_editing
@@ -98,22 +98,22 @@
             <p class="muted">Chapters:</p>
             <div class="events" data-bind="template: {name: 'event_template', foreach: events}"></div>
             <p>
-                <a data-bind="
-                event: {click: createEvent},
-                text: length() === 0 ? 'add the first chapter' : 'add another chapter'
-                "></a>
+                    <a class="cta add-chapter" data-bind="
+                    event: {click: createEvent},
+                    text: length() === 0 ? 'Add the first chapter' : 'Add another chapter'
+                    "></a>
             </p>
         </p>
 
         <p>
             <p class="muted">Synopsis:</p>
             <p>
-                <div data-bind="
+                <div class="synopsis" data-bind="
                     visible: !_explainer_editing(),
                     text: explainer() ? explainer : '(no explainer)',
                     click: _explainer_edit
                 "></div>
-                <textarea data-bind="
+                <textarea class="synopsis" data-bind="
                     visible: _explainer_editing,
                     value: explainer,
                     hasfocus: _explainer_editing
@@ -130,7 +130,7 @@
 
 <!-- template: event -->
 <script type="text/html" id="event_template">
-    <div class="event" data-bind="makeDropabble: true, css: {well: $parent._selected() === $data}">
+    <div class="event" data-bind="makeDropabble: true, css: {eventwell: $parent._selected() === $data}">
         <i data-bind="
             click: bump,
             css: {
@@ -166,29 +166,31 @@
             "/>
 
             <span class="muted">
-                | <a data-bind="click: $parent.clearSelected">collapse</a>
+                | <a class="cta" data-bind="click: $parent.clearSelected">collapse</a>
+                | <a class="cta" data-bind="click: $parent.deleteEvent">delete</a>
             </span>
+
 
             <div class="event-innards">
 
                 <p>
-                    <div class="muted">Articles</div>
+                    <p class="muted">Articles</p>
                     <div class="event-articles" data-bind="
                         template: {name: 'event_article_template', foreach: content}
                     "></div>
                     <!-- ko if: content().length === 0 -->
-                        <div>drag articles here</div>
+                        <div class="alert">drag articles here</div>
                     <!-- /ko -->
                 <p>
 
                 <p>
-                    <div class="muted">Chapter Synopsis:</div>
-                    <div data-bind="
+                    <p class="muted">Chapter Synopsis:</p>
+                    <div class="synopsis" data-bind="
                         visible: !_explainer_editing(),
                         text: explainer() ? explainer : '(no explainer)',
                         click: _explainer_edit
                     "></div>
-                    <textarea data-bind="
+                    <textarea class="synopsis" data-bind="
                         visible: _explainer_editing,
                         value: explainer,
                         hasfocus: _explainer_editing
@@ -199,8 +201,6 @@
                 <input type="date" class="input-medium" data-bind='value: _prettyDate, valueUpdate:     "afterkeydown"'/>
                 <span class="muted">at</span>
                 <input type="time" class="input-medium" data-bind='value: _prettyTime, valueUpdate: "afterkeydown"'/>
-                <span class="muted">|</span>
-                <a data-bind="click: $parent.deleteEvent">delete chapter</a>
             </div>
         <!-- /ko -->
     </div>
@@ -220,44 +220,42 @@
         <a class="article-title" target="_blank" data-bind="
             text: webTitle() ? webTitle : id, 
             attr: {href: _mDot}
-        "></a>
-        <span title="color: dark = serious, light = entertaining" data-bind="
-            css: {
-                'color-light': colour() <= 2,
-                'color-dark': colour() > 2
-            },
-            click: $parent.setColour">*</span>
+            "></a>
+        <!--
+        -->
         <div class="article-meta">
             <span data-bind="text: _humanDate"></span>
-            <span class="article-tone-picker">
-                <label data-bind="css: {picked: tone() ==='overview'}">
-                    <span class="pipe">|</span>
-                    <span class="value">overview</span>
-                    <input type="radio" name="tone" value="overview" data-bind="checked: tone" />
-                </label>
-                <label data-bind="css: {picked: tone() ==='background'}">
-                    <span class="pipe">|</span>
-                    <span class="value">background</span>
-                    <input type="radio" name="tone" value="background" data-bind="checked: tone" />
-                </label>
-                <label data-bind="css: {picked: tone() ==='analysis'}">
-                    <span class="pipe">|</span>
-                    <span class="value">analysis</span>
-                    <input type="radio" name="tone" value="analysis" data-bind="checked: tone" />
-                </label>
-                <label data-bind="css: {picked: tone() ==='reaction'}">
-                    <span class="pipe">|</span>
-                    <span class="value">reaction</span>
-                    <input type="radio" name="tone" value="reaction" data-bind="checked: tone" />
-                </label>
-                <label data-bind="">
-                    <span class="pipe">|</span>
-                    <span class="value">none</span>
-                    <input type="radio" name="tone" value="" data-bind="checked: tone" />
-                </label>
-            </span>
         </div>
-    </div>
+        <p class="article-tone-picker">
+            <label data-bind="css: {picked: tone() ==='overview'}">
+                <span class="value">overview</span>
+                <input type="radio" name="tone" value="overview" data-bind="checked: tone" />
+            </label>
+            <label data-bind="css: {picked: tone() ==='background'}">
+                <span class="value">background</span>
+                <input type="radio" name="tone" value="background" data-bind="checked: tone" />
+            </label>
+            <label data-bind="css: {picked: tone() ==='analysis'}">
+                <span class="value">analysis</span>
+                <input type="radio" name="tone" value="analysis" data-bind="checked: tone" />
+            </label>
+            <label data-bind="css: {picked: tone() ==='reaction'}">
+                <span class="value">reaction</span>
+                <input type="radio" name="tone" value="reaction" data-bind="checked: tone" />
+            </label>
+            <label data-bind="">
+                <span class="value">none</span>
+                <input type="radio" name="tone" value="" data-bind="checked: tone" />
+            </label>
+        </p>
+     <!--       <span title="color: dark = serious, light = entertaining" data-bind="
+                css: {
+                    'color-light': colour() <= 2,
+                    'color-dark': colour() > 2
+                },
+                click: $parent.setColour">colour</span>
+            -->
+        </div>
 </script>
 
 <script src="@routes.Assets.at("javascripts/storyEditor.js")" type="text/javascript"></script>
