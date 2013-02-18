@@ -81,9 +81,17 @@
         </p>
 
         <p class="muted">Name:</p>
-
-        <p> 
-            <span class="story-title" contentEditable="true" data-bind="textEditable: title"></span>
+        <p>
+            <p class="story-title" data-bind="
+                visible: !_title_editing(),
+                text: title() ? title : '(no title)',
+                click: _title_edit
+                "></p>
+            <input placeholder="Story Title" data-bind="
+                visible: _title_editing,
+                value: title,
+                hasfocus: _title_editing
+            "/>
         </p>
 
         <p>
@@ -100,10 +108,18 @@
         <p>
             <p class="muted">Synopsis:</p>
             <p>
-                <div contentEditable="true" data-bind="htmlEditable: explainer"></div>
+                <div data-bind="
+                    visible: !_explainer_editing(),
+                    text: explainer() ? explainer : '(no explainer)',
+                    click: _explainer_edit
+                "></div>
+                <textarea data-bind="
+                    visible: _explainer_editing,
+                    value: explainer,
+                    hasfocus: _explainer_editing
+                "/></textarea>
             </p>
         </p>
-
         <p>
             <button class="btn btn-mini" data-bind="
                 event: {click: $root.stories.deleteSelected}
@@ -126,7 +142,7 @@
         <!-- An UNselected event: -->
         <!-- ko if: $parent._selected() !== $data -->
             <span class="event-title" data-bind="
-                text: title().length > 0 ? title : '(untitled chapter)',
+                text: title().length > 0 ? title : '(no title)',
                 event: {click: $parent.setSelected}
             "></span>
             <span class="count" data-bind="
@@ -137,9 +153,18 @@
 
         <!-- An SELCTED event: -->
         <!-- ko if: $parent._selected() === $data -->
-            <span class="event-title" contentEditable="true" data-bind="
-                textEditable: title().length > 0 ? title : '(untitled chapter)'
+
+            <span class="event-title" data-bind="
+                visible: !_title_editing(),
+                text: title() ? title : '(no title)',
+                click: _title_edit
             "></span>
+            <input placeholder="Chapter Title" data-bind="
+                visible: _title_editing,
+                value: title,
+                hasfocus: _title_editing
+            "/>
+
             <span class="muted">
                 | <a data-bind="click: $parent.clearSelected">collapse</a>
             </span>
@@ -158,7 +183,16 @@
 
                 <p>
                     <div class="muted">Chapter Synopsis:</div>
-                    <div contentEditable="true" data-bind="htmlEditable: explainer"></div>
+                    <div data-bind="
+                        visible: !_explainer_editing(),
+                        text: explainer() ? explainer : '(no explainer)',
+                        click: _explainer_edit
+                    "></div>
+                    <textarea data-bind="
+                        visible: _explainer_editing,
+                        value: explainer,
+                        hasfocus: _explainer_editing
+                    "/></textarea>
                 </p>
 
                 <span class="muted">Takes place on</span>
@@ -183,7 +217,10 @@
                 'icon-star': importance() > 50
             }
         "></div>
-        <a class="article-title" target="_blank" data-bind="text: webTitle, attr: {href: _mDot}"></a>
+        <a class="article-title" target="_blank" data-bind="
+            text: webTitle() ? webTitle : id, 
+            attr: {href: _mDot}
+        "></a>
         <span title="color: dark = serious, light = entertaining" data-bind="
             css: {
                 'color-light': colour() <= 2,

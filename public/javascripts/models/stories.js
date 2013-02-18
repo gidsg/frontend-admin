@@ -15,7 +15,7 @@ define(['models/story', 'Knockout', 'Common', 'Reqwest'], function (Story, ko, C
 
         this.loadStory = function(o) {
             var story;
-            o = o || {};
+            o = o || {_tentative: true};
             o.articleCache = opts.articleCache;
             story = new Story(o);
             self.stories.push(story);
