@@ -245,7 +245,17 @@ label {
     display: none;
 }
 
-button.create { float: right; margin-right: 14px; }
+button.create {  }
+
+.hoverable:hover { color: red; cursor: pointer; }
+
+.saving { display: inline; float: right; margin-right: 32px; }
+.saving span {
+        display: inline-block; 
+        background-image: url(/assets/images/ajax-loader.gif);
+        background-repeat: no-repeat;
+        width: 32px; height: 32px;
+  }
 
 .color-light, .color-dark { 
     display: inline-block;

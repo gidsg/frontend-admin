@@ -36,14 +36,18 @@
   </div>
 
   <div class="storify-events span8">
-    <!-- ko if: !$root.stories.selected() -->
-        <h3>Stories</h3>
+            <p class="saving">
+                <span class="muted" data-bind="visible: $root.pendingSave()"></span>
+            </p>
+      <p>
         <button class="btn btn-mini create btn-success" data-bind="
             event: {click: stories.createStory}
-        ">Start a Story</button>
-        <div class="stories" data-bind="
+            ">Start a Story</button>
+      </p>
+    <!-- ko if: !$root.stories.selected() -->
+        <ul class="stories" data-bind="
             template: {name: 'story_closed_template', foreach: stories.stories}
-        "></div>
+        "></ul>
         <div data-bind="text: stories.length() === 0 ? 'Loading stories...' : ''"></div>
     <!-- /ko -->
 
@@ -56,11 +60,11 @@
 
 <!-- template: story in closed state -->
 <script type="text/html" id="story_closed_template">
-    <div class="story-wrap">
-        <div class="story-title" data-bind="
+    <li class="story-wrap">
+        <div class="story-title hoverable" data-bind="
             text: title().length > 0 ? title : '(Un-titled story)',
             event: {click: $root.stories.setSelected}
-        "></div>
+            "></li>
     </div>
 </script>
 
@@ -68,27 +72,36 @@
 <script type="text/html" id="story_open_template">
     <div class="story-wrap">
 
+        
+        <p>
         <button class="btn btn-mini" data-bind="
             event: {click: $root.stories.clearSelected},
             disable: $root.pendingSave()
         ">&laquo; Back to Stories</button>
+        </p>
 
-        <span class="muted" data-bind="visible: $root.pendingSave()">saving...</span>
+        <p class="muted">Name:</p>
 
-        <h3 class="story-title" contentEditable="true" data-bind="textEditable: title"></h3>
-
-        <p>
-            <div class="muted">Chapters:</div>
-            <div class="events" data-bind="template: {name: 'event_template', foreach: events}"></div>
-            <a data-bind="
-                event: {click: createEvent},
-                text: length() === 0 ? 'add the first chapter' : 'add another chapter'
-            "></a>
+        <p> 
+            <span class="story-title" contentEditable="true" data-bind="textEditable: title"></span>
         </p>
 
         <p>
-            <div class="muted">Overall Synopsis:</div>
-            <div contentEditable="true" data-bind="htmlEditable: explainer"></div>
+            <p class="muted">Chapters:</p>
+            <div class="events" data-bind="template: {name: 'event_template', foreach: events}"></div>
+            <p>
+                <a data-bind="
+                event: {click: createEvent},
+                text: length() === 0 ? 'add the first chapter' : 'add another chapter'
+                "></a>
+            </p>
+        </p>
+
+        <p>
+            <p class="muted">Synopsis:</p>
+            <p>
+                <div contentEditable="true" data-bind="htmlEditable: explainer"></div>
+            </p>
         </p>
 
         <p>
