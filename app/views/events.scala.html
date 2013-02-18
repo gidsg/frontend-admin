@@ -209,7 +209,6 @@
 <!-- template: articles within events -->
 <script type="text/html" id="event_article_template">
     <div class="article">
-        <button type="button" class="close" data-bind='click: $parent.removeArticle' class="close">×</button>
         <div class="article-star" data-bind="
             click: $parent.bumpContent,
             css: {
@@ -247,6 +246,9 @@
                 <span class="value">none</span>
                 <input type="radio" name="tone" value="" data-bind="checked: tone" />
             </label>
+        </p>
+        <p class="article-delete">
+            <span class="cta" data-bind='click: $parent.removeArticle'>Delete</span>
         </p>
      <!--       <span title="color: dark = serious, light = entertaining" data-bind="
                 css: {
