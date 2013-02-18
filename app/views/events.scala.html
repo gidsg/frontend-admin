@@ -45,9 +45,9 @@
             ">Start a Story</button>
       </p>
     <!-- ko if: !$root.stories.selected() -->
-        <ul class="stories" data-bind="
+        <dl class="stories" data-bind="
             template: {name: 'story_closed_template', foreach: stories.stories}
-        "></ul>
+        "></dl>
         <div data-bind="text: stories.length() === 0 ? 'Loading stories...' : ''"></div>
     <!-- /ko -->
 
@@ -60,12 +60,17 @@
 
 <!-- template: story in closed state -->
 <script type="text/html" id="story_closed_template">
-    <li class="story-wrap">
-        <div class="story-title hoverable" data-bind="
+    <dt class="story-wrap">
+        <p class="cta" data-bind="
             text: title().length > 0 ? title : '(Un-titled story)',
             event: {click: $root.stories.setSelected}
-            "></li>
-    </div>
+            "></p>
+    </dt>
+    <dd>
+    <p>
+        <p data-bind="text:explainer()"></p>
+    </p> 
+    </dd>
 </script>
 
 <!-- template: story in open state -->
