@@ -52,7 +52,7 @@ object Mongo {
   }
 
   lazy val Stories = {
-    val table = client("story")
+    val table = client("Stories")
 
     table.underlying.ensureIndex(
       Map("id" -> 1),

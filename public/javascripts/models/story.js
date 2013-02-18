@@ -76,12 +76,8 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
             // Post to the persisted id - even if we're changing the id
             if (self.id()) {
                 url += '/' + self.id();
-            }
-
-            // Generate an ID if the title has changed. This also covers new events.
-            // IDs get a random part for "uniquness"
-            if (self.title() !== self._oldTitle()) {
-                self.id(self.slugify(self.title() + '-' + Math.floor(Math.random()*1000000)));
+            } else {
+                self.id("" + Math.floor(Math.random()*1000000));
             }
             
             // Sort by importance then by date.  Both descending. This'll probably need changing.

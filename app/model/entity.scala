@@ -11,7 +11,6 @@ import com.mongodb
 
 case class Entity(
     id: String,
-    //rdfType: Option[String] = None, // Eg, http://schema.org/Person
     properties: Map[String, String] // very simple model, just a bunch of key values at the moment, Eg, 'geo:latitude' => '-0.12'
 ) extends Enumeration
 
@@ -43,7 +42,7 @@ object Entity {
     
     def find(id:String) = Entities.find(Map("id" -> "(?i)%s".format(id).r.pattern)).limit(1000).toSeq.map(fromDbObject)
     
-    def findByRdfType(rdfType:String) = Entities.find(Map("properties.rdf:type" -> "(?i)%s".format(rdfType).r.pattern)).limit(1000).toSeq.map(fromDbObject)
+    def findByRdfType(rdfType:String) = Entities.find(Map("properties.rdf:type" -> rdfType)).limit(1000).toSeq.map(fromDbObject)
 
     def update(entityId: String, entity: Entity) = {
       Entities.update(Map("id" -> entityId), toDbObject(entity), upsert = false)
@@ -52,7 +51,11 @@ object Entity {
 
     def delete(entityId: String) = Entities.remove(Map("id" -> entityId)).getLastError().ok()
 
-    def get(id: String) = Entities.findOne(Map("id" -> id)).map(fromDbObject)
+    def get(id: String, rdfType: String = null) = {
+        val query = scala.collection.mutable.Map("id" -> id)
+        if (!rdfType.isEmpty) query += "properties.rdf:type" -> rdfType
+        Entities.findOne(query).map(fromDbObject)
+    }
 
   }
 }

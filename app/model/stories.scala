@@ -80,7 +80,6 @@ object Story {
 
   def toJsonList(s: Seq[Story]) = grater[Story].toPrettyJSONArray(s)
 
-
   object mongo {
     def createNew(story: Story) = {
       Stories.insert(toDbObject(story)).getLastError.ok()

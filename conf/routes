@@ -52,16 +52,20 @@ POST    /story                           controllers.event.StoryController.creat
 POST    /story*storyId                   controllers.event.StoryController.update(storyId)
 
 #Entities
-GET     /entity*entityId                   controllers.event.EntityController.read(entityId)
-DELETE  /entity*entityId                   controllers.event.EntityController.delete(entityId)
+GET     /entity*entityId                 controllers.event.EntityController.read(entityId, rdfType: String = "")
+DELETE  /entity*entityId                 controllers.event.EntityController.delete(entityId)
 
-GET     /entity                           controllers.event.EntityController.find(id: String ?= "")
-POST    /entity                           controllers.event.EntityController.create()
-POST    /entity*entityId                  controllers.event.EntityController.update(entityId)
+GET     /entity                          controllers.event.EntityController.find(id: String ?= "")
+POST    /entity                          controllers.event.EntityController.create()
+POST    /entity*entityId                 controllers.event.EntityController.update(entityId)
 
-#People (proxies to Entity)
-GET     /people                           controllers.event.EntityController.findByType(rdfType: String = "http://schema.org/Person")
-GET     /places                           controllers.event.EntityController.findByType(rdfType: String = "http://schema.org/Place")
-GET     /organisations                    controllers.event.EntityController.findByType(rdfType: String = "http://schema.org/Organization")
-
+# Public face of typed entities
+GET     /people                          controllers.event.EntityController.findByType(rdfType: String = "http://schema.org/Person")
+GET     /people*id                       controllers.event.EntityController.read(id, rdfType = "http://schema.org/Person")
+GET     /places                          controllers.event.EntityController.findByType(rdfType: String = "http://schema.org/Place")
+GET     /places*id                       controllers.event.EntityController.read(id, rdfType = "http://schema.org/Place")
+GET     /countries                       controllers.event.EntityController.findByType(rdfType: String = "http://schema.org/Country")
+GET     /countries*id                    controllers.event.EntityController.read(id, rdfType = "http://schema.org/Country")
+GET     /organisations                   controllers.event.EntityController.findByType(rdfType: String = "http://schema.org/Organization")
+GET     /organisations*id                controllers.event.EntityController.read(id, rdfType = "http://schema.org/Organization")
 

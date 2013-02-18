@@ -41,9 +41,8 @@ object EntityController extends Controller with Logging with AuthLogging {
     Ok(status("deleted: " + entityId)).as("application/json")
   }
 
-  def read(entityId: String) = AuthAction{ request =>
-    // entityId will have leading /
-    Entity.mongo.get(entityId.drop(1)).map{ entity =>   Ok(Entity.toJsonString(entity)) }
+  def read(entityId: String, rdfType: String) = AuthAction{ request =>
+    Entity.mongo.get(entityId.drop(1), rdfType).map{ entity =>   Ok(Entity.toJsonString(entity)) }
       .getOrElse(NotFound(status("no entity found: " + entityId)).as("application/json"))
   }
   
