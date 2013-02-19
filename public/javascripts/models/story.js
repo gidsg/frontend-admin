@@ -10,7 +10,7 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
 
         this.id = ko.observable(opts.id);
         this.title = ko.observable(opts.title || '');
-        this.explainer = ko.observable(opts.explainer || 'none');
+        this.explainer = ko.observable(opts.explainer || '(No synopsis)');
         this.events = ko.observableArray();
 
         // Temporary
@@ -41,7 +41,7 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
             o = o || {};
             o.articleCache = opts.articleCache;
             event = new Event(o);
-            self.events.unshift(event);
+            self.events.push(event);
         };
 
         (opts.events || []).map(function(a){
@@ -62,7 +62,7 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
                 articleCache: opts.articleCache,
                 _tentative: true
             });
-            self.events.push(event);
+            self.events.unshift(event);
             self._selected(event);
         };
 
@@ -106,6 +106,13 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
                 }
             });
             */
+
+            // Sort by date, descending.
+            this.events.sort(function (left, right) {
+                var ld = left.startDate(),
+                    rd = right.startDate();
+                return (ld > rd) ? -1 : 1;
+            });
 
             console && console.log('SENT:');
             console && console.log(JSON.stringify(self) + "\n\n")

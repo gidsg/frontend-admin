@@ -74,7 +74,6 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
             this.startDate(new Date(opts.startDate)); // today
         } else {
             var d = new Date();
-            d.setHours(0, 0, 0, 0); // TODO verify this is required
             this.startDate(d);
         }
 
@@ -159,6 +158,12 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
                                     c.webPublicationDate(ra.webPublicationDate);
                                     opts.articleCache[ra.id] = ra;
                                 }
+                            });
+                            // Sort articles by date, descending.
+                            self.content.sort(function (left, right) {
+                                var ld = left.webPublicationDate(),
+                                    rd = right.webPublicationDate();
+                                return (ld > rd) ? -1 : 1;
                             });
                         }
                     },
