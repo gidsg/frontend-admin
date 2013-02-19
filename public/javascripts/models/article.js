@@ -14,14 +14,14 @@ define(['Knockout', 'Common'], function (ko, Common) {
         
         // colour is represented as a number at the moment
         this._colourAsText = ko.computed(function() {
-            switch (self.colour()) {
+            switch (parseInt(this.colour(), 10)) {
                 case 1: return 'Overview';
                 case 2: return 'Background';
                 case 3: return 'Analysis';
                 case 4: return 'Reaction';
                 case 0: return 'None';
             }
-        })
+        }, this);
 
 
         if (opts.fields)
