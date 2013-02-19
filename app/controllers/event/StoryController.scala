@@ -31,7 +31,7 @@ object StoryController extends Controller with Logging with AuthLogging {
       val modified = Modified(request.asInstanceOf[AuthenticatedRequest[AnyContent]].identity.get.email, new DateTime)
 
       request.body.asJson.map(_.toString).map(Story.fromJson)
-        .map(_.copy(createdBy = oldStory.createdBy, modifiedBy = (oldStory.modifiedBy ++ Seq(modified))))
+        .map(_.copy(createdBy = oldStory.createdBy, modifiedBy = (oldStory.modifiedBy ++ Seq(modified)).take(10)))
         .map(story => Ok(Story.toJsonString(Story.mongo.update(oldStory.id, story))).as("application/json"))
         .getOrElse(BadRequest(status("Invalid Json")).as("application/json"))
     }.getOrElse(NotFound)
