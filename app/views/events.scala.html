@@ -35,7 +35,7 @@
     </div>
   </div>
 
-  <div class="storify-events span8">
+  <div class="storify-events scrollable span8">
             <p class="saving">
                 <span class="muted" data-bind="visible: $root.pendingSave()"></span>
             </p>
@@ -61,7 +61,7 @@
 <!-- template: story in closed state -->
 <script type="text/html" id="story_closed_template">
     <dt class="story-wrap">
-        <p class="cta" data-bind="
+        <p class="hoverable" data-bind="
             text: title().length > 0 ? title : '(Un-titled story)',
             event: {click: $root.stories.setSelected}
             "></p>
@@ -202,10 +202,14 @@
                     "/></textarea>
                 </p>
 
+                <p>
                 <span class="muted">Takes place on</span>
-                <input type="date" class="input-medium" data-bind='value: _prettyDate, valueUpdate:     "afterkeydown"'/>
-                <span class="muted">at</span>
-                <input type="time" class="input-medium" data-bind='value: _prettyTime, valueUpdate: "afterkeydown"'/>
+                </p>
+                <p class="synopsis">
+                    <input type="date" class="input-medium" data-bind='value: _prettyDate, valueUpdate:     "afterkeydown"'/>
+                    <span class="muted">at</span>
+                    <input type="time" class="input-medium" data-bind='value: _prettyTime, valueUpdate: "afterkeydown"'/>
+                </p>
             </div>
         <!-- /ko -->
     </div>

@@ -16,7 +16,13 @@ case class Content(id: String, importance: Int, colour: Int = 3)
   *  - We use the foaf:Agent property to describe the person/org, xmlns.com/foaf/spec/#term_Agent
   *  - We use the rdfs:sameAs property to externally reference, http://www.w3.org/TR/2000/CR-rdf-schema-20000327/#s2.3.4
   */
-case class Agent(id: Option[String], name: Option[String] = None, explainer: Option[String] = None, sameAs: Seq[String] = Nil)
+case class Agent(
+    id: Option[String], 
+    name: Option[String] = None, 
+    explainer: Option[String] = None, 
+    role: Option[String] = None,
+    sameAs: Seq[String] = Nil
+    )
 
 // Places are locations (or things on the landscape - lakes, mountains, churches) where the event happened
 case class xPlace(id: Option[String], sameAs: Seq[String] = Nil)

@@ -321,7 +321,7 @@ button.create {  }
 }
 
 
-.event .cta { font-size: 11px; }
+.cta { font-size: 11px; }
 
 .cta { 
     color: #5bb75b;
@@ -342,3 +342,6 @@ button.create {  }
 }
 
 textarea.synopsis { width: 90%; min-height: 120px; }
+
+.muted { font-size: 11px; }
+
