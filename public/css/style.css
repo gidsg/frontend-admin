@@ -321,20 +321,18 @@ button.create {  }
 }
 
 
-.cta { font-size: 11px; }
-
 .cta { 
+    font-size: 11px;
+    color: #ccc;
+}
+
+a.cta, .cta a { 
     color: #5bb75b;
 }
 
 .cta:hover { 
     background-color: #ffe;
     cursor: pointer;
-}
-
-.add-chapter {
-    display: inline-block;
-    margin: 10px 0 0 22px;
 }
 
 .synopsis, .story-title, input.story-title { 

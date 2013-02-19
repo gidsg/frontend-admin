@@ -87,27 +87,32 @@
 
         <p class="muted">Name:</p>
         <p>
-            <p class="story-title" data-bind="
+            <span class="story-title" data-bind="
                 visible: !_title_editing(),
                 text: title() ? title : '(no title)',
                 click: _title_edit
-                "></p>
+            "></span>
             <input placeholder="Story Title" class="story-title" data-bind="
                 visible: _title_editing,
                 value: title,
                 hasfocus: _title_editing
             "/>
+            <span class="cta" data-bind="visible: !_selected()">
+                | <a data-bind="event: {click: $root.stories.deleteSelected}">delete this story</a>
         </p>
 
         <p>
-            <p class="muted">Chapters:</p>
-            <div class="events" data-bind="template: {name: 'event_template', foreach: events}"></div>
-            <p>
-                    <a class="cta add-chapter" data-bind="
-                    event: {click: createEvent},
-                    text: length() === 0 ? 'Add the first chapter' : 'Add another chapter'
+            <p class="muted">
+                Chapters 
+                <span class="cta" data-bind="visible: !_selected()">
+                    | <a data-bind="
+                        event: {click: createEvent},
+                        text: length() === 0 ? 'Add the first chapter' : 'add a chapter'
                     "></a>
+                </span>
             </p>
+
+            <div class="events" data-bind="template: {name: 'event_template', foreach: events}"></div>
         </p>
 
         <p>
@@ -125,11 +130,6 @@
                 "/></textarea>
             </p>
         </p>
-        <p>
-            <button class="btn btn-mini" data-bind="
-                event: {click: $root.stories.deleteSelected}
-            ">Delete this story</button>
-        </p>
     </div>
 </script>
 
@@ -143,6 +143,8 @@
                 'icon-star': importance() > 50
             }
         "></i>
+
+        <span data-bind="text: $parent.length()-$index()"> </span>.
 
         <!-- An UNselected event: -->
         <!-- ko if: $parent._selected() !== $data -->
@@ -170,9 +172,9 @@
                 hasfocus: _title_editing
             "/>
 
-            <span class="muted">
-                | <a class="cta" data-bind="click: $parent.clearSelected">collapse</a>
-                | <a class="cta" data-bind="click: $parent.deleteEvent">delete</a>
+            <span class="cta">
+                | <a data-bind="click: $parent.clearSelected">collapse</a>
+                | <a data-bind="click: $parent.deleteEvent">delete this chapter</a>
             </span>
 
 
