@@ -159,6 +159,12 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
                                     opts.articleCache[ra.id] = ra;
                                 }
                             });
+                            // Sort articles by date, descending.
+                            self.content.sort(function (left, right) {
+                                var ld = left.webPublicationDate(),
+                                    rd = right.webPublicationDate();
+                                return (ld > rd) ? -1 : 1;
+                            });
                         }
                     },
                     error: function() {}
