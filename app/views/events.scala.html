@@ -9,20 +9,7 @@
         <input type="text" placeholder="Search" 
             data-bind='event: {keyup: articles.search, mousedown: articles.articleSearch, afterpaste: articles.articleSearch}, value:
             articles.term, valueUpdate: ["afterkeydown", "afterpaste"]'/>
-        <!--
-        <select data-bind='
-            value: articles.term,
-            options: sections,
-            optionsText: "webTitle",
-            optionsValue: "id",
-            valueUpdate: "afterkeydown",
-            optionsCaption: "Section",
-            event: {change: articles.search}
-            '></select> -->
-        <label class="checkbox">
-            <!--<input id="tone-news" type="checkbox" value="news" 
-                data-bind="checked: articles.toneNews, event: {click: articles.search}"/>
-                tone/news-->
+            <label class="checkbox">
         </label>
     </form>
 
@@ -231,44 +218,37 @@
             text: webTitle() ? webTitle : id, 
             attr: {href: _mDot}
             "></a>
-        <!--
-        -->
+        
         <div class="article-meta">
             <span data-bind="text: _humanDate"></span>
+            -
+            <span data-bind="text: _colourAsText, valueUpdate: 'click'"></span>
+
         </div>
+
         <p class="article-tone-picker">
-            <label data-bind="css: {picked: tone() ==='overview'}">
-                <span class="value">overview</span>
-                <input type="radio" name="tone" value="overview" data-bind="checked: tone" />
+            <label data-bind="click: $parent.setColour" data-tone="1">
+                <span class="value" data-tone="1">Overview</span>
             </label>
-            <label data-bind="css: {picked: tone() ==='background'}">
-                <span class="value">background</span>
-                <input type="radio" name="tone" value="background" data-bind="checked: tone" />
+            <label data-bind="click: $parent.setColour" data-tone="2">
+                <span class="value" data-tone="2">Background</span>
             </label>
-            <label data-bind="css: {picked: tone() ==='analysis'}">
-                <span class="value">analysis</span>
-                <input type="radio" name="tone" value="analysis" data-bind="checked: tone" />
+            <label data-bind="click: $parent.setColour" data-tone="3">
+                <span class="value" data-tone="3">Analysis</span>
             </label>
-            <label data-bind="css: {picked: tone() ==='reaction'}">
-                <span class="value">reaction</span>
-                <input type="radio" name="tone" value="reaction" data-bind="checked: tone" />
+            <label data-bind="click: $parent.setColour" data-tone="4">
+                <span class="value" data-tone="4">Reaction</span>
             </label>
-            <label data-bind="">
-                <span class="value">none</span>
-                <input type="radio" name="tone" value="" data-bind="checked: tone" />
+            <label data-bind="click: $parent.setColour">
+                <span class="value">None</span>
             </label>
-        </p>
+            </p>
+
         <p class="article-delete">
             <span class="cta" data-bind='click: $parent.removeArticle'>Delete</span>
         </p>
-     <!--       <span title="color: dark = serious, light = entertaining" data-bind="
-                css: {
-                    'color-light': colour() <= 2,
-                    'color-dark': colour() > 2
-                },
-                click: $parent.setColour">colour</span>
-            -->
-        </div>
+    
+    </div>
 </script>
 
 <script src="@routes.Assets.at("javascripts/storyEditor.js")" type="text/javascript"></script>

@@ -3,18 +3,25 @@ define(['Knockout', 'Common'], function (ko, Common) {
     var Article = function(opts) {
 
         var opts = opts || {},
-            mDotHost = 'http://m.guardian.co.uk/';
+            mDotHost = 'http://m.guardian.co.uk/',
+            self = this;
 
         this.id         = ko.observable(opts.id         || '');
         this.webTitle   = ko.observable(opts.webTitle   || '');
         this.webPublicationDate = ko.observable(opts.webPublicationDate);
         this.importance = ko.observable(opts.importance || 50);
         this.colour     = ko.observable(opts.colour);
-
-        this.tone       = ko.observable(opts.tone);
-        this.tone.subscribe(function(val){
-            Common.mediator.emitEvent('models:story:haschanges');
-        });
+        
+        // colour is represented as a number at the moment
+        this._colourAsText = ko.computed(function() {
+            switch (self.colour()) {
+                case 1: return 'Overview';
+                case 2: return 'Background';
+                case 3: return 'Analysis';
+                case 4: return 'Reaction';
+                case 0: return 'None';
+            }
+        })
 
 
         if (opts.fields)

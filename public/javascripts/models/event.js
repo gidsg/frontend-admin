@@ -56,7 +56,7 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
         this._humanDate  = ko.observable();
         this._prettyDate = ko.observable();
         this._prettyTime = ko.observable();        
-
+        
         this.startDate  = ko.computed({
             read: function() {
                 return this._prettyDate() + 'T' + this._prettyTime() + ':00.000Z';
@@ -202,18 +202,9 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
             Common.mediator.emitEvent('models:story:haschanges');
         };
     
-        this.setColour = function(item) {
-            var id = item.id();
-            self.content().forEach(function(i){
-                if (i.id() === id) {
-                    if (item.colour() > 2) {
-                        i.colour(1)
-                    }
-                    else { 
-                        i.colour(5)
-                    }
-                }
-            });
+        this.setColour = function(item, e) {
+            var colour = e.srcElement.getAttribute('data-tone') || 0;
+            item.colour(colour);
             Common.mediator.emitEvent('models:story:haschanges');
         }
 
