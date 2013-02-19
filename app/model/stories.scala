@@ -15,7 +15,7 @@ case class Modified(email: String, date: DateTime)
 case class SContent(
   id: String, 
   importance: Int = 50, 
-  colour: Int = 3
+  colour: Int = 0
 )
 
 /**
@@ -30,13 +30,12 @@ case class SAgent(
   importance: Int = 0,
   role: Option[String] = None,
   picture: Option[String] = None,
-  sameAs: Seq[String] = Nil
+  rdfType: Option[String] = None // Eg, http://schema.org/Person
 )
 
 // Places are locations (or things on the landscape - lakes, mountains, churches) where the event happened
 case class SPlace(
-  id: Option[String],
-  sameAs: Seq[String] = Nil
+  id: Option[String]
 )
 
 case class SEvent(
@@ -46,8 +45,7 @@ case class SEvent(
   content: Seq[SContent] = Nil,
   agents: Seq[SAgent] = Nil,
   places: Seq[SPlace] = Nil,
-  explainer: Option[String] = None,
-  sameAs: Seq[String] = Nil
+  explainer: Option[String] = None
 )
 
 case class Story(
