@@ -97,7 +97,7 @@
                 value: title,
                 hasfocus: _title_editing
             "/>
-            <span class="cta" data-bind="visible: !_selected()">
+            <span class="cta" data-bind="visible: !length()">
                 | <a data-bind="event: {click: $root.stories.deleteSelected}">delete this story</a>
         </p>
 
