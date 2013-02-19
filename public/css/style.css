@@ -64,7 +64,7 @@ input[type=checkbox].status {
 
 /** events */
 
-.scrollable {
+.xscrollable {
     margin: 10px 0;
     overflow-y: auto;
     overflow-x: hidden;
@@ -227,7 +227,7 @@ textarea.event-explainer {
 
 .article:hover .article-tone-picker {
     z-index: 10;
-    width: 90%;
+    width: 60%;
     background-color: white;
     }
 
@@ -240,8 +240,8 @@ textarea.event-explainer {
     padding: 0 0 5px 19px;
     z-index: 10;
     border-bottom: 1px solid #ccc;
-    box-shadow: 0px 30px 40px rgba(0,0,0,.2);
-    width: 90%;
+    box-shadow: 0px 30px 40px rgba(0,0,0,.4);
+    width: 60%;
     background-color: white;
 }
 
