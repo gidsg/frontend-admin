@@ -74,7 +74,6 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
             this.startDate(new Date(opts.startDate)); // today
         } else {
             var d = new Date();
-            d.setHours(0, 0, 0, 0); // TODO verify this is required
             this.startDate(d);
         }
 
