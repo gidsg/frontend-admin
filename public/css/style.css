@@ -64,7 +64,7 @@ input[type=checkbox].status {
 
 /** events */
 
-.xscrollable {
+.scrollable {
     margin: 10px 0;
     overflow-y: auto;
     overflow-x: hidden;
