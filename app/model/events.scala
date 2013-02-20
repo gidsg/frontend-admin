@@ -9,7 +9,7 @@ import com.mongodb.casbah.Imports._
 import tools.Mongo.Events
 
 case class Parent(id: String, title: Option[String] = None)
-case class Content(id: String, importance: Int, colour: Int = 3)
+case class Content(id: String, importance: Int, colour: Int = 0)
 
 /**
   *  Agents are people and organisations who play a role in the story. We want to tell their backstory.
