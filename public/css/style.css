@@ -346,7 +346,7 @@ a.cta, .cta a {
 }
 
 img.story-hero {
-    max-height: 100px;
+    max-height: 150px;
 }
 
 textarea.synopsis { width: 90%; min-height: 120px; }
