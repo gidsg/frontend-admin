@@ -24,7 +24,6 @@ define(['Knockout', 'Common'], function (ko, Common) {
             }
         }, this);
 
-
         if (opts.fields)
             this.trailText  = ko.observable(opts.fields.trailText  || '');
 

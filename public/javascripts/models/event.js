@@ -37,8 +37,7 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
         });
 
         // Agents
-        this.agents     = ko.observableArray(); // people, organisations etc.
-        self.agents.removeAll(); 
+        this.agents = ko.observableArray(); // people, organisations etc.
         (opts.agents || []).map(function(a){
             self.agents.push(new Agent(a));
         });
@@ -109,17 +108,21 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
                 included;
             if (typeof article === 'string') {
                 id = self.urlPath(article);
-                article = new Article({id: id})
+                if (id) {
+                    article = new Article({id: id})
+                }
             } else { // We assume it's an Article. Check using its constructor? 
                 id = article.id(); 
             }
-            included = _.some(self.content(), function(item){
-                return item.id() === id;
-            });
-            if (!included) {
-                self.content.unshift(article);
-                self.decorateContent();
-                Common.mediator.emitEvent('models:story:haschanges');
+            if (id) {
+                included = _.some(self.content(), function(item){
+                    return item.id() === id;
+                });
+                if (!included) {
+                    self.content.unshift(article);
+                    self.decorateContent();
+                    Common.mediator.emitEvent('models:story:haschanges');
+                }
             }
         };
 
@@ -172,6 +175,21 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
             }
         };
 
+        this.addAgentPerson = function(article) {
+            self.agents.unshift(new Agent({rdfType: 'http://schema.org/Person'}));
+        };
+
+        this.addAgentOrganization = function(article) {
+            self.agents.unshift(new Agent({rdfType: 'http://schema.org/Organization'}));
+        };
+
+        this.removeAgent = function(article) {
+            var result = window.confirm("Are you sure you want to DELETE this agent?");
+            if (!result) return;
+            self.agents.remove(article);
+            Common.mediator.emitEvent('models:story:haschanges');
+        };
+
         this.bump = function() {
             if (self.importance() > importanceDefault) {
                 self.importance(importanceDefault);
@@ -205,9 +223,11 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
         this.urlPath = function(url) {
             var a = document.createElement('a');
             a.href = url;
-            a = a.pathname + a.search;
-            a = a.indexOf('/') === 0 ? a.substr(1) : a;
-            return a;
+            if (a.hostname.match(/guardian/)) {
+                a = a.pathname;
+                a = a.indexOf('/') === 0 ? a.substr(1) : a;
+                return a;
+            }
         };
     };
 

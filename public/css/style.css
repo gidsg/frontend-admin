@@ -62,7 +62,11 @@ input[type=checkbox].status {
 
 /** Events Editor */
 
-/** events */
+.storify {
+    font-size: 12px;
+}
+
+/** Events */
 
 .scrollable {
     margin: 10px 0;
@@ -76,32 +80,27 @@ input[type=checkbox].status {
     .scrollable { max-height: 78vh; }
 }
 
-.events > .event-wrapper {
-    border-top: 1px solid #eee;
-    padding: 8px 0;
+.events {
+    margin: 0 0 0 14px;
 }
 
 .event {
-    padding: 7px 4px;
-    margin-bottom: 2px;
+    padding: 4px;
 }
 
-.event.well {
-    padding: 3px;
-    margin: 4px 0 6px 0;
+.eventwell {
+    background-color: #F4F4EE;
 }
 
 .event-title {
     color: #214583;
-    font-size: 1em;
     cursor: pointer;
 }
 
 .count {
-    color: red;
-    font-size: 11px;
+    color: #E0AF1B;
     font-weight: normal;
-
+    margin: 0 2px;
 }
 
 .event-parent {
@@ -124,7 +123,7 @@ textarea.event-explainer {
 }
 
 .event-meta {
-    font-size: 0.9em;
+    font-size: 0.8em;
 }
 
 .icon-star-empty {
@@ -168,10 +167,14 @@ textarea.event-explainer {
 
 .article-meta { color: #999; margin: 0; font-size: 11px; line-height: 0.99em; }
 
+.event-articles,
 .event-articles .article-meta {margin: 0 0 0 18px;}
 
 .article-colour {
-    color: red;
+    background-color: #BD3535;
+    color: #fff;
+    padding: 1px 2px 0 2px;
+    margin: 0 0 0 4px;
 }
 
 /** search results */
@@ -221,8 +224,39 @@ textarea.event-explainer {
     color: #000;
 }
 
+
+/* Agents */
+
+.event-agents {
+    font-size: 12px;
+    clear: both;
+}
+
+.agent {
+    clear: both;
+    overflow: auto;
+    margin: 0 0 10px 0;
+}
+
+.agent-name {
+    font-weight: bold;
+}
+
+.agent-role {
+    font-style: italic;
+}
+
+img.agent-picture {
+    float: left;
+    margin: 0 10px 10px 0;
+
+}
+
+/* Articles */
+
 .article .article-tone-picker {
     padding: 0 0 5px 17px;
+    margin: 2px 0 0 0;
     position: absolute;
 }
 
@@ -235,13 +269,13 @@ textarea.event-explainer {
 
 .article .article-delete { display: none; }
 .article:hover .article-delete { 
-    margin-top: 17px;
+    margin-top: 20px;
     display: block;
     position: absolute;
     padding: 0 0 5px 19px;
     z-index: 10;
     border-bottom: 1px solid #ccc;
-    box-shadow: 0px 30px 40px rgba(0,0,0,.4);
+    box-shadow: 0px 15px 30px rgba(0,0,0,.2);
     width: 60%;
     background-color: white;
 }
@@ -282,7 +316,6 @@ label {
     margin: 0;
 }
 
-button.create {  }
 
 .hoverable:hover { color: red; cursor: pointer; }
 
@@ -310,18 +343,9 @@ button.create {  }
     color: #FFDB4D;    
 }
 
-
-.eventwell {
-    border-left: 1px solid #dedede;
-    background-color: #F4F4EE;
-    padding: 10px;
-    margin: 10px 0 10px -7px;
-}
-
-
 .cta { 
     font-size: 11px;
-    color: #5bb75b;
+    color: #ccc;
 }
 
 a.cta, .cta a { 
@@ -333,7 +357,7 @@ a.cta, .cta a {
     cursor: pointer;
 }
 
-.synopsis, .story-title, input.story-title, .story-hero, input.story-hero { 
+.synopsis, .story-title, input.story-title, .story-hero, input.story-hero, .event-agents { 
     margin-left: 22px;
 }
 
@@ -345,11 +369,22 @@ a.cta, .cta a {
     width: 90%;
 }
 
-img.story-hero {
-    max-height: 150px;
+.storify img {
+    max-width: 150px;
 }
 
-textarea.synopsis { width: 90%; min-height: 120px; }
+.storify textarea { 
+    width: 90%; 
+    min-height: 120px;
+    clear: both;
+}
 
 .muted { font-size: 11px; }
 
+.onDragOver {
+    background: #DFF0D8;
+}
+
+.onDrop {
+    background: #CEE8C3;
+}

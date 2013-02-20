@@ -23,18 +23,18 @@
   </div>
 
   <div class="storify-events span8">
-            <p class="saving">
-                <span class="muted" data-bind="visible: $root.pendingSave()"></span>
-            </p>
-      <p>
+    <p class="saving">
+        <span class="muted" data-bind="visible: $root.pendingSave()"></span>
+    </p>
+    <p>
         <button class="btn btn-mini create btn-success" data-bind="
             event: {click: stories.createStory}
             ">Start a Story</button>
-      </p>
+    </p>
     <!-- ko if: !$root.stories.selected() -->
         <dl class="stories" data-bind="
             template: {name: 'story_closed_template', foreach: stories.stories}
-        "></dl>
+            "></dl>
         <div data-bind="text: stories.length() === 0 ? 'Loading stories...' : ''"></div>
     <!-- /ko -->
 
@@ -54,9 +54,7 @@
             "></p>
     </dt>
     <dd>
-    <p>
         <p data-bind="text:explainer()"></p>
-    </p> 
     </dd>
 </script>
 
@@ -69,16 +67,16 @@
         <button class="btn btn-mini" data-bind="
             event: {click: $root.stories.clearSelected},
             disable: $root.pendingSave()
-        ">&laquo; Back to Stories</button>
+            ">&laquo; Back to Stories</button>
         </p>
 
-        <p class="muted">Name:</p>
+        <p class="muted">Name</p>
         <p>
             <span class="story-title" data-bind="
                 visible: !_title_editing(),
                 text: title() ? title : '(no title)',
                 click: _title_edit
-            "></span>
+                "></span>
             <input type="text" placeholder="Story Title" class="story-title" data-bind="
                 visible: _title_editing,
                 value: title,
@@ -102,7 +100,7 @@
             <div class="events" data-bind="template: {name: 'event_template', foreach: events}"></div>
         </p>
 
-        <p class="muted">Hero image:</p>
+        <p class="muted">Hero image</p>
         <p>
             <img class="story-hero" data-bind="
                 visible: !_hero_editing() && hero(),
@@ -112,7 +110,7 @@
             <span class="story-hero" data-bind="
                 visible: !_hero_editing() && !hero(),
                 click: _hero_edit
-            ">(none)</span>
+                ">(none)</span>
             <input type="text" class="story-hero" placeholder="http://... image url" data-bind="
                 visible: _hero_editing,
                 value: hero,
@@ -121,13 +119,13 @@
         </p>
 
         <p>
-            <p class="muted">Story Synopsis:</p>
+            <p class="muted">Story Synopsis</p>
             <p>
                 <div class="synopsis" data-bind="
                     visible: !_explainer_editing(),
                     text: explainer() ? explainer : '(no explainer)',
                     click: _explainer_edit
-                "></div>
+                    "></div>
                 <textarea class="synopsis" data-bind="
                     visible: _explainer_editing,
                     value: explainer,
@@ -147,17 +145,22 @@
                 'icon-star-empty': importance() <= 50,
                 'icon-star': importance() > 50
             }
-        "></i>
+            "></i>
 
         <!-- An UNselected event: -->
         <!-- ko if: $parent._selected() !== $data -->
             <span class="event-title" data-bind="
                 text: title().length > 0 ? title : '(no title)',
                 event: {click: $parent.setSelected}
-            "></span>
+                "></span>
             <span class="count" data-bind="
+                visible: content().length > 0,
                 text: content().length + ' article' + (content().length !== 1 ? 's' : '')
-            "></span>
+                "></span>
+            <span class="count" data-bind="
+                visible: agents().length > 0,
+                text: agents().length + ' agent' + (agents().length !== 1 ? 's' : '')
+                "></span>
             <span class="event-meta" data-bind="text: _humanDate"></span>
         <!-- /ko -->
 
@@ -168,7 +171,7 @@
                 visible: !_title_editing(),
                 text: title() ? title : '(no title)',
                 click: _title_edit
-            "></span>
+                "></span>
             <input type="text" placeholder="Chapter Title" data-bind="
                 visible: _title_editing,
                 value: title,
@@ -187,25 +190,39 @@
                     <p class="muted">Articles</p>
                     <div class="event-articles" data-bind="
                         template: {name: 'event_article_template', foreach: content}
-                    "></div>
+                        "></div>
                     <!-- ko if: content().length === 0 -->
                         <div class="alert">drag articles here</div>
                     <!-- /ko -->
-                <p>
+                </p>
 
                 <p>
-                    <p class="muted">Chapter Synopsis:</p>
+                    <p class="muted">Chapter Synopsis</p>
                     <div class="synopsis" data-bind="
                         visible: !_explainer_editing(),
                         text: explainer() ? explainer : '(no explainer)',
                         click: _explainer_edit
-                    "></div>
+                        "></div>
                     <textarea class="synopsis" data-bind="
                         visible: _explainer_editing,
                         value: explainer,
                         hasfocus: _explainer_editing
                     "/></textarea>
                 </p>
+
+                <p>
+                    <span class="muted">Agents</span>
+                    <span class="cta">
+                        | <a data-bind="event: {click: addAgentPerson}">add Person</a>
+                        | <a data-bind="event: {click: addAgentOrganization}">add Organisation</a>
+                    </span>
+                </p>
+                <div class="event-agents" data-bind="
+                    template: {name: 'event_agent_template', foreach: agents}
+                    "></div>
+                <!-- ko if: agents().length === 0 -->
+                    <p class="event-agents">(none)</p>
+                <!-- /ko -->
 
                 <p>
                 <span class="muted">Takes place on</span>
@@ -229,7 +246,7 @@
                 'icon-star-empty': importance() <= 50,
                 'icon-star': importance() > 50
             }
-        "></div>
+            "></div>
         <a class="article-title" target="_blank" data-bind="
             text: webTitle() ? webTitle : id, 
             attr: {href: _mDot}
@@ -237,8 +254,10 @@
         
         <div class="article-meta">
             <span data-bind="text: _humanDate"></span>
-            -
-            <span class="article-colour" data-bind="text: _colourAsText"></span>
+            <span class="article-colour" data-bind="
+                visible: colour,
+                text: _colourAsText
+                "></span>
         </div>
 
         <p class="article-tone-picker">
@@ -260,9 +279,78 @@
             </p>
 
         <p class="article-delete">
-            <span class="cta" data-bind='click: $parent.removeArticle'>Delete</span>
+            <a class="cta" data-bind='click: $parent.removeArticle'>Delete</a>
         </p>
     
+    </div>
+</script>
+
+<script type="text/html" id="event_agent_template">
+    <div class="agent">
+
+        <!-- Agent Name -->
+        <div data-bind="visible: !_editing_name()">
+            <i data-bind="
+                click: bump,
+                css: {
+                    'icon-star-empty': !importance(),
+                    'icon-star': importance()
+                }
+                "></i>
+            <span class="agent-name" data-edit="name" data-bind="
+                text: name() ? name : '(Name)',
+                click: _edit
+                "></span>
+            <span class="cta">
+                | <a data-bind="event: {click: $parent.removeAgent}">delete</a>
+                </span>
+        </div>
+        <input type="text" placeholder="Name" data-bind="
+            visible: _editing_name,
+            value: name,
+            hasfocus: _editing_name
+            "/>
+
+        <!-- Agent picture -->
+        <div data-edit="picture" data-bind="
+            visible: !_editing_picture() && !picture(),
+            click: _edit
+            ">(Picture)</div>
+        <img class="agent-picture" data-edit="picture" data-bind="
+            visible: !_editing_picture() && picture(),
+            attr: {src: picture},
+            click: _edit
+            "/>
+        <input type="text" placeholder="http://...image url" data-bind="
+            visible: _editing_picture,
+            value: picture,
+            hasfocus: _editing_picture
+            "/>
+
+        <!-- Agent role -->
+        <div class="agent-role" data-edit="role" data-bind="
+            visible: !_editing_role(),
+            text: role() ? role : '(Role)',
+            click: _edit
+            "></div>
+        <input type="text" placeholder="role" data-bind="
+            visible: _editing_role,
+            value: role,
+            hasfocus: _editing_role
+            "/>
+
+        <!-- Agent explainer -->
+        <div class="agent-explainer" data-edit="explainer" data-bind="
+            visible: !_editing_explainer(),
+            text: explainer() ? explainer : '(Explainer)',
+            click: _edit
+            "></div>
+        <textarea type="text" placeholder="Explainer" data-bind="
+            visible: _editing_explainer,
+            value: explainer,
+            hasfocus: _editing_explainer
+            "/></textarea>
+
     </div>
 </script>
 
