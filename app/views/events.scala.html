@@ -79,7 +79,7 @@
                 text: title() ? title : '(no title)',
                 click: _title_edit
             "></span>
-            <input placeholder="Story Title" class="story-title" data-bind="
+            <input type="text" placeholder="Story Title" class="story-title" data-bind="
                 visible: _title_editing,
                 value: title,
                 hasfocus: _title_editing
@@ -90,7 +90,7 @@
 
         <p>
             <p class="muted">
-                Chapters 
+                Chapters (latest first)
                 <span class="cta" data-bind="visible: !_selected()">
                     | <a data-bind="
                         event: {click: createEvent},
@@ -102,8 +102,26 @@
             <div class="events" data-bind="template: {name: 'event_template', foreach: events}"></div>
         </p>
 
+        <p class="muted">Hero image:</p>
         <p>
-            <p class="muted">Synopsis:</p>
+            <img class="story-hero" data-bind="
+                visible: !_hero_editing() && hero(),
+                attr: {src: hero},
+                click: _hero_edit
+            "/>
+            <span class="story-hero" data-bind="
+                visible: !_hero_editing() && !hero(),
+                click: _hero_edit
+            ">(none)</span>
+            <input type="text" class="story-hero" placeholder="http://... image url" data-bind="
+                visible: _hero_editing,
+                value: hero,
+                hasfocus: _hero_editing
+            "/>
+        </p>
+
+        <p>
+            <p class="muted">Story Synopsis:</p>
             <p>
                 <div class="synopsis" data-bind="
                     visible: !_explainer_editing(),
@@ -131,8 +149,6 @@
             }
         "></i>
 
-        <span data-bind="text: $parent.length()-$index()"> </span>.
-
         <!-- An UNselected event: -->
         <!-- ko if: $parent._selected() !== $data -->
             <span class="event-title" data-bind="
@@ -153,7 +169,7 @@
                 text: title() ? title : '(no title)',
                 click: _title_edit
             "></span>
-            <input placeholder="Chapter Title" data-bind="
+            <input type="text" placeholder="Chapter Title" data-bind="
                 visible: _title_editing,
                 value: title,
                 hasfocus: _title_editing
@@ -222,25 +238,24 @@
         <div class="article-meta">
             <span data-bind="text: _humanDate"></span>
             -
-            <span data-bind="text: _colourAsText"></span>
-
+            <span class="article-colour" data-bind="text: _colourAsText"></span>
         </div>
 
         <p class="article-tone-picker">
-            <label data-bind="click: $parent.setColour" data-tone="1">
+            <label data-bind="click: setColour" data-tone="1">
                 <span class="value" data-tone="1">Overview</span>
             </label>
-            <label data-bind="click: $parent.setColour" data-tone="2">
+            <label data-bind="click: setColour" data-tone="2">
                 <span class="value" data-tone="2">Background</span>
             </label>
-            <label data-bind="click: $parent.setColour" data-tone="3">
+            <label data-bind="click: setColour" data-tone="3">
                 <span class="value" data-tone="3">Analysis</span>
             </label>
-            <label data-bind="click: $parent.setColour" data-tone="4">
+            <label data-bind="click: setColour" data-tone="4">
                 <span class="value" data-tone="4">Reaction</span>
             </label>
-            <label data-bind="click: $parent.setColour">
-                <span class="value">None</span>
+            <label data-bind="click: setColour" data-tone="5">
+                <span class="value" data-tone="5">Light</span>
             </label>
             </p>
 

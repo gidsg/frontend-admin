@@ -11,6 +11,7 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         this.id = ko.observable(opts.id);
         this.title = ko.observable(opts.title || '');
         this.explainer = ko.observable(opts.explainer || '(No synopsis)');
+        this.hero = ko.observable(opts.hero || '');
         this.events = ko.observableArray();
 
         // Temporary
@@ -32,9 +33,12 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         this._explainer_editing = ko.observable(false);
         this._explainer_edit    = function() { this._explainer_editing(true) };
 
+        this._hero_editing = ko.observable(false);
+        this._hero_edit    = function() { this._hero_editing(true) };
+
         this.title.subscribe(    function(){Common.mediator.emitEvent('models:story:haschanges')});
         this.explainer.subscribe(function(){Common.mediator.emitEvent('models:story:haschanges')});
-
+        this.hero.subscribe(     function(){Common.mediator.emitEvent('models:story:haschanges')});
 
         this.loadEvent = function(o) {
             var event;
