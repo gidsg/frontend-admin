@@ -79,7 +79,7 @@
                 text: title() ? title : '(no title)',
                 click: _title_edit
             "></span>
-            <input placeholder="Story Title" class="story-title" data-bind="
+            <input type="text" placeholder="Story Title" class="story-title" data-bind="
                 visible: _title_editing,
                 value: title,
                 hasfocus: _title_editing
@@ -113,7 +113,7 @@
                 visible: !_hero_editing() && !hero(),
                 click: _hero_edit
             ">(none)</span>
-            <input class="story-hero" placeholder="http://... image url" data-bind="
+            <input type="text" class="story-hero" placeholder="http://... image url" data-bind="
                 visible: _hero_editing,
                 value: hero,
                 hasfocus: _hero_editing
@@ -171,7 +171,7 @@
                 text: title() ? title : '(no title)',
                 click: _title_edit
             "></span>
-            <input placeholder="Chapter Title" data-bind="
+            <input type="text" placeholder="Chapter Title" data-bind="
                 visible: _title_editing,
                 value: title,
                 hasfocus: _title_editing

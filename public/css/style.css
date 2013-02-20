@@ -218,7 +218,7 @@ textarea.event-explainer {
 
 .storify input[type="text"]{
     background-color: #fff;
-    color: #000;    
+    color: #000;
 }
 
 .article .article-tone-picker {
@@ -335,6 +335,14 @@ a.cta, .cta a {
 
 .synopsis, .story-title, input.story-title, .story-hero, input.story-hero { 
     margin-left: 22px;
+}
+
+.storify input[type="text"] {
+    width: 50%;
+}
+
+.storify input.story-hero {
+    width: 90%;
 }
 
 img.story-hero {
