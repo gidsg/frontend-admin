@@ -102,6 +102,26 @@
             <div class="events" data-bind="template: {name: 'event_template', foreach: events}"></div>
         </p>
 
+        <p class="muted">Hero image:</p>
+        <p>
+            <img class="story-hero" data-bind="
+                visible: !_hero_editing() && hero(),
+                attr: {src: hero},
+                click: _hero_edit
+            "/>
+            <span class="story-hero" data-bind="
+                visible: !_hero_editing() && !hero(),
+                click: _hero_edit
+            ">(none)</span>
+            <input class="story-hero" placeholder="http://... image url" data-bind="
+                visible: _hero_editing,
+                value: hero,
+                hasfocus: _hero_editing
+            "/>
+            <span class="cta" data-bind="visible: !length()">
+                | <a data-bind="event: {click: $root.stories.deleteSelected}">delete this story</a>
+        </p>
+
         <p>
             <p class="muted">Story Synopsis:</p>
             <p>

@@ -55,6 +55,7 @@ case class Story(
   createdBy: Option[Modified] = None,
   modifiedBy: Seq[Modified] = Nil,
   explainer: Option[String] = None,
+  hero: Option[String] = None,
   sameAs: Seq[String] = Nil
 )
 

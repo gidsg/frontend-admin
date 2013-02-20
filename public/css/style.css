@@ -333,8 +333,12 @@ a.cta, .cta a {
     cursor: pointer;
 }
 
-.synopsis, .story-title, input.story-title { 
+.synopsis, .story-title, input.story-title, .story-hero, input.story-hero { 
     margin-left: 22px;
+}
+
+img.story-hero {
+    max-height: 100px;
 }
 
 textarea.synopsis { width: 90%; min-height: 120px; }
