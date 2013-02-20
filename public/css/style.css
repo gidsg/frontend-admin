@@ -81,10 +81,6 @@ input[type=checkbox].status {
     padding: 8px 0;
 }
 
-.events > .event-wrapper:nth-child(odd) {
-    background-color: #f9f9f9;
-}
-
 .event {
     padding: 7px 4px;
     margin-bottom: 2px;
@@ -174,6 +170,10 @@ textarea.event-explainer {
 
 .event-articles .article-meta {margin: 0 0 0 18px;}
 
+.article-colour {
+    color: red;
+}
+
 /** search results */
 
 .storify-articles {
@@ -240,7 +240,6 @@ textarea.event-explainer {
     position: absolute;
     padding: 0 0 5px 19px;
     z-index: 10;
-    margin-left: -2px;
     border-bottom: 1px solid #ccc;
     box-shadow: 0px 30px 40px rgba(0,0,0,.4);
     width: 60%;
@@ -283,10 +282,6 @@ label {
     margin: 0;
 }
 
-.article-tone-picker input[type="radio"] {
-    display: none;
-}
-
 button.create {  }
 
 .hoverable:hover { color: red; cursor: pointer; }
@@ -318,6 +313,7 @@ button.create {  }
 
 .eventwell {
     border-left: 1px solid #dedede;
+    background-color: #F4F4EE;
     padding: 10px;
     margin: 10px 0 10px -7px;
 }

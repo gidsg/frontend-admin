@@ -14,12 +14,13 @@ define(['Knockout', 'Common'], function (ko, Common) {
         
         // colour is represented as a number at the moment
         this._colourAsText = ko.computed(function() {
-            switch (parseInt(this.colour(), 10)) {
+            switch (this.colour()) {
                 case 1: return 'Overview';
                 case 2: return 'Background';
                 case 3: return 'Analysis';
                 case 4: return 'Reaction';
-                case 0: return 'None';
+                case 5: return 'Light';
+                case 0: return '';
             }
         }, this);
 
@@ -34,6 +35,12 @@ define(['Knockout', 'Common'], function (ko, Common) {
         }, this);
 
     };
+
+    this.setColour = function(item, e) {
+        var colour = parseInt(e.srcElement.getAttribute('data-tone') || 0, 10);
+        item.colour(colour === item.colour() ? 0 : colour);
+        Common.mediator.emitEvent('models:story:haschanges');
+    }
 
     Article.prototype.toJSON = function() {
         var copy = ko.toJS(this),

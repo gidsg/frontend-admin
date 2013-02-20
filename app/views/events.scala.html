@@ -103,7 +103,7 @@
         </p>
 
         <p>
-            <p class="muted">Synopsis:</p>
+            <p class="muted">Story Synopsis:</p>
             <p>
                 <div class="synopsis" data-bind="
                     visible: !_explainer_editing(),
@@ -222,25 +222,24 @@
         <div class="article-meta">
             <span data-bind="text: _humanDate"></span>
             -
-            <span data-bind="text: _colourAsText"></span>
-
+            <span class="article-colour" data-bind="text: _colourAsText"></span>
         </div>
 
         <p class="article-tone-picker">
-            <label data-bind="click: $parent.setColour" data-tone="1">
+            <label data-bind="click: setColour" data-tone="1">
                 <span class="value" data-tone="1">Overview</span>
             </label>
-            <label data-bind="click: $parent.setColour" data-tone="2">
+            <label data-bind="click: setColour" data-tone="2">
                 <span class="value" data-tone="2">Background</span>
             </label>
-            <label data-bind="click: $parent.setColour" data-tone="3">
+            <label data-bind="click: setColour" data-tone="3">
                 <span class="value" data-tone="3">Analysis</span>
             </label>
-            <label data-bind="click: $parent.setColour" data-tone="4">
+            <label data-bind="click: setColour" data-tone="4">
                 <span class="value" data-tone="4">Reaction</span>
             </label>
-            <label data-bind="click: $parent.setColour">
-                <span class="value">None</span>
+            <label data-bind="click: setColour" data-tone="5">
+                <span class="value" data-tone="5">Light</span>
             </label>
             </p>
 

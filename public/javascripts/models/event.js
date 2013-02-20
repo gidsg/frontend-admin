@@ -21,7 +21,7 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
 
         // General 'schema' poperties
         this.title      = ko.observable(opts.title || '');
-        this.explainer  = ko.observable(opts.explainer || 'none');
+        this.explainer  = ko.observable(opts.explainer || '(No synopsis)');
         this.importance = ko.observable(opts.importance || importanceDefault);
         
         // Content
@@ -202,12 +202,6 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
             Common.mediator.emitEvent('models:story:haschanges');
         };
     
-        this.setColour = function(item, e) {
-            var colour = e.srcElement.getAttribute('data-tone') || 0;
-            item.colour(colour);
-            Common.mediator.emitEvent('models:story:haschanges');
-        }
-
         this.urlPath = function(url) {
             var a = document.createElement('a');
             a.href = url;
