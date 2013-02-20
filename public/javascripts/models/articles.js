@@ -1,38 +1,41 @@
 define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, ko, Common, Reqwest) {
 
-    return function() {
+    return function(opts) {
 
         var self = this,
-            deBounced;
+            deBounced,
+            opts = opts || {};
 
-        this.articles = ko.observableArray();
+        this.articles   = ko.observableArray();
+        this.term       = ko.observable(Common.queryParams.q || '');
+        this.section    = ko.observable();
 
-        this.articleTerm = ko.observable(Common.queryParams.q || '');
-        this.sectionTerm = ko.observable();
-        this.toneNews    = ko.observable();
-
+        var reqwest = opts.reqwest || Reqwest;
+        
         this.cache = {};
 
+        this.isTermAnItem = function() {
+            return self.term().match(/\//);
+        }
+
         // Grab articles from Content Api
-        this.articleSearch = function() {
+        this.search = function() {
             clearTimeout(deBounced);
             deBounced = setTimeout(function(){
                 
                 var url, propName;
 
                 // If term contains slashes, assume it's an article id
-                if (self.articleTerm().match(/\//)) {
-                    var url = '/api/proxy/' + self.articleTerm() + '?show-fields=all&format=json';
+                if (self.isTermAnItem()) {
+                    var url = '/api/proxy/' + self.term() + '?show-fields=all&format=json';
                     propName = 'content';
                 } else {
                     url  = '/api/proxy/search?show-fields=all&page-size=50&format=json&q=';
-                    url += encodeURIComponent(self.articleTerm());
-                    url += self.sectionTerm() ? '&section=' + encodeURIComponent(self.sectionTerm()) : '';
-                    url += self.toneNews() ? '&tag=tone%2Fnews' : '';
+                    url += encodeURIComponent(self.term());
                     propName = 'results';
                 }
 
-                Reqwest({
+                reqwest({
                     url: url,
                     type: 'jsonp',
                     success: function(resp) {
@@ -56,3 +59,5 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
 
     };
 });
+
+

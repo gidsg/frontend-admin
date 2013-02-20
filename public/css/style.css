@@ -26,7 +26,7 @@ input.invalid {
 }
 
 .saving{
-    cursor:wait;
+    cursor: wait;
 }
 
 fieldset, 
@@ -81,27 +81,14 @@ input[type=checkbox].status {
     padding: 8px 0;
 }
 
-.events > .event-wrapper:nth-child(odd) {
-    background-color: #f9f9f9;
-}
-
 .event {
-    padding: 0 4px;
+    padding: 7px 4px;
+    margin-bottom: 2px;
 }
 
-.event-header {
-}
-
-.event-header-selected {
-    padding: 9px 0 0 0;
-}
-
-.event-header-selected .event-title {
-    font-size: 1.2em;
-}
-
-.event-children {
-    padding-left: 20px;    
+.event.well {
+    padding: 3px;
+    margin: 4px 0 6px 0;
 }
 
 .event-title {
@@ -136,10 +123,6 @@ textarea.event-explainer {
     height: 100px;
 }
 
-.event-articles{
-    margin: 10px 0;
-}
-
 .event-meta {
     font-size: 0.9em;
 }
@@ -148,12 +131,21 @@ textarea.event-explainer {
     opacity: 0.2;
 }
 
+.event-innards {
+    margin: 0 0 0 18px;
+}
+
 /** articles, in all uses */
+
+.article:hover { 
+    background-color: white;
+}
 
 .article {
     display: block;
     overflow: hidden;
-    padding: 0 0 8px 0;
+    padding: 0 0 4px 0;
+    margin-bottom: 10px;
     -webkit-transition: opacity 0.2s;
        -moz-transition: opacity 0.2s;
         -ms-transition: opacity 0.2s;
@@ -161,16 +153,26 @@ textarea.event-explainer {
             transition: opacity 0.2s;
 }
 
-.article-star {float: left; display: block; width: 18px; }
+.article a {
+    text-decoration: none;
+}
 
+.article-star {float: left; display: block; width: 18px; }
 
 .icon-star:hover, .icon-star-empty:hover { cursor: pointer; }
 
 .article-title { font-size: 12px; color: #005689; display: inline-block; width: 90%; }
 .article-id { font-size: 1em; color: #999; margin-bottom: 0; font-size: 0.9em; }
 
-.event-date, .article-date { color: #ccc; margin-bottom: 0; font-size: 12px; line-height: 0.99em; }
-.event-articles .article-date { margin-left: 33px; } 
+.event-meta { color: #ccc; margin-bottom: 0; font-size: 12px; line-height: 0.99em; }
+
+.article-meta { color: #999; margin: 0; font-size: 11px; line-height: 0.99em; }
+
+.event-articles .article-meta {margin: 0 0 0 18px;}
+
+.article-colour {
+    color: red;
+}
 
 /** search results */
 
@@ -216,19 +218,81 @@ textarea.event-explainer {
 
 .storify input[type="text"]{
     background-color: #fff;
-    color: #000;    
+    color: #000;
 }
 
-input#tone-news { 
-    float: left;
-    margin-right: 5px;
+.article .article-tone-picker {
+    padding: 0 0 5px 17px;
+    position: absolute;
 }
 
-label[for="tone-news"] { 
+.article:hover .article-tone-picker {
+    z-index: 10;
+    width: 60%;
+    background-color: white;
+    }
+
+
+.article .article-delete { display: none; }
+.article:hover .article-delete { 
+    margin-top: 17px;
+    display: block;
+    position: absolute;
+    padding: 0 0 5px 19px;
+    z-index: 10;
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0px 30px 40px rgba(0,0,0,.4);
+    width: 60%;
+    background-color: white;
+}
+
+.article:hover .article-tone {display: none;}
+
+.article-tone-picker label {display: none;}
+.article:hover .article-tone-picker label {display: inline;}
+
+
+
+.article-tone-picker .value {
+    color: #333;
+    font-size: 10px;
+    text-transform: capitalize;
+    padding: 0 2px; 
+    display: inline-block;
+}
+
+.article-tone-picker .picked .value {
+    color: red;
+}
+
+.article-tone-picker label.picked {
+    color: red;
+}
+
+.article-tone-picker .value:hover {
+    color: #fff;
+    background-color: #333;
+    cursor: pointer; 
+}
+
+label { 
+    display: inline-block;
     font-size: 12px;
+    line-height: inherit;
+    margin: 0;
 }
 
-button.create { float: right; margin-right: 14px; }
+button.create {  }
+
+.hoverable:hover { color: red; cursor: pointer; }
+
+.saving { display: inline; right: 0; position: fixed;  margin-right: 42px; }
+.saving span {
+        display: inline-block; 
+        background-image: url(/assets/images/ajax-loader.gif);
+        background-repeat: no-repeat;
+        width: 32px; height: 32px;
+  }
 
 .color-light, .color-dark { 
     display: inline-block;
@@ -247,4 +311,45 @@ button.create { float: right; margin-right: 14px; }
 }
 
 
+.eventwell {
+    border-left: 1px solid #dedede;
+    background-color: #F4F4EE;
+    padding: 10px;
+    margin: 10px 0 10px -7px;
+}
+
+
+.cta { 
+    font-size: 11px;
+    color: #5bb75b;
+}
+
+a.cta, .cta a { 
+    color: #5bb75b;
+}
+
+.cta:hover { 
+    background-color: #ffe;
+    cursor: pointer;
+}
+
+.synopsis, .story-title, input.story-title, .story-hero, input.story-hero { 
+    margin-left: 22px;
+}
+
+.storify input[type="text"] {
+    width: 50%;
+}
+
+.storify input.story-hero {
+    width: 90%;
+}
+
+img.story-hero {
+    max-height: 150px;
+}
+
+textarea.synopsis { width: 90%; min-height: 120px; }
+
+.muted { font-size: 11px; }
 

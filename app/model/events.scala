@@ -13,13 +13,19 @@ case class Content(id: String, importance: Int, colour: Int = 3)
 
 /**
   *  Agents are people and organisations who play a role in the story. We want to tell their backstory.
-  *  - We use the foaf:Agent property to describe the person/org, xmlns.com/foaf/spec/#term_Agent
   *  - We use the rdfs:sameAs property to externally reference, http://www.w3.org/TR/2000/CR-rdf-schema-20000327/#s2.3.4
   */
-case class Agent(id: Option[String], name: Option[String] = None, explainer: Option[String] = None, sameAs: Seq[String] = Nil)
+case class Agent(
+    id: Option[String], 
+    name: Option[String] = None,  // Eg. 'Jeremy Hunt'
+    explainer: Option[String] = None, // Their role in the story
+    role: Option[String] = None, // Eg. 'Secretary of State for Health'
+    picture: Option[String] = None, 
+    rdfType: String // Ie. 'http://schema.org/Person' or 'http://schema.org/Organization'
+    )
 
 // Places are locations (or things on the landscape - lakes, mountains, churches) where the event happened
-case class Place(id: Option[String], sameAs: Seq[String] = Nil)
+case class xPlace(id: Option[String], sameAs: Seq[String] = Nil)
 
 case class Event(
   id: String,
@@ -32,7 +38,7 @@ case class Event(
   createdBy: Option[String] = None,
   lastModifiedBy: Option[String] = None,
   agents: Seq[Agent] = Nil,
-  places: Seq[Place] = Nil,
+  places: Seq[xPlace] = Nil,
   explainer: Option[String] = None
 )
 
