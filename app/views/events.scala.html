@@ -90,7 +90,7 @@
 
         <p>
             <p class="muted">
-                Chapters 
+                Chapters (latest first)
                 <span class="cta" data-bind="visible: !_selected()">
                     | <a data-bind="
                         event: {click: createEvent},
@@ -130,8 +130,6 @@
                 'icon-star': importance() > 50
             }
         "></i>
-
-        <span data-bind="text: $parent.length()-$index()"> </span>.
 
         <!-- An UNselected event: -->
         <!-- ko if: $parent._selected() !== $data -->
