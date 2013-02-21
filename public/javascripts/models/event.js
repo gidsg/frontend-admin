@@ -1,4 +1,5 @@
-define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 'Common', 'Reqwest'], function (Article, Agent, Place, ko, Config, Common, Reqwest) {
+define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 'Common', 'Reqwest'], 
+        function (Editable, Article, Agent, Place, ko, Config, Common, Reqwest) {
 
     // zero pad the date getters
     Date.prototype.getHoursPadded = function() {
@@ -24,6 +25,9 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
         this.explainer  = ko.observable(opts.explainer || '(No synopsis)');
         this.importance = ko.observable(opts.importance || importanceDefault);
         
+        // Make these editable inline 
+        this._makeEditable(['title', 'explainer']);
+
         // Content
         this.content = ko.observableArray();
         (opts.content || []).map(function(a){
@@ -44,13 +48,12 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
 
         // Places
         this.places     = ko.observableArray(); // locations 
-        this.sameAs     = ko.observableArray(); // Eg. cross-reference with wikipedia, PA, BBC etc. 
-        
-        self.places.removeAll(); 
         (opts.places || []).map(function(p){
             self.places.push(new Place(p));
         });
 
+        this.sameAs     = ko.observableArray(); // Eg. cross-reference with wikipedia, PA, BBC etc. 
+        
         // Dates
         this._humanDate  = ko.observable();
         this._prettyDate = ko.observable();
@@ -85,18 +88,6 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
 
         // Administrative vars
         this._tentative   = ko.observable(opts._tentative);
-        this._hidden      = ko.observable();
-
-        // Lsisteners on editable observables
-        this._editing_title = ko.observable(opts._tentative);
-        this._edit_title    = function() { this._editing_title(true) };
-
-        this._editing_explainer = ko.observable(false);
-        this._explainer_edit    = function() { this._editing_explainer(true) };
-
-        this.title.subscribe(    function(){Common.mediator.emitEvent('models:story:haschanges')});
-        this.explainer.subscribe(function(){Common.mediator.emitEvent('models:story:haschanges')});
-        this.startDate.subscribe(function(){Common.mediator.emitEvent('models:story:haschanges')});
 
         if (bumped.length === 0) {
             self.content().map(function(a){
@@ -237,6 +228,8 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
             }
         };
     };
+
+    Event.prototype = new Editable();
 
     Event.prototype.toJSON = function() {
         var copy = ko.toJS(this),

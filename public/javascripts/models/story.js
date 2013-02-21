@@ -1,4 +1,4 @@
-define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, Common, Reqwest) {
+define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], function (Editable, Event, ko, Common, Reqwest) {
 
     var Story = function(opts) {
         var endpoint = '/story',
@@ -8,10 +8,14 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
 
         opts = opts || {};
 
-        this.id = ko.observable(opts.id);
         this.title = ko.observable(opts.title || '');
         this.explainer = ko.observable(opts.explainer || '(No synopsis)');
         this.hero = ko.observable(opts.hero || '');
+
+        // Make these editable inline 
+        this._makeEditable(['title', 'explainer', 'hero']);
+
+        this.id = ko.observable(opts.id);
         this.events = ko.observableArray();
 
         // Temporary
@@ -25,20 +29,6 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
             write: function(value) {this.explainer(value.replace(/(\r\n|\n|\r)/gm, '<br />'))},
             owner: this
         });
-
-        // Lsisteners on editable observables
-        this._editing_title = ko.observable(opts._tentative);
-        this._edit_title    = function() { this._editing_title(true) };
-
-        this._editing_explainer = ko.observable(false);
-        this._explainer_edit    = function() {this._editing_explainer(true)};
-
-        this._editing_hero = ko.observable(false);
-        this._edit_hero    = function() { this._editing_hero(true) };
-
-        this.title.subscribe(    function(){Common.mediator.emitEvent('models:story:haschanges')});
-        this.explainer.subscribe(function(){Common.mediator.emitEvent('models:story:haschanges')});
-        this.hero.subscribe(     function(){Common.mediator.emitEvent('models:story:haschanges')});
 
         this.loadEvent = function(o) {
             var event;
@@ -191,6 +181,8 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         };
         Common.mediator.addListener('models:events:save:success', this.eventSaveSuccess);
     };
+
+    Story.prototype = new Editable();
 
     Story.prototype.toJSON = function() {
         var copy = ko.toJS(this),

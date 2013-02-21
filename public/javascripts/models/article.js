@@ -36,7 +36,7 @@ define(['Knockout', 'Common'], function (ko, Common) {
     };
 
     this.setColour = function(item, e) {
-        var colour = parseInt(e.srcElement.getAttribute('data-tone') || 0, 10);
+        var colour = parseInt($(e.target).data('tone') || 0, 10);
         item.colour(colour === item.colour() ? 0 : colour);
         Common.mediator.emitEvent('models:story:haschanges');
     }
