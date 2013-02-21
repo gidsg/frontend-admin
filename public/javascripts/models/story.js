@@ -11,17 +11,15 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
         this.title = ko.observable(opts.title || '');
         this.explainer = ko.observable(opts.explainer || '(No synopsis)');
         this.hero = ko.observable(opts.hero || '');
-
-        // Make these editable inline 
-        this._makeEditable(['title', 'explainer', 'hero']);
-
         this.id = ko.observable(opts.id);
         this.events = ko.observableArray();
 
+        // Track for editability / saving
+        this._makeEditable(['title', 'explainer', 'hero']);
+
         // Temporary
-        this._oldTitle = ko.observable();
-        this._selected = ko.observable();
-        this._tentative   = ko.observable(opts._tentative); // No id means it's a new un-persisted event,
+        this._selected = ko.observable(); // The selected event
+        this._tentative = ko.observable(opts._tentative); // No id means it's a new un-persisted event,
 
         // Explainer - for textarea, replace <br/> with \n 
         this._explainerBreaks = ko.computed({
@@ -86,21 +84,6 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
                 self.id("" + Math.floor(Math.random()*1000000));
             }
             
-            // Sort by importance then by date.  Both descending. This'll probably need changing.
-            /*
-            this.content.sort(function (left, right) {
-                var li = left.importance(),
-                    ri = right.importance(),
-                    ld = left.webPublicationDate(),
-                    rd = right.webPublicationDate();
-                if (li === ri) {
-                    return (ld > rd) ? -1 : 1;
-                } else {
-                    return (li > ri) ? -1 : 1;
-                }
-            });
-            */
-
             // Sort by date, descending.
             this.events.sort(function (left, right) {
                 var ld = left.startDate(),
@@ -158,43 +141,9 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
                 self.save();
             }, saveInterval);
         };
-
-        this.sanitize = function (str) {
-            str = str
-                .replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'')
-                .replace(/[^\w]+/g, ' ') // unfair on utf-8 IMHO
-                .replace(/(^\w|\w$)/g, '');
-            return str;
-        };
-
-        this.slugify = function (str) {
-            str = str
-                .replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'')
-                .toLowerCase()
-                .replace(/[^\w]+/g, '-') // unfair on utf-8 IMHO
-                .replace(/(^-|-$)/g, '');
-            return str;
-        };
-
-        this.eventSaveSuccess = function() {
-            // Show success
-        };
-        Common.mediator.addListener('models:events:save:success', this.eventSaveSuccess);
     };
 
     Story.prototype = new Editable();
-
-    Story.prototype.toJSON = function() {
-        var copy = ko.toJS(this),
-            prop;
-        // Strip temp vars starting '_'
-        for (prop in copy) {
-            if (0 === prop.indexOf('_')) {
-                delete copy[prop];
-            }
-        }
-        return copy;
-    };
 
     return Story;
 });

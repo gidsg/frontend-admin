@@ -13,15 +13,16 @@ define(['models/editable', 'Knockout', 'Common'], function (Editable,  ko, Commo
         this.picture    = ko.observable(opts.picture);
         this.rdfType    = opts.rdfType || 'http://schema.org/Person';
 
-        // Make these editable inline 
-        this._makeEditable(['name', 'explainer', 'role', 'picture']);
+        // Track for editability / saving
+        this._makeEditable(['name', 'explainer', 'importance', 'role', 'picture']);
 
         this.bump = function() {
             self.importance(self.importance() ? 0 : 1);
+            Common.mediator.emitEvent('models:story:haschanges');
         };
     };
 
     Agent.prototype = new Editable();
 
     return Agent;
-})
+});

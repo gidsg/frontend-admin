@@ -69,18 +69,18 @@
 
         <p class="muted">Name</p>
         <p>
-            <span class="story-title" data-edit="title" data-bind="
-                visible: !_editing_title(),
-                text: title() ? title : '(no title)',
-                click: _edit
-                "></span>
+            <div data-bind="visible: !_editing_title()">
+                <span class="story-title" data-edit="title" data-bind="
+                    text: title() ? title : '(no title)',
+                    click: _edit
+                    "></span>
+                <span class="cta"> | <a data-bind="event: {click: $root.stories.deleteSelected}">delete Story</a>
+            </div>
             <input type="text" placeholder="Story Title" class="story-title" data-bind="
                 visible: _editing_title,
                 value: title,
                 hasfocus: _editing_title
             "/>
-            <span class="cta" data-bind="visible: !events().length">
-                | <a data-bind="event: {click: $root.stories.deleteSelected}">delete Story</a>
         </p>
 
         <p>
@@ -164,24 +164,24 @@
         <!-- An SELCTED event: -->
         <!-- ko if: $parent._selected() === $data -->
 
-            <span class="event-title" data-edit="title" data-bind="
-                visible: !_editing_title(),
-                text: title() ? title : '(no title)',
-                click: _edit
-                "></span>
+            <span data-bind="visible: !_editing_title()">
+                <span class="event-title" data-edit="title" data-bind="
+                    text: title() ? title : '(no title)',
+                    click: _edit
+                    "></span>
+                <span class="cta">
+                    | <a data-bind="click: $parent.clearSelected">collapse</a>
+                    | <a data-bind="click: $parent.deleteEvent">delete Chapter</a>
+                </span>
+            </span>
+
             <input type="text" placeholder="Chapter Title" data-bind="
                 visible: _editing_title,
                 value: title,
                 hasfocus: _editing_title
             "/>
 
-            <span class="cta">
-                | <a data-bind="click: $parent.clearSelected">collapse</a>
-                | <a data-bind="click: $parent.deleteEvent">delete Chapter</a>
-            </span>
-
             <div class="event-innards">
-
                 <p>
                     <p class="muted">Articles</p>
                     <div class="event-articles" data-bind="
@@ -213,6 +213,7 @@
                         | <a data-bind="event: {click: addAgentOrganization}">add Organisation</a>
                     </span>
                 </p>
+
                 <div class="event-agents" data-bind="
                     template: {name: 'event_agent_template', foreach: agents}
                     "></div>
@@ -221,10 +222,10 @@
                 <!-- /ko -->
 
                 <p>
-                <span class="muted">Takes place on</span>
+                    <span class="muted">Takes place on</span>
                 </p>
                 <p class="synopsis">
-                    <input type="date" class="input-medium" data-bind='value: _prettyDate, valueUpdate:     "afterkeydown"'/>
+                    <input type="date" class="input-medium" data-bind='value: _prettyDate, valueUpdate: "afterkeydown"'/>
                     <span class="muted">at</span>
                     <input type="time" class="input-medium" data-bind='value: _prettyTime, valueUpdate: "afterkeydown"'/>
                 </p>

@@ -25,8 +25,8 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
         this.explainer  = ko.observable(opts.explainer || '(No synopsis)');
         this.importance = ko.observable(opts.importance || importanceDefault);
         
-        // Make these editable inline 
-        this._makeEditable(['title', 'explainer']);
+        // Track for editability / saving 
+        this._makeEditable(['title', 'explainer', 'importance']);
 
         // Content
         this.content = ko.observableArray();
@@ -97,10 +97,6 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
             });
         }
 
-        this._isValid = ko.computed(function () {
-            return true; // TODO validate
-        }, this);
-        
         this.addArticle = function(article) {
             var id, 
                 included;
@@ -194,7 +190,7 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
             } else {
                 self.importance(importanceBumped);
             }
-            Common.mediator.emitEvent('models:story:haschanges');
+            //Common.mediator.emitEvent('models:story:haschanges');
         };
 
         this.bumpContent = function(item) {
@@ -230,18 +226,6 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
     };
 
     Event.prototype = new Editable();
-
-    Event.prototype.toJSON = function() {
-        var copy = ko.toJS(this),
-            prop;
-        // Strip temp vars starting '_'
-        for (prop in copy) {
-            if (0 === prop.indexOf('_')) {
-                delete copy[prop];
-            }
-        }
-        return copy;
-    };
 
     return Event;
 });
