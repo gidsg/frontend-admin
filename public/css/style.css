@@ -160,20 +160,19 @@ textarea.event-explainer {
 
 .icon-star:hover, .icon-star-empty:hover { cursor: pointer; }
 
-.article-title { font-size: 12px; color: #005689; display: inline-block; width: 90%; }
+.article-title { font-size: 12px; color: #005689; display: inline-block; }
 .article-id { font-size: 1em; color: #999; margin-bottom: 0; font-size: 0.9em; }
 
 .event-meta { color: #ccc; margin-bottom: 0; font-size: 12px; line-height: 0.99em; }
 
-.article-meta { color: #999; margin: 0; font-size: 11px; line-height: 0.99em; }
+.article-meta { color: #BFBF9F; margin: 0; font-size: 11px; line-height: 0.99em; }
 
 .event-articles,
 .event-articles .article-meta {margin: 0 0 0 18px;}
 
 .article-colour {
-    background-color: #BD3535;
-    color: #fff;
-    padding: 1px 2px 0 2px;
+    color: #E0AF1B;
+    padding: 1px 3px 0 3px;
     margin: 0 0 0 4px;
 }
 
@@ -186,13 +185,21 @@ textarea.event-explainer {
     border-color: rgba(102,102,102,0.2);
 }
 
-.articles .article {
+.article {
     cursor: move;
     padding-left: 3px;
 }
 
-.articles .article:hover {
+.article:hover {
     background-color: #fff;
+}
+
+.article .cta {
+    display: none;
+}
+
+.article:hover .cta {
+    display: inline-block;
 }
 
 /** only display close/delete on hover */
@@ -255,8 +262,8 @@ img.agent-picture {
 /* Articles */
 
 .article .article-tone-picker {
-    padding: 0 0 5px 17px;
-    margin: 2px 0 0 0;
+    padding: 0 0 0px 18px;
+    margin: 2px 0 0 -3px;
     position: absolute;
 }
 
@@ -264,20 +271,7 @@ img.agent-picture {
     z-index: 10;
     width: 60%;
     background-color: white;
-    }
-
-
-.article .article-delete { display: none; }
-.article:hover .article-delete { 
-    margin-top: 20px;
-    display: block;
-    position: absolute;
-    padding: 0 0 5px 19px;
-    z-index: 10;
-    border-bottom: 1px solid #ccc;
-    box-shadow: 0px 15px 30px rgba(0,0,0,.2);
-    width: 60%;
-    background-color: white;
+    box-shadow: 0px 15px 20px rgba(0,0,0,.4);
 }
 
 .article:hover .article-tone {display: none;}
@@ -285,10 +279,8 @@ img.agent-picture {
 .article-tone-picker label {display: none;}
 .article:hover .article-tone-picker label {display: inline;}
 
-
-
 .article-tone-picker .value {
-    color: #333;
+    color: #666;
     font-size: 10px;
     text-transform: capitalize;
     padding: 0 2px; 
@@ -299,13 +291,8 @@ img.agent-picture {
     color: red;
 }
 
-.article-tone-picker label.picked {
-    color: red;
-}
-
 .article-tone-picker .value:hover {
-    color: #fff;
-    background-color: #333;
+    color: #5bb75b;
     cursor: pointer; 
 }
 

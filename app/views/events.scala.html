@@ -83,7 +83,7 @@
                 hasfocus: _title_editing
             "/>
             <span class="cta" data-bind="visible: !length()">
-                | <a data-bind="event: {click: $root.stories.deleteSelected}">delete this story</a>
+                | <a data-bind="event: {click: $root.stories.deleteSelected}">delete Story</a>
         </p>
 
         <p>
@@ -180,7 +180,7 @@
 
             <span class="cta">
                 | <a data-bind="click: $parent.clearSelected">collapse</a>
-                | <a data-bind="click: $parent.deleteEvent">delete this chapter</a>
+                | <a data-bind="click: $parent.deleteEvent">delete Chapter</a>
             </span>
 
 
@@ -251,7 +251,9 @@
             text: webTitle() ? webTitle : id, 
             attr: {href: _mDot}
             "></a>
-        
+        <span class="cta"> 
+            | <a data-bind='click: $parent.removeArticle'>delete Article</a></span>
+
         <div class="article-meta">
             <span data-bind="text: _humanDate"></span>
             <span class="article-colour" data-bind="
@@ -276,12 +278,7 @@
             <label data-bind="click: setColour" data-tone="5">
                 <span class="value" data-tone="5">Light</span>
             </label>
-            </p>
-
-        <p class="article-delete">
-            <a class="cta" data-bind='click: $parent.removeArticle'>Delete</a>
         </p>
-    
     </div>
 </script>
 
@@ -302,7 +299,7 @@
                 click: _edit
                 "></span>
             <span class="cta">
-                | <a data-bind="event: {click: $parent.removeAgent}">delete</a>
+                | <a data-bind="event: {click: $parent.removeAgent}">delete Agent</a>
                 </span>
         </div>
         <input type="text" placeholder="Name" data-bind="
