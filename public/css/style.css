@@ -66,6 +66,12 @@ input[type=checkbox].status {
     font-size: 12px;
 }
 
+
+.story-title, 
+.story-title-closed {
+    font-weight: bold;
+}
+
 /** Events */
 
 .scrollable {
@@ -303,8 +309,7 @@ label {
     margin: 0;
 }
 
-
-.hoverable:hover { color: red; cursor: pointer; }
+.hoverable:hover { color: #5BB75B; cursor: pointer; }
 
 .saving { display: inline; right: 0; position: fixed;  margin-right: 42px; }
 .saving span {

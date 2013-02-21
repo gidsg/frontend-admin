@@ -76,6 +76,13 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
             this.startDate(d);
         }
 
+        // Explainer - for textarea, replace <br/> with \n 
+        this._explainerBreaks = ko.computed({
+            read: function(value) {return this.explainer().replace(/\s*<br\s*\/>\s*/g, '\n')},
+            write: function(value) {this.explainer(value.replace(/(\r\n|\n|\r)/gm, '<br />'))},
+            owner: this
+        });
+
         // Administrative vars
         this._tentative   = ko.observable(opts._tentative);
         this._hidden      = ko.observable();

@@ -17,21 +17,37 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         // Temporary
         this._oldTitle = ko.observable();
         this._selected = ko.observable();
-
         this._tentative   = ko.observable(opts._tentative); // No id means it's a new un-persisted event,
-        this._editing     = ko.observable(this._tentative()); // so mark as editable
-        this._hidden      = ko.observable();
 
-        this.length = ko.computed(function(){
-            return this.events().length;
-        }, this)
+        // Explainer - for textarea, replace <br/> with \n 
+        this._explainerBreaks = ko.computed({
+            read: function(value) {return this.explainer().replace(/\s*<br\s*\/>\s*/g, '\n')},
+            write: function(value) {this.explainer(value.replace(/(\r\n|\n|\r)/gm, '<br />'))},
+            owner: this
+        });
 
         // Lsisteners on editable observables
         this._title_editing = ko.observable(opts._tentative);
         this._title_edit    = function() { this._title_editing(true) };
 
         this._explainer_editing = ko.observable(false);
-        this._explainer_edit    = function() { this._explainer_editing(true) };
+        this._explainer_edit    = function() {this._explainer_editing(true)};
+
+        /*
+        this._explainer_edit    = function() {
+            this._explainer_editing(true);
+            var editor = new wysihtml5.Editor(this.id(), { // id of textarea element
+                toolbar: "wysihtml5-toolbar", // id of toolbar element
+                parserRules: wysihtml5ParserRules // defined in parser rules set 
+            });
+            editor.on("change", function(){
+                self.explainer(editor.textareaElement.value);
+            });
+            editor.on("blur", function(){
+                self._explainer_editing(false);
+            });
+        };
+        */
 
         this._hero_editing = ko.observable(false);
         this._hero_edit    = function() { this._hero_editing(true) };

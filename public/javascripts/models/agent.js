@@ -14,6 +14,13 @@ define(['Knockout', 'Common'], function (ko, Common) {
 
         this.rdfType    = opts.rdfType || 'http://schema.org/Person';
 
+        // Explainer - for textarea, replace <br/> with \n 
+        this._explainerBreaks = ko.computed({
+            read: function(value) {return this.explainer().replace(/\s*<br\s*\/>\s*/g, '\n')},
+            write: function(value) {this.explainer(value.replace(/(\r\n|\n|\r)/gm, '<br />'))},
+            owner: this
+        });
+
         // Generate boolean observables to denote editable states
         for(var prop in this) {
             if(this.hasOwnProperty(prop) && this[prop].subscribe) {
