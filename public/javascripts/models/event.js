@@ -88,11 +88,11 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
         this._hidden      = ko.observable();
 
         // Lsisteners on editable observables
-        this._title_editing = ko.observable(opts._tentative);
-        this._title_edit    = function() { this._title_editing(true) };
+        this._editing_title = ko.observable(opts._tentative);
+        this._edit_title    = function() { this._editing_title(true) };
 
-        this._explainer_editing = ko.observable(false);
-        this._explainer_edit    = function() { this._explainer_editing(true) };
+        this._editing_explainer = ko.observable(false);
+        this._explainer_edit    = function() { this._editing_explainer(true) };
 
         this.title.subscribe(    function(){Common.mediator.emitEvent('models:story:haschanges')});
         this.explainer.subscribe(function(){Common.mediator.emitEvent('models:story:haschanges')});

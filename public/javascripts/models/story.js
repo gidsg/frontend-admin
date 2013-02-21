@@ -27,30 +27,14 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         });
 
         // Lsisteners on editable observables
-        this._title_editing = ko.observable(opts._tentative);
-        this._title_edit    = function() { this._title_editing(true) };
+        this._editing_title = ko.observable(opts._tentative);
+        this._edit_title    = function() { this._editing_title(true) };
 
-        this._explainer_editing = ko.observable(false);
-        this._explainer_edit    = function() {this._explainer_editing(true)};
+        this._editing_explainer = ko.observable(false);
+        this._explainer_edit    = function() {this._editing_explainer(true)};
 
-        /*
-        this._explainer_edit    = function() {
-            this._explainer_editing(true);
-            var editor = new wysihtml5.Editor(this.id(), { // id of textarea element
-                toolbar: "wysihtml5-toolbar", // id of toolbar element
-                parserRules: wysihtml5ParserRules // defined in parser rules set 
-            });
-            editor.on("change", function(){
-                self.explainer(editor.textareaElement.value);
-            });
-            editor.on("blur", function(){
-                self._explainer_editing(false);
-            });
-        };
-        */
-
-        this._hero_editing = ko.observable(false);
-        this._hero_edit    = function() { this._hero_editing(true) };
+        this._editing_hero = ko.observable(false);
+        this._edit_hero    = function() { this._editing_hero(true) };
 
         this.title.subscribe(    function(){Common.mediator.emitEvent('models:story:haschanges')});
         this.explainer.subscribe(function(){Common.mediator.emitEvent('models:story:haschanges')});

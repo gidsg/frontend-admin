@@ -70,14 +70,14 @@
         <p class="muted">Name</p>
         <p>
             <span class="story-title" data-bind="
-                visible: !_title_editing(),
+                visible: !_editing_title(),
                 text: title() ? title : '(no title)',
-                click: _title_edit
+                click: _edit_title
                 "></span>
             <input type="text" placeholder="Story Title" class="story-title" data-bind="
-                visible: _title_editing,
+                visible: _editing_title,
                 value: title,
-                hasfocus: _title_editing
+                hasfocus: _editing_title
             "/>
             <span class="cta" data-bind="visible: !events().length">
                 | <a data-bind="event: {click: $root.stories.deleteSelected}">delete Story</a>
@@ -100,18 +100,18 @@
         <p class="muted">Hero image</p>
         <p>
             <img class="story-hero" data-bind="
-                visible: !_hero_editing() && hero(),
+                visible: !_editing_hero() && hero(),
                 attr: {src: hero},
-                click: _hero_edit
+                click: _edit_hero
             "/>
             <span class="story-hero" data-bind="
-                visible: !_hero_editing() && !hero(),
-                click: _hero_edit
+                visible: !_editing_hero() && !hero(),
+                click: _edit_hero
                 ">(none)</span>
             <input type="text" class="story-hero" placeholder="http://... image url" data-bind="
-                visible: _hero_editing,
+                visible: _editing_hero,
                 value: hero,
-                hasfocus: _hero_editing
+                hasfocus: _editing_hero
             "/>
         </p>
 
@@ -119,14 +119,14 @@
             <p class="muted">Story Synopsis</p>
             <p>
                 <div class="synopsis" data-bind="
-                    visible: !_explainer_editing(),
+                    visible: !_editing_explainer(),
                     html: explainer() ? explainer : '(no explainer)',
                     click: _explainer_edit
                     "></div>
                 <textarea data-bind="
-                    visible: _explainer_editing,
+                    visible: _editing_explainer,
                     value: _explainerBreaks,
-                    hasfocus: _explainer_editing
+                    hasfocus: _editing_explainer
                     "/></textarea>
             </p>
         </p>
@@ -165,14 +165,14 @@
         <!-- ko if: $parent._selected() === $data -->
 
             <span class="event-title" data-bind="
-                visible: !_title_editing(),
+                visible: !_editing_title(),
                 text: title() ? title : '(no title)',
-                click: _title_edit
+                click: _edit_title
                 "></span>
             <input type="text" placeholder="Chapter Title" data-bind="
-                visible: _title_editing,
+                visible: _editing_title,
                 value: title,
-                hasfocus: _title_editing
+                hasfocus: _editing_title
             "/>
 
             <span class="cta">
@@ -195,14 +195,14 @@
                 <p>
                     <p class="muted">Chapter Synopsis</p>
                     <div class="synopsis" data-bind="
-                        visible: !_explainer_editing(),
+                        visible: !_editing_explainer(),
                         html: explainer() ? explainer : '(no explainer)',
                         click: _explainer_edit
                         "></div>
                     <textarea class="synopsis" data-bind="
-                        visible: _explainer_editing,
+                        visible: _editing_explainer,
                         value: _explainerBreaks,
-                        hasfocus: _explainer_editing
+                        hasfocus: _editing_explainer
                     "/></textarea>
                 </p>
 
