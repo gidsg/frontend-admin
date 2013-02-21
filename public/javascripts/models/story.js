@@ -17,24 +17,24 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
         // Temporary
         this._oldTitle = ko.observable();
         this._selected = ko.observable();
-
         this._tentative   = ko.observable(opts._tentative); // No id means it's a new un-persisted event,
-        this._editing     = ko.observable(this._tentative()); // so mark as editable
-        this._hidden      = ko.observable();
 
-        this.length = ko.computed(function(){
-            return this.events().length;
-        }, this)
+        // Explainer - for textarea, replace <br/> with \n 
+        this._explainerBreaks = ko.computed({
+            read: function(value) {return this.explainer().replace(/\s*<br\s*\/>\s*/g, '\n')},
+            write: function(value) {this.explainer(value.replace(/(\r\n|\n|\r)/gm, '<br />'))},
+            owner: this
+        });
 
         // Lsisteners on editable observables
-        this._title_editing = ko.observable(opts._tentative);
-        this._title_edit    = function() { this._title_editing(true) };
+        this._editing_title = ko.observable(opts._tentative);
+        this._edit_title    = function() { this._editing_title(true) };
 
-        this._explainer_editing = ko.observable(false);
-        this._explainer_edit    = function() { this._explainer_editing(true) };
+        this._editing_explainer = ko.observable(false);
+        this._explainer_edit    = function() {this._editing_explainer(true)};
 
-        this._hero_editing = ko.observable(false);
-        this._hero_edit    = function() { this._hero_editing(true) };
+        this._editing_hero = ko.observable(false);
+        this._edit_hero    = function() { this._editing_hero(true) };
 
         this.title.subscribe(    function(){Common.mediator.emitEvent('models:story:haschanges')});
         this.explainer.subscribe(function(){Common.mediator.emitEvent('models:story:haschanges')});

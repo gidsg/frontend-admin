@@ -32,23 +32,23 @@ curl([
     viewModel.articles.search();
 
     function onDragStart(event) {
-        event.target.style.opacity = '0.3';  // this / e.target is the source node.
+        $(event.target).css('opacity', '0.3'); 
     }
 
     function onDragEnd(event) {
         setTimeout(function(){
-            event.target.style.opacity = '1';
+            $(event.target).css('opacity', '1');
         }, 1000);
     }
 
     function onDragOver(event) {
         event.preventDefault();
-        event.currentTarget.style.background = '#DFF0D8';
+        $(event.currentTarget).addClass('onDragOver');
     }
 
     function onDragLeave(event) {
         event.preventDefault();
-        event.currentTarget.style.background = 'inherit';  
+        $(event.currentTarget).removeClass('onDragOver');
     }
 
     function onDrop(event) {
@@ -57,11 +57,11 @@ curl([
         var el = event.currentTarget;
         var target = ko.dataFor(el);
         target.addArticle(id)
-
-        el.style.background = '#CEE8C3';
+        $(el).removeClass('onDragOver');
+        $(el).addClass('onDrop');
         setTimeout(function(){
-            el.style.background = 'inherit';  
-        }, 1000);
+            $(el).removeClass('onDrop');
+       }, 1000);
     }
 
     ko.bindingHandlers.makeDraggable = {

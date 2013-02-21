@@ -37,8 +37,7 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
         });
 
         // Agents
-        this.agents     = ko.observableArray(); // people, organisations etc.
-        self.agents.removeAll(); 
+        this.agents = ko.observableArray(); // people, organisations etc.
         (opts.agents || []).map(function(a){
             self.agents.push(new Agent(a));
         });
@@ -77,16 +76,23 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
             this.startDate(d);
         }
 
+        // Explainer - for textarea, replace <br/> with \n 
+        this._explainerBreaks = ko.computed({
+            read: function(value) {return this.explainer().replace(/\s*<br\s*\/>\s*/g, '\n')},
+            write: function(value) {this.explainer(value.replace(/(\r\n|\n|\r)/gm, '<br />'))},
+            owner: this
+        });
+
         // Administrative vars
         this._tentative   = ko.observable(opts._tentative);
         this._hidden      = ko.observable();
 
         // Lsisteners on editable observables
-        this._title_editing = ko.observable(opts._tentative);
-        this._title_edit    = function() { this._title_editing(true) };
+        this._editing_title = ko.observable(opts._tentative);
+        this._edit_title    = function() { this._editing_title(true) };
 
-        this._explainer_editing = ko.observable(false);
-        this._explainer_edit    = function() { this._explainer_editing(true) };
+        this._editing_explainer = ko.observable(false);
+        this._explainer_edit    = function() { this._editing_explainer(true) };
 
         this.title.subscribe(    function(){Common.mediator.emitEvent('models:story:haschanges')});
         this.explainer.subscribe(function(){Common.mediator.emitEvent('models:story:haschanges')});
@@ -109,17 +115,21 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
                 included;
             if (typeof article === 'string') {
                 id = self.urlPath(article);
-                article = new Article({id: id})
+                if (id) {
+                    article = new Article({id: id})
+                }
             } else { // We assume it's an Article. Check using its constructor? 
                 id = article.id(); 
             }
-            included = _.some(self.content(), function(item){
-                return item.id() === id;
-            });
-            if (!included) {
-                self.content.unshift(article);
-                self.decorateContent();
-                Common.mediator.emitEvent('models:story:haschanges');
+            if (id) {
+                included = _.some(self.content(), function(item){
+                    return item.id() === id;
+                });
+                if (!included) {
+                    self.content.unshift(article);
+                    self.decorateContent();
+                    Common.mediator.emitEvent('models:story:haschanges');
+                }
             }
         };
 
@@ -172,6 +182,21 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
             }
         };
 
+        this.addAgentPerson = function(article) {
+            self.agents.unshift(new Agent({rdfType: 'http://schema.org/Person'}));
+        };
+
+        this.addAgentOrganization = function(article) {
+            self.agents.unshift(new Agent({rdfType: 'http://schema.org/Organization'}));
+        };
+
+        this.removeAgent = function(article) {
+            var result = window.confirm("Are you sure you want to DELETE this agent?");
+            if (!result) return;
+            self.agents.remove(article);
+            Common.mediator.emitEvent('models:story:haschanges');
+        };
+
         this.bump = function() {
             if (self.importance() > importanceDefault) {
                 self.importance(importanceDefault);
@@ -205,9 +230,11 @@ define(['models/article', 'models/agent', 'models/place', 'Knockout', 'Config', 
         this.urlPath = function(url) {
             var a = document.createElement('a');
             a.href = url;
-            a = a.pathname + a.search;
-            a = a.indexOf('/') === 0 ? a.substr(1) : a;
-            return a;
+            if (a.hostname.match(/guardian/)) {
+                a = a.pathname;
+                a = a.indexOf('/') === 0 ? a.substr(1) : a;
+                return a;
+            }
         };
     };
 
