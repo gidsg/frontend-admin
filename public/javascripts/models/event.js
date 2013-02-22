@@ -185,12 +185,7 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
         };
 
         this.bump = function() {
-            if (self.importance() > importanceDefault) {
-                self.importance(importanceDefault);
-            } else {
-                self.importance(importanceBumped);
-            }
-            //Common.mediator.emitEvent('models:story:haschanges');
+            self.importance(self.importance() === importanceBumped ? importanceDefault : importanceBumped);
         };
 
         this.bumpContent = function(item) {
