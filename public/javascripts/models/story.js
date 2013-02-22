@@ -14,6 +14,11 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
         this.id = ko.observable(opts.id);
         this.events = ko.observableArray();
 
+        this.createdByEmail = ko.observable(opts.createdBy ? opts.createdBy.email : '');
+        this.createdByDatePretty  = ko.computed(function(){
+            return opts.createdBy ? humanized_time_span(opts.createdBy.date) : '';
+        }, this);
+
         // Track for editability / saving
         this._makeEditable(['title', 'explainer', 'hero']);
 
