@@ -13,15 +13,14 @@ curl([
     Config,
     Common
 ) {
-    var viewModel = {},
-        self = this;
+    var viewModel = {};
 
     if(!Common.hasVh()) {
         //this fixes the article and event lists to the height of the viewport
         //If CSS3 vh units are not supported
         var h = (window.innerHeight - 200) + 'px';
-        document.querySelector('.articles').style.maxHeight = h;
-        document.querySelector('.story').style.maxHeight = h;
+        $('.articles').css('maxHeight', h);
+        $('.story').css(   'maxHeight', h);
     }
 
     viewModel.articles = new Articles();

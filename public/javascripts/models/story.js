@@ -1,4 +1,4 @@
-define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, Common, Reqwest) {
+define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], function (Editable, Event, ko, Common, Reqwest) {
 
     var Story = function(opts) {
         var endpoint = '/story',
@@ -8,16 +8,18 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
 
         opts = opts || {};
 
-        this.id = ko.observable(opts.id);
         this.title = ko.observable(opts.title || '');
         this.explainer = ko.observable(opts.explainer || '(No synopsis)');
         this.hero = ko.observable(opts.hero || '');
+        this.id = ko.observable(opts.id);
         this.events = ko.observableArray();
 
+        // Track for editability / saving
+        this._makeEditable(['title', 'explainer', 'hero']);
+
         // Temporary
-        this._oldTitle = ko.observable();
-        this._selected = ko.observable();
-        this._tentative   = ko.observable(opts._tentative); // No id means it's a new un-persisted event,
+        this._selected = ko.observable(); // The selected event
+        this._tentative = ko.observable(opts._tentative); // No id means it's a new un-persisted event,
 
         // Explainer - for textarea, replace <br/> with \n 
         this._explainerBreaks = ko.computed({
@@ -25,20 +27,6 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
             write: function(value) {this.explainer(value.replace(/(\r\n|\n|\r)/gm, '<br />'))},
             owner: this
         });
-
-        // Lsisteners on editable observables
-        this._editing_title = ko.observable(opts._tentative);
-        this._edit_title    = function() { this._editing_title(true) };
-
-        this._editing_explainer = ko.observable(false);
-        this._explainer_edit    = function() {this._editing_explainer(true)};
-
-        this._editing_hero = ko.observable(false);
-        this._edit_hero    = function() { this._editing_hero(true) };
-
-        this.title.subscribe(    function(){Common.mediator.emitEvent('models:story:haschanges')});
-        this.explainer.subscribe(function(){Common.mediator.emitEvent('models:story:haschanges')});
-        this.hero.subscribe(     function(){Common.mediator.emitEvent('models:story:haschanges')});
 
         this.loadEvent = function(o) {
             var event;
@@ -96,21 +84,6 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
                 self.id("" + Math.floor(Math.random()*1000000));
             }
             
-            // Sort by importance then by date.  Both descending. This'll probably need changing.
-            /*
-            this.content.sort(function (left, right) {
-                var li = left.importance(),
-                    ri = right.importance(),
-                    ld = left.webPublicationDate(),
-                    rd = right.webPublicationDate();
-                if (li === ri) {
-                    return (ld > rd) ? -1 : 1;
-                } else {
-                    return (li > ri) ? -1 : 1;
-                }
-            });
-            */
-
             // Sort by date, descending.
             this.events.sort(function (left, right) {
                 var ld = left.startDate(),
@@ -168,41 +141,9 @@ define(['models/event', 'Knockout', 'Common', 'Reqwest'], function (Event, ko, C
                 self.save();
             }, saveInterval);
         };
-
-        this.sanitize = function (str) {
-            str = str
-                .replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'')
-                .replace(/[^\w]+/g, ' ') // unfair on utf-8 IMHO
-                .replace(/(^\w|\w$)/g, '');
-            return str;
-        };
-
-        this.slugify = function (str) {
-            str = str
-                .replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'')
-                .toLowerCase()
-                .replace(/[^\w]+/g, '-') // unfair on utf-8 IMHO
-                .replace(/(^-|-$)/g, '');
-            return str;
-        };
-
-        this.eventSaveSuccess = function() {
-            // Show success
-        };
-        Common.mediator.addListener('models:events:save:success', this.eventSaveSuccess);
     };
 
-    Story.prototype.toJSON = function() {
-        var copy = ko.toJS(this),
-            prop;
-        // Strip temp vars starting '_'
-        for (prop in copy) {
-            if (0 === prop.indexOf('_')) {
-                delete copy[prop];
-            }
-        }
-        return copy;
-    };
+    Story.prototype = new Editable();
 
     return Story;
 });
