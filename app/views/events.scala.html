@@ -24,8 +24,8 @@
 
   <div class="storify-events span8">
     <p class="alerts">
-        <span class="pendingSave" data-bind="visible: $root.pendingSave()"></span>
-        <span class="failedSave"  data-bind="visible: $root.failedSave()"></span>
+        <span class="pendingSave" data-bind="css: {visible: $root.pendingSave()}"></span>
+        <span class="failedSave"  data-bind="css: {visible: $root.failedSave()}"></span>
     </p>
     <button class="btn btn-mini btn-success" data-bind="
         event: {click: stories.createStory},
@@ -47,7 +47,7 @@
 
 <!-- template: story in closed state -->
 <script type="text/html" id="story_closed_template">
-    <p> 
+    <div class="story-wrap">
         <span class="story-title-closed hoverable" data-bind="
             text: title().length > 0 ? title : '(Un-titled story)',
             event: {click: $root.stories.setSelected}
@@ -55,11 +55,11 @@
         <span class="count" data-bind="
             text: (events().length ? events().length : 'no') + ' chapter'+(events().length===1?'':'s')
             "></span>
-        <span class="meta">
-            <span class="author" data-bind="text: createdByEmail"></span>
-            <span data-bind="text: createdByDatePretty"></span>
-        </span>
-    </p>
+        <div class="meta">
+            edited by <span class="author" data-bind="text: lastModifiedEmail"></span>
+            <span data-bind="text: lastModifiedDatePretty"></span>
+        </div>
+    </div>
 </script>
 
 <!-- template: story in open state -->
@@ -79,10 +79,6 @@
                     text: title() ? title : '(no title)',
                     click: _edit
                     "></span>
-                <span class="meta">
-                    <span class="author" data-bind="text: createdByEmail"></span>,
-                    <span data-bind="text: createdByDatePretty"></span>
-                </span>
                 <span class="cta"> | <a data-bind="event: {click: $root.stories.deleteSelected}">delete Story</a>
             </div>
             <input type="text" placeholder="Story Title" class="story-title" data-bind="

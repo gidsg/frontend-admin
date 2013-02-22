@@ -25,10 +25,6 @@ input.invalid {
     background-color: #F2DEDE;
 }
 
-.saving{
-    cursor: wait;
-}
-
 fieldset, 
 input[type=text] {
     box-sizing:border-box;
@@ -66,6 +62,9 @@ input[type=checkbox].status {
     font-size: 12px;
 }
 
+.story-wrap {
+    margin: 0 0 10px 0;
+}
 
 .story-title, 
 .story-title-closed {
@@ -305,18 +304,27 @@ label {
 
 .hoverable:hover { color: #5BB75B; cursor: pointer; }
 
-.alerts { display: inline; right: 0; position: fixed;  margin-right: 42px; }
+.alerts { 
+    right: 0; 
+    position: fixed;  
+    margin-right: 42px;
+}
+
 .alerts span {
-    display: inline-block; 
     background-repeat: no-repeat;
     width: 32px; height: 32px;
 }
+
 .alerts span.pendingSave {
     background-image: url(/assets/images/ajax-loader.gif);
 }
 
 .alerts span.failedSave {
     background-image: url(/assets/images/ajax-failed.png);
+}
+
+.visible {
+    display: block;
 }
 
 .color-light, .color-dark { 
