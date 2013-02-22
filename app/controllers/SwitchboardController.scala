@@ -6,7 +6,6 @@ import play.api.libs.concurrent.Akka
 import tools.S3
 import conf._
 import io.Source
-import com.gu.management.DefaultSwitch
 
 case class Switch(name: String, isOn: Boolean, description: String)
 
