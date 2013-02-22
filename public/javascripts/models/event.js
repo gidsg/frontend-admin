@@ -25,9 +25,6 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
         this.explainer  = ko.observable(opts.explainer || '(No synopsis)');
         this.importance = ko.observable(opts.importance || importanceDefault);
         
-        // Track for editability / saving 
-        this._makeEditable(['title', 'explainer', 'importance']);
-
         // Content
         this.content = ko.observableArray();
         (opts.content || []).map(function(a){
@@ -79,6 +76,9 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
             this.startDate(d);
         }
 
+        // Track for editability / saving 
+        this._makeEditable(['title', 'explainer', 'importance', 'startDate']);
+
         // Explainer - for textarea, replace <br/> with \n 
         this._explainerBreaks = ko.computed({
             read: function(value) {return this.explainer().replace(/\s*<br\s*\/>\s*/g, '\n')},
@@ -105,7 +105,7 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
                 if (id) {
                     article = new Article({id: id})
                 }
-            } else { // We assume it's an Article. Check using its constructor? 
+            } else { // We assume it's an Article. Check using its constructor?
                 id = article.id(); 
             }
             if (id) {
