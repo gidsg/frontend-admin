@@ -3,6 +3,8 @@ define(['models/editable', 'Knockout', 'Common'], function (Editable,  ko, Commo
     var Agent = function(opts) {
 
         var opts = opts || {},
+            importanceBumped  = 100,
+            importanceDefault = 50,
             self = this;
 
         this.id         = ko.observable(opts.id);
@@ -17,8 +19,7 @@ define(['models/editable', 'Knockout', 'Common'], function (Editable,  ko, Commo
         this._makeEditable(['name', 'explainer', 'importance', 'role', 'picture']);
 
         this.bump = function() {
-            self.importance(self.importance() ? 0 : 1);
-            Common.mediator.emitEvent('models:story:haschanges');
+            self.importance(self.importance() === importanceBumped ? importanceDefault : importanceBumped);
         };
     };
 

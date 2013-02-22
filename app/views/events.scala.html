@@ -143,7 +143,6 @@
                 'icon-star': importance() > 50
             }
             "></i>
-
         <!-- An UNselected event: -->
         <!-- ko if: $parent._selected() !== $data -->
             <span class="event-title" data-bind="
@@ -290,8 +289,8 @@
             <i data-bind="
                 click: bump,
                 css: {
-                    'icon-star-empty': !importance(),
-                    'icon-star': importance()
+                    'icon-star-empty': importance() <= 50,
+                    'icon-star': importance() > 50
                 }
                 "></i>
             <span class="agent-name" data-edit="name" data-bind="
