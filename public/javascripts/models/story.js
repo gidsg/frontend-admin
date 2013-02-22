@@ -108,11 +108,7 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
                     Common.mediator.emitEvent('models:story:save:success');
                 },
                 error: function() {
-                    if (self._tentative()) {
-                        Common.mediator.emitEvent('models:story:save:error:duplicate');
-                    } else {
-                        Common.mediator.emitEvent('models:story:save:error');
-                    }
+                    Common.mediator.emitEvent('models:story:save:error');
                 }
             });
         };

@@ -26,6 +26,8 @@ curl([
     viewModel.articles = new Articles();
     viewModel.stories  = new Stories({articleCache: viewModel.articles.cache});
     viewModel.pendingSave = ko.observable(false);
+    viewModel.failedSave  = ko.observable(false);
+
 
     // Do an initial article search
     viewModel.articles.search();
@@ -81,12 +83,19 @@ curl([
     Common.mediator.addListener('models:story:haschanges', function(){
         if (viewModel.stories.selected()) {
             viewModel.stories.selected().backgroundSave();            
-            viewModel.pendingSave(true)
+            viewModel.pendingSave(true);
+            viewModel.failedSave(false);
         }
     });
 
     Common.mediator.addListener('models:story:save:success', function(){
-        viewModel.pendingSave(false)
+        viewModel.pendingSave(false);
+        viewModel.failedSave(false);
+    });
+
+    Common.mediator.addListener('models:story:save:error', function(){
+        viewModel.pendingSave(false);
+        viewModel.failedSave(true);
     });
 
     // Render

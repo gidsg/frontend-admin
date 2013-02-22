@@ -23,8 +23,9 @@
   </div>
 
   <div class="storify-events span8">
-    <p class="saving">
-        <span class="muted" data-bind="visible: $root.pendingSave()"></span>
+    <p class="alerts">
+        <span class="pendingSave" data-bind="visible: $root.pendingSave()"></span>
+        <span class="failedSave"  data-bind="visible: $root.failedSave()"></span>
     </p>
     <button class="btn btn-mini btn-success" data-bind="
         event: {click: stories.createStory},
@@ -136,7 +137,7 @@
 <!-- template: event -->
 <script type="text/html" id="event_template">
     <div class="event" data-bind="makeDropabble: true, css: {eventwell: $parent._selected() === $data}">
-        <i data-bind="
+        <i class="icon-star" data-bind="
             click: bump,
             css: {
                 'icon-star-empty': importance() <= 50,
@@ -221,7 +222,7 @@
                 <!-- /ko -->
 
                 <p>
-                    <span class="muted">Takes place on</span>
+                    <span class="muted">Takes place on DD/MM/YYYY at HH:MM</span>
                 </p>
                 <p class="synopsis">
                     <input type="date" class="input-medium" data-bind='value: _prettyDate, valueUpdate: "afterkeydown"'/>
