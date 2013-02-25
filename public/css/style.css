@@ -294,7 +294,6 @@ img.agent-picture {
     display: none;
     cursor: pointer; 
     margin: 0 0 0 2px;
-    text-transform: uppercase;
 }
 
 .article:hover .colour-picker .colour { display: inline; }

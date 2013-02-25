@@ -55,10 +55,10 @@
         <span class="meta count" data-bind="
             text: (events().length ? events().length : 'no') + ' chapter'+(events().length===1?'':'s')
             "></span>
-        <div class="meta" data-bind="if: lastModifiedDatePretty">
+        <div class="meta" data-bind="if: _lastModifiedDatePretty">
             edited by 
-            <span class="author" data-bind="text: lastModifiedEmail"></span>
-            <span data-bind="text: lastModifiedDatePretty"></span>.
+            <span class="author" data-bind="text: _lastModifiedEmail"></span>
+            <span data-bind="text: _lastModifiedDatePretty"></span>.
             <span data-bind="text: '/stories/' + id()"></span>
         </div>
     </div>

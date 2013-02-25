@@ -28,8 +28,8 @@ curl([
     viewModel.pendingSave = ko.observable(false);
     viewModel.failedSave  = ko.observable(false);
 
+    viewModel.stories.loadStories();
 
-    // Do an initial article search
     viewModel.articles.search();
 
     function onDragStart(event) {
@@ -97,6 +97,31 @@ curl([
         viewModel.pendingSave(false);
         viewModel.failedSave(true);
     });
+
+    // Poll for changes to selected story, or to story list
+    setInterval(function(){
+        var story = viewModel.stories.selected();
+        if(story && story._lastModifiedDate() && !viewModel.pendingSave()) {
+            Reqwest({
+                url: '/story/' + story.id(),
+                type: 'json',
+                success: function(resp) {
+                    if (resp.lastModified.date !== story._lastModifiedDate() && !viewModel.pendingSave()) {
+                        story._lastModifiedDate(resp.lastModified.date);
+                        if(!window.confirm("This story has been updated by " + resp.lastModified.email + ". Show their changes?")) return;
+                        // Re-construct Story from response
+                        viewModel.stories.loadSelectedStory(resp);
+                    }
+                },
+                error: function() {
+                    window.alert("Oops! This story has been deleted by someone.");
+                    window.location.reload();
+                }
+            });
+        } else if (!story) {
+            viewModel.stories.loadStories();
+        }
+    }, 5000);
 
     // Render
     ko.applyBindings(viewModel);
