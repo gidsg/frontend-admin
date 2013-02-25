@@ -15,7 +15,15 @@ case class Modified(email: String, date: DateTime)
 case class SContent(
   id: String, 
   importance: Int = 50, 
-  colour: Int = 0
+  colour: Int = 0,
+  quote: Option[SQuote] = None
+)
+
+case class SQuote(
+  text: Option[String] = None,
+  by: Option[String] = None,
+  url: Option[String] = None,
+  subject: Option[String] = None
 )
 
 /**
