@@ -14,8 +14,9 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
         this.id = ko.observable(opts.id);
         this.events = ko.observableArray();
 
-        this.lastModifiedEmail = ko.observable(opts.lastModified ? opts.lastModified.email : '');
-        this.lastModifiedDatePretty  = ko.computed(function(){
+        this._lastModifiedEmail = ko.observable(opts.lastModified ? opts.lastModified.email : '');
+        this._lastModifiedDate  = ko.observable(opts.lastModified ? opts.lastModified.date  : '');
+        this._lastModifiedDatePretty  = ko.computed(function(){
             return opts.lastModified ? humanized_time_span(opts.lastModified.date) : '';
         }, this);
 
@@ -108,6 +109,7 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
                 success: function(resp) {
                     console && console.log('RECEIVED:')
                     console && console.log(JSON.stringify(resp) + "\n\n")
+                    self._lastModifiedDate(resp.lastModified.date);
                     // Mark event as real
                     self._tentative(false);
                     Common.mediator.emitEvent('models:story:save:success');

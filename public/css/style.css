@@ -1,3 +1,7 @@
+html {
+       overflow-y: scroll;
+}
+
 body {
     padding: 10px;
 }
@@ -90,7 +94,7 @@ input[type=checkbox].status {
 }
 
 .event {
-    padding: 4px;
+    padding: 4px 0 4px 4px;
 }
 
 .eventwell {
@@ -100,12 +104,6 @@ input[type=checkbox].status {
 .event-title {
     color: #214583;
     cursor: pointer;
-}
-
-.count {
-    color: #E0AF1B;
-    font-weight: normal;
-    margin: 0 2px;
 }
 
 .event-parent {
@@ -137,20 +135,21 @@ textarea.event-explainer {
 
 /** articles, in all uses */
 
-.article:hover { 
-    background-color: white;
-}
-
 .article {
     display: block;
     overflow: hidden;
-    padding: 0 0 4px 0;
-    margin-bottom: 10px;
+    padding: 2px 2px 6px 2px;
+    margin-bottom: 4px;
     -webkit-transition: opacity 0.2s;
        -moz-transition: opacity 0.2s;
         -ms-transition: opacity 0.2s;
          -o-transition: opacity 0.2s;
             transition: opacity 0.2s;
+}
+
+.article:hover {
+    background-color: #fff;
+    box-shadow: 0px 5px 10px rgba(0,0,0,.2);
 }
 
 .article a {
@@ -164,16 +163,11 @@ textarea.event-explainer {
 .article-title { font-size: 12px; color: #005689; display: inline-block; }
 .article-id { font-size: 1em; color: #999; margin-bottom: 0; font-size: 0.9em; }
 
-.meta { color: #BFBF9F; margin: 0; font-size: 11px; line-height: 0.99em; }
+.meta { color: #BFBF9F; margin: 0 0 4px 0; font-size: 11px; line-height: 0.99em; }
 
-.event-articles,
-.event-articles .meta {margin: 0 0 0 18px;}
+.event-articles {margin: 0 0 0 2px;}
 
-.article-colour {
-    color: #E0AF1B;
-    padding: 1px 3px 0 3px;
-    margin: 0 0 0 4px;
-}
+.event-articles .meta {margin: 2px 0 0 18px;}
 
 /** search results */
 
@@ -184,13 +178,9 @@ textarea.event-explainer {
     border-color: rgba(102,102,102,0.2);
 }
 
-.article {
+.storify-articles .article {
     cursor: move;
-    padding-left: 3px;
-}
-
-.article:hover {
-    background-color: #fff;
+    padding-left: 4px;
 }
 
 .article .cta {
@@ -198,12 +188,8 @@ textarea.event-explainer {
 }
 
 .article:hover .cta {
-    display: inline-block;
+    display: inline;
 }
-
-/** only display close/delete on hover */
-.article .close { display: none; color: red; text-shadow: 1px 1px #ccc; opacity: 1.0 }
-.article:hover .close { display: inline-block; }
 
 /** scaffolding */
 .storify * {
@@ -228,6 +214,9 @@ textarea.event-explainer {
 .storify input[type="text"]{
     background-color: #fff;
     color: #000;
+    padding: 0 2px;
+    margin: 0;
+    font-size: 12px;
 }
 
 
@@ -260,47 +249,60 @@ img.agent-picture {
 
 /* Articles */
 
-.article .article-tone-picker {
+.article .article-options {
     padding: 0 0 0px 18px;
     margin: 2px 0 0 -3px;
     position: absolute;
+    display: none; 
+    background-color: #fff;
 }
 
-.article:hover .article-tone-picker {
+.article:hover .article-options {
     z-index: 10;
     width: 60%;
-    background-color: white;
     box-shadow: 0px 20px 20px rgba(0,0,0,.4);
+    display: block;
 }
 
-.article:hover .article-tone {display: none;}
-
-.article-tone-picker label {display: none;}
-.article:hover .article-tone-picker label {display: inline;}
-
-.article-tone-picker .value {
+.quote {
+    margin: 4px 0 0 30px;
     color: #666;
-    font-size: 10px;
-    text-transform: capitalize;
-    padding: 0 2px; 
+    min-height: 50px;
+}
+
+.quote-text {
+    font-style: italic;
+    margin: 4px 0 0 -6px;
     display: inline-block;
 }
 
-.article-tone-picker .picked .value {
-    color: red;
+.quote-text:before, .quote-text:after {
+    content: '"';
+    color: #999;
 }
 
-.article-tone-picker .value:hover {
+.quote-url {
+    font-size: 11px;
+    color: #5C7D91;
+    margin: 0 0 0 4px;
+}
+
+/* colour picker */
+
+.colour-picker .colour {
     color: #5bb75b;
+    display: none;
     cursor: pointer; 
+    margin: 0 0 0 2px;
 }
 
-label { 
-    display: inline-block;
-    font-size: 12px;
-    line-height: inherit;
-    margin: 0;
+.article:hover .colour-picker .colour { display: inline; }
+
+.colour-picker .picked {
+    display: inline;
+    color: #E0AF1B;
 }
+
 
 .hoverable:hover { color: #5BB75B; cursor: pointer; }
 
@@ -348,12 +350,11 @@ label {
     color: #ccc;
 }
 
-a.cta, .cta a { 
+a.cta, .cta a {
     color: #5bb75b;
 }
 
 .cta:hover { 
-    background-color: #ffe;
     cursor: pointer;
 }
 
@@ -380,6 +381,12 @@ a.cta, .cta a {
 }
 
 .muted { font-size: 11px; }
+
+.count {
+    color: #E0AF1B;
+    font-weight: normal;
+    margin: 0 2px;
+}
 
 .author {
     font-weight: bold;
