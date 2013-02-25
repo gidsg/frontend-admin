@@ -25,10 +25,6 @@ input.invalid {
     background-color: #F2DEDE;
 }
 
-.saving{
-    cursor: wait;
-}
-
 fieldset, 
 input[type=text] {
     box-sizing:border-box;
@@ -66,6 +62,9 @@ input[type=checkbox].status {
     font-size: 12px;
 }
 
+.story-wrap {
+    margin: 0 0 10px 0;
+}
 
 .story-title, 
 .story-title-closed {
@@ -128,10 +127,6 @@ textarea.event-explainer {
     height: 100px;
 }
 
-.event-meta {
-    font-size: 0.8em;
-}
-
 .icon-star-empty {
     opacity: 0.2;
 }
@@ -169,12 +164,10 @@ textarea.event-explainer {
 .article-title { font-size: 12px; color: #005689; display: inline-block; }
 .article-id { font-size: 1em; color: #999; margin-bottom: 0; font-size: 0.9em; }
 
-.event-meta { color: #ccc; margin-bottom: 0; font-size: 12px; line-height: 0.99em; }
-
-.article-meta { color: #BFBF9F; margin: 0; font-size: 11px; line-height: 0.99em; }
+.meta { color: #BFBF9F; margin: 0; font-size: 11px; line-height: 0.99em; }
 
 .event-articles,
-.event-articles .article-meta {margin: 0 0 0 18px;}
+.event-articles .meta {margin: 0 0 0 18px;}
 
 .article-colour {
     color: #E0AF1B;
@@ -311,13 +304,28 @@ label {
 
 .hoverable:hover { color: #5BB75B; cursor: pointer; }
 
-.saving { display: inline; right: 0; position: fixed;  margin-right: 42px; }
-.saving span {
-        display: inline-block; 
-        background-image: url(/assets/images/ajax-loader.gif);
-        background-repeat: no-repeat;
-        width: 32px; height: 32px;
-  }
+.alerts { 
+    right: 0; 
+    position: fixed;  
+    margin-right: 42px;
+}
+
+.alerts span {
+    background-repeat: no-repeat;
+    width: 32px; height: 32px;
+}
+
+.alerts span.pendingSave {
+    background-image: url(/assets/images/ajax-loader.gif);
+}
+
+.alerts span.failedSave {
+    background-image: url(/assets/images/ajax-failed.png);
+}
+
+.visible {
+    display: block;
+}
 
 .color-light, .color-dark { 
     display: inline-block;
@@ -366,12 +374,17 @@ a.cta, .cta a {
 }
 
 .storify textarea { 
-    width: 90%; 
+    width: 90%;
     min-height: 120px;
     clear: both;
 }
 
 .muted { font-size: 11px; }
+
+.author {
+    font-weight: bold;
+    margin: 0 2px;
+}
 
 .onDragOver {
     background: #DFF0D8;

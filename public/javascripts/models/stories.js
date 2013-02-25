@@ -31,7 +31,7 @@ define(['models/story', 'Knockout', 'Common', 'Reqwest'], function (Story, ko, C
         this.clearSelected = function(story) {
             var doIt = story._tentative() ? self.deleteSelected(story) : true;
             if (doIt) {
-                self.selected(false);
+                window.location.href = '/events';
             }
         };
 

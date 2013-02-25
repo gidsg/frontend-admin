@@ -14,6 +14,11 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
         this.id = ko.observable(opts.id);
         this.events = ko.observableArray();
 
+        this.lastModifiedEmail = ko.observable(opts.lastModified ? opts.lastModified.email : '');
+        this.lastModifiedDatePretty  = ko.computed(function(){
+            return opts.lastModified ? humanized_time_span(opts.lastModified.date) : '';
+        }, this);
+
         // Track for editability / saving
         this._makeEditable(['title', 'explainer', 'hero']);
 
@@ -108,11 +113,7 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
                     Common.mediator.emitEvent('models:story:save:success');
                 },
                 error: function() {
-                    if (self._tentative()) {
-                        Common.mediator.emitEvent('models:story:save:error:duplicate');
-                    } else {
-                        Common.mediator.emitEvent('models:story:save:error');
-                    }
+                    Common.mediator.emitEvent('models:story:save:error');
                 }
             });
         };

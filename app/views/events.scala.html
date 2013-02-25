@@ -17,14 +17,15 @@
         <div class="article" draggable="true" data-bind="makeDraggable: true">
             <a class="article-title" target="_blank"
                 data-bind="html: webTitle, attr: {href: _mDot}"></a>
-            <div class="article-meta"  data-bind="text: _humanDate"></div>
+            <div class="meta"  data-bind="text: _humanDate"></div>
         </div>
     </div>
   </div>
 
   <div class="storify-events span8">
-    <p class="saving">
-        <span class="muted" data-bind="visible: $root.pendingSave()"></span>
+    <p class="alerts">
+        <span class="pendingSave" data-bind="css: {visible: $root.pendingSave()}"></span>
+        <span class="failedSave"  data-bind="css: {visible: $root.failedSave()}"></span>
     </p>
     <button class="btn btn-mini btn-success" data-bind="
         event: {click: stories.createStory},
@@ -46,15 +47,20 @@
 
 <!-- template: story in closed state -->
 <script type="text/html" id="story_closed_template">
-        <p> 
-            <span class="story-title-closed hoverable" data-bind="
-                text: title().length > 0 ? title : '(Un-titled story)',
-                event: {click: $root.stories.setSelected}
-                "></span>
-            <span class="count" data-bind="
-                text: (events().length ? events().length : 'no') + ' chapter'+(events().length===1?'':'s')
-                "></span>
-        </p>
+    <div class="story-wrap">
+        <span class="story-title-closed hoverable" data-bind="
+            text: title().length > 0 ? title : '(Un-titled story)',
+            event: {click: $root.stories.setSelected}
+            "></span>
+        <span class="count" data-bind="
+            text: (events().length ? events().length : 'no') + ' chapter'+(events().length===1?'':'s')
+            "></span>
+        <div class="meta" data-bind="if: lastModifiedDatePretty">
+            edited by 
+            <span class="author" data-bind="text: lastModifiedEmail"></span>
+            <span data-bind="text: lastModifiedDatePretty"></span>
+        </div>
+    </div>
 </script>
 
 <!-- template: story in open state -->
@@ -136,7 +142,7 @@
 <!-- template: event -->
 <script type="text/html" id="event_template">
     <div class="event" data-bind="makeDropabble: true, css: {eventwell: $parent._selected() === $data}">
-        <i data-bind="
+        <i class="icon-star" data-bind="
             click: bump,
             css: {
                 'icon-star-empty': importance() <= 50,
@@ -157,7 +163,7 @@
                 visible: agents().length > 0,
                 text: agents().length + ' agent' + (agents().length !== 1 ? 's' : '')
                 "></span>
-            <span class="event-meta" data-bind="text: _humanDate"></span>
+            <span class="meta" data-bind="text: _humanDate"></span>
         <!-- /ko -->
 
         <!-- An SELCTED event: -->
@@ -221,7 +227,7 @@
                 <!-- /ko -->
 
                 <p>
-                    <span class="muted">Takes place on</span>
+                    <span class="muted">Takes place on DD/MM/YYYY at HH:MM</span>
                 </p>
                 <p class="synopsis">
                     <input type="date" class="input-medium" data-bind='value: _prettyDate, valueUpdate: "afterkeydown"'/>
@@ -250,7 +256,7 @@
         <span class="cta"> 
             | <a data-bind='click: $parent.removeArticle'>delete Article</a></span>
 
-        <div class="article-meta">
+        <div class="meta">
             <span data-bind="text: _humanDate"></span>
             <span class="article-colour" data-bind="
                 visible: colour,

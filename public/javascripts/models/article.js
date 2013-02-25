@@ -36,7 +36,7 @@ define(['models/editable', 'Knockout', 'Common'], function (Editable, ko, Common
         }, this);
 
         // Track for editability / saving
-        this._makeEditable(['importance']);
+        this._makeEditable(['importance', 'colour']);
     };
 
     Article.prototype = new Editable();

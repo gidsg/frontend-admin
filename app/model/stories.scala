@@ -53,7 +53,7 @@ case class Story(
   title: String,
   events: Seq[SEvent] = Nil,
   createdBy: Option[Modified] = None,
-  modifiedBy: Seq[Modified] = Nil,
+  lastModified: Option[Modified],
   explainer: Option[String] = None,
   hero: Option[String] = None,
   sameAs: Seq[String] = Nil
