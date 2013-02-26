@@ -1,13 +1,17 @@
-define(['Knockout'], function (ko) {
+define(['models/editable', 'Knockout', 'Common'], function (Editable,  ko, Common) {
 
     var Place = function(opts) {
 
         var opts = opts || {};
 
         this.id         = ko.observable(opts.id || '');
-        this.sameAs     = ko.observableArray(opts.sameAs);
+        this.name       = ko.observable(opts.name || '');
+
+        this._makeEditable(['name']);
 
     };
 
+    Place.prototype = new Editable();
+    
     return Place;
 })

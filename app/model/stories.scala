@@ -35,7 +35,7 @@ case class SAgent(
 
 // Places are locations (or things on the landscape - lakes, mountains, churches) where the event happened
 case class SPlace(
-  id: Option[String]
+  name: Option[String]
 )
 
 case class SEvent(
