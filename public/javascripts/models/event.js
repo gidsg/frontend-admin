@@ -104,6 +104,9 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
                 id = self.urlPath(article);
                 if (id) {
                     article = new Article({id: id})
+                } else {
+                    window.alert("Sorry, only Guardian pages can be added here!");
+                    return;
                 }
             } else { // We assume it's an Article. Check using its constructor?
                 id = article.id(); 
@@ -216,6 +219,9 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
                 a = a.pathname;
                 a = a.indexOf('/') === 0 ? a.substr(1) : a;
                 return a;
+            } else if (a.hostname.match(/google/)) {
+                a = a.search.match(/url=([^&]+)/);
+                return a ? this.urlPath(decodeURIComponent(a[1])) : false;
             }
         };
     };
