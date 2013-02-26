@@ -176,7 +176,8 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
         };
         
         this.removeAgent = function(article) {
-            var result = window.confirm("Are you sure you want to DELETE this agent?");
+            var term = (article.rdfType === "http://schema.org/Person") ? 'person' : 'organisation'
+              , result = window.confirm("Are you sure you want to DELETE this " + term + "?");
             if (!result) return;
             self.agents.remove(article);
             Common.mediator.emitEvent('models:story:haschanges');
