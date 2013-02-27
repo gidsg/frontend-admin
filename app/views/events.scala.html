@@ -216,23 +216,38 @@
                 </p>
 
                 <p>
-                    <span class="muted">Agents</span>
+                    <span class="muted">People &amp; Organisations</span>
                     <span class="cta">
                         | <a data-bind="event: {click: addAgentPerson}">add Person</a>
                         | <a data-bind="event: {click: addAgentOrganization}">add Organisation</a>
                     </span>
                 </p>
-
+                
                 <div class="event-agents" data-bind="
                     template: {name: 'event_agent_template', foreach: agents}
                     "></div>
                 <!-- ko if: agents().length === 0 -->
                     <p class="event-agents">(none)</p>
                 <!-- /ko -->
+                
+                <p>
+                    <span class="muted">Places</span>
+                    <span class="cta">
+                        | <a data-bind="event: {click: addPlace}">add Place</a>
+                    </span>
+                </p>
+                
+                <div class="event-places" data-bind="
+                    template: {name: 'event_place_template', foreach: places}
+                    "></div>
+                <!-- ko if: places().length === 0 -->
+                    <p class="event-places">(none)</p>
+                <!-- /ko -->
 
                 <p>
                     <span class="muted">Takes place on DD/MM/YYYY at HH:MM</span>
                 </p>
+                
                 <p class="synopsis">
                     <input type="date" class="input-medium" data-bind='value: _prettyDate, valueUpdate: "afterkeydown"'/>
                     <span class="muted">at</span>
@@ -329,6 +344,25 @@
             visible: _editing_url,
             value: url,
             hasfocus: _editing_url
+            "/>
+    </div>
+</script>
+
+<script type="text/html" id="event_place_template">
+    <div class="place">
+        <div data-bind="visible: !_editing_name()">
+            <span class="place-name" data-edit="name" data-bind="
+                text: name() ? name : '(Name)',
+                click: _edit
+                "></span>
+            <span class="cta">
+                | <a data-bind="event: {click: $parent.removePlace}">delete</a>
+                </span>
+        </div>
+        <input type="text" placeholder="Name" data-bind="
+            visible: _editing_name,
+            value: name,
+            hasfocus: _editing_name
             "/>
     </div>
 </script>
