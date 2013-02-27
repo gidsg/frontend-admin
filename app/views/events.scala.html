@@ -49,7 +49,7 @@
 <script type="text/html" id="story_closed_template">
     <div class="story-wrap">
         <span class="story-title-closed hoverable" data-bind="
-            text: title().length > 0 ? title : '[Un-titled story]',
+            text: title() ? title : '[Un-titled story]',
             event: {click: $root.stories.setSelected}
             "></span>
         <span class="meta count" data-bind="
@@ -74,7 +74,7 @@
                 ">&laquo; Back to Stories</button>
         </p>
 
-        <p class="muted">Name for
+        <p class="muted" data-bind="visible: id">Name for
             <span class="meta" data-bind="text: '/stories/' + id()"></span>
         </p>
         <p>
@@ -116,7 +116,7 @@
             <span class="story-hero" data-edit="hero" data-bind="
                 visible: !_editing_hero() && !hero(),
                 click: _edit
-                ">(none)</span>
+                ">[none]</span>
             <input type="text" class="story-hero" placeholder="http://... image url" data-bind="
                 visible: _editing_hero,
                 value: hero,
@@ -155,7 +155,7 @@
         <!-- An UNselected event: -->
         <!-- ko if: $parent._selected() !== $data -->
             <span class="event-title" data-bind="
-                text: title().length > 0 ? title : '[no title]',
+                text: title() ? title : '[no title]',
                 event: {click: $parent.setSelected}
                 "></span>
             <span class="meta count" data-bind="
@@ -204,7 +204,7 @@
                     <p class="muted">Chapter Synopsis</p>
                     <div class="synopsis" data-edit="explainer" data-bind="
                         visible: !_editing_explainer(),
-                        html: explainer() ? explainer : '(none)',
+                        html: explainer() ? explainer : '[none]',
                         click: _edit
                         "></div>
                     <textarea class="synopsis" data-bind="
@@ -226,7 +226,7 @@
                     template: {name: 'event_agent_template', foreach: agents}
                     "></div>
                 <!-- ko if: agents().length === 0 -->
-                    <p class="event-agents">(none)</p>
+                    <p class="event-agents">[none]</p>
                 <!-- /ko -->
 
                 <p>

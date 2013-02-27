@@ -22,7 +22,7 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
 
         // General 'schema' poperties
         this.title      = ko.observable(opts.title || '');
-        this.explainer  = ko.observable(opts.explainer || '(No synopsis)');
+        this.explainer  = ko.observable(opts.explainer || '');
         this.importance = ko.observable(opts.importance || importanceDefault);
         
         // Content
