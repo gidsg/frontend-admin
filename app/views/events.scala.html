@@ -95,7 +95,7 @@
         <p>
             <p class="muted">
                 Chapters (latest first)
-                <span class="cta" data-bind="visible: !_selected()">
+                <span class="cta">
                     | <a data-bind="
                         event: {click: createEvent},
                         text: events().length === 0 ? 'Add the first chapter' : 'add a chapter'
@@ -173,12 +173,12 @@
         <!-- ko if: $parent._selected() === $data -->
 
             <span data-bind="visible: !_editing_title()">
-                <span class="event-title" data-edit="title" data-bind="
+                <span class="event-title" data-bind="
                     text: title() ? title : '[no title]',
-                    click: _edit
+                    click: $parent.clearSelected
                     "></span>
                 <span class="cta">
-                    | <a data-bind="click: $parent.clearSelected">collapse</a>
+                    | <a data-bind="click: _edit" data-edit="title">edit Chapter name</a>
                     | <a data-bind="click: $parent.deleteEvent">delete Chapter</a>
                 </span>
             </span>
