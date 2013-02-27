@@ -214,20 +214,20 @@ textarea.event-explainer {
 }
 
 
-/* Agents */
+/* Agents & Places */
 
-.event-agents {
+.event-agents, .event-places {
     font-size: 12px;
     clear: both;
 }
 
-.agent {
+.agent, .place {
     clear: both;
     overflow: auto;
     margin: 0 0 10px 0;
 }
 
-.agent-name {
+.agent-name, .place-name {
     font-weight: bold;
 }
 
@@ -352,7 +352,7 @@ a.cta, .cta a {
     cursor: pointer;
 }
 
-.synopsis, .story-title, input.story-title, .story-hero, input.story-hero, .event-agents { 
+.synopsis, .story-title, input.story-title, .story-hero, input.story-hero, .event-agents, .event-places { 
     margin-left: 22px;
 }
 

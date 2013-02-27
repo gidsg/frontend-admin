@@ -48,8 +48,6 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
         (opts.places || []).map(function(p){
             self.places.push(new Place(p));
         });
-
-        this.sameAs     = ko.observableArray(); // Eg. cross-reference with wikipedia, PA, BBC etc. 
         
         // Dates
         this._humanDate  = ko.observable();
@@ -176,11 +174,23 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
         this.addAgentOrganization = function(article) {
             self.agents.unshift(new Agent({rdfType: 'http://schema.org/Organization'}));
         };
-
+        
         this.removeAgent = function(article) {
-            var result = window.confirm("Are you sure you want to DELETE this agent?");
+            var term = (article.rdfType === "http://schema.org/Person") ? 'person' : 'organisation'
+              , result = window.confirm("Are you sure you want to DELETE this " + term + "?");
             if (!result) return;
             self.agents.remove(article);
+            Common.mediator.emitEvent('models:story:haschanges');
+        };
+        
+        this.addPlace = function(article) {
+            self.places.unshift(new Place());
+        };
+
+        this.removePlace = function(p) {
+            var result = window.confirm("Are you sure you want to DELETE this place?");
+            if (!result) return;
+            self.places.remove(p);
             Common.mediator.emitEvent('models:story:haschanges');
         };
 
