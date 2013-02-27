@@ -99,18 +99,22 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
 
         this.addArticle = function(id) {
             var included;
-            id = self.urlPath(id);
-            if (id) {
-                included = _.some(self.content(), function(item){
-                    return item.id() === id;
-                });
-                if (!included) {
-                    self.content.unshift(new Article({id: id}));
-                    self.decorateContent();
-                    Common.mediator.emitEvent('models:story:haschanges');
-                }
+            if(self.content().length >= 50) {
+                window.alert("Sorry, you're at the maximum of 50 articles per chapter");
             } else {
-                window.alert("Sorry, only Guardian pages can be added here!");
+                id = self.urlPath(id);
+                if (id) {
+                    included = _.some(self.content(), function(item){
+                        return item.id() === id;
+                    });
+                    if (!included) {
+                        self.content.unshift(new Article({id: id}));
+                        self.decorateContent();
+                        Common.mediator.emitEvent('models:story:haschanges');
+                    }
+                } else {
+                    window.alert("Sorry, only Guardian pages can be added here!");
+                }                
             }
         };
 
