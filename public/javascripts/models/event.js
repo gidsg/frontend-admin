@@ -22,7 +22,7 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
 
         // General 'schema' poperties
         this.title      = ko.observable(opts.title || '');
-        this.explainer  = ko.observable(opts.explainer || '(No synopsis)');
+        this.explainer  = ko.observable(opts.explainer || '');
         this.importance = ko.observable(opts.importance || importanceDefault);
         
         // Content
@@ -97,26 +97,24 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
             });
         }
 
-        this.addArticle = function(article) {
-            var id, 
-                included;
-            if (typeof article === 'string') {
-                id = self.urlPath(article);
+        this.addArticle = function(id) {
+            var included;
+            if(self.content().length >= 50) {
+                window.alert("Sorry, you're at the maximum of 50 articles per chapter");
+            } else {
+                id = self.urlPath(id);
                 if (id) {
-                    article = new Article({id: id})
-                }
-            } else { // We assume it's an Article. Check using its constructor?
-                id = article.id(); 
-            }
-            if (id) {
-                included = _.some(self.content(), function(item){
-                    return item.id() === id;
-                });
-                if (!included) {
-                    self.content.unshift(article);
-                    self.decorateContent();
-                    Common.mediator.emitEvent('models:story:haschanges');
-                }
+                    included = _.some(self.content(), function(item){
+                        return item.id() === id;
+                    });
+                    if (!included) {
+                        self.content.unshift(new Article({id: id}));
+                        self.decorateContent();
+                        Common.mediator.emitEvent('models:story:haschanges');
+                    }
+                } else {
+                    window.alert("Sorry, only Guardian pages can be added here!");
+                }                
             }
         };
 
@@ -151,9 +149,11 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
                                     var c = _.find(areRaw,function(a){
                                         return a.id() === ra.id;
                                     });
-                                    c.webTitle(ra.webTitle);
-                                    c.webPublicationDate(ra.webPublicationDate);
-                                    opts.articleCache[ra.id] = ra;
+                                    if (c) {
+                                        c.webTitle(ra.webTitle);
+                                        c.webPublicationDate(ra.webPublicationDate);
+                                        opts.articleCache[ra.id] = ra;
+                                    }
                                 }
                             });
                             // Sort articles by date, descending.
@@ -210,12 +210,19 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
         };
     
         this.urlPath = function(url) {
-            var a = document.createElement('a');
+            var a = document.createElement('a'),
+                p;
             a.href = url;
             if (a.hostname.match(/guardian/)) {
-                a = a.pathname;
-                a = a.indexOf('/') === 0 ? a.substr(1) : a;
-                return a;
+                p = a.pathname;
+                p = p.indexOf('/') === 0 ? p.substr(1) : p;
+                return p;
+            } else if (a.hostname.match(/google/)) {
+                p = a.search.match(/url=([^&]+)/);
+                if (!p) {
+                    p = a.search.match(/q=([^&]+)/);
+                }
+                return p ? this.urlPath(decodeURIComponent(p[1])) : false;
             }
         };
     };
