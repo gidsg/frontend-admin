@@ -97,29 +97,20 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
             });
         }
 
-        this.addArticle = function(article) {
-            var id, 
-                included;
-            if (typeof article === 'string') {
-                id = self.urlPath(article);
-                if (id) {
-                    article = new Article({id: id})
-                } else {
-                    window.alert("Sorry, only Guardian pages can be added here!");
-                    return;
-                }
-            } else { // We assume it's an Article. Check using its constructor?
-                id = article.id(); 
-            }
+        this.addArticle = function(id) {
+            var included;
+            id = self.urlPath(id);
             if (id) {
                 included = _.some(self.content(), function(item){
                     return item.id() === id;
                 });
                 if (!included) {
-                    self.content.unshift(article);
+                    self.content.unshift(new Article({id: id}));
                     self.decorateContent();
                     Common.mediator.emitEvent('models:story:haschanges');
                 }
+            } else {
+                window.alert("Sorry, only Guardian pages can be added here!");
             }
         };
 
@@ -154,9 +145,11 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
                                     var c = _.find(areRaw,function(a){
                                         return a.id() === ra.id;
                                     });
-                                    c.webTitle(ra.webTitle);
-                                    c.webPublicationDate(ra.webPublicationDate);
-                                    opts.articleCache[ra.id] = ra;
+                                    if (c) {
+                                        c.webTitle(ra.webTitle);
+                                        c.webPublicationDate(ra.webPublicationDate);
+                                        opts.articleCache[ra.id] = ra;
+                                    }
                                 }
                             });
                             // Sort articles by date, descending.
