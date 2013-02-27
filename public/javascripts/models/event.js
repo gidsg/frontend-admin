@@ -210,15 +210,19 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
         };
     
         this.urlPath = function(url) {
-            var a = document.createElement('a');
+            var a = document.createElement('a'),
+                p;
             a.href = url;
             if (a.hostname.match(/guardian/)) {
-                a = a.pathname;
-                a = a.indexOf('/') === 0 ? a.substr(1) : a;
-                return a;
+                p = a.pathname;
+                p = p.indexOf('/') === 0 ? p.substr(1) : p;
+                return p;
             } else if (a.hostname.match(/google/)) {
-                a = a.search.match(/url=([^&]+)/);
-                return a ? this.urlPath(decodeURIComponent(a[1])) : false;
+                p = a.search.match(/url=([^&]+)/);
+                if (!p) {
+                    p = a.search.match(/q=([^&]+)/);
+                }
+                return p ? this.urlPath(decodeURIComponent(p[1])) : false;
             }
         };
     };

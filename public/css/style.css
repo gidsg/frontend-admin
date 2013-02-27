@@ -70,11 +70,6 @@ input[type=checkbox].status {
     margin: 0 0 10px 0;
 }
 
-.story-title, 
-.story-title-closed {
-    font-weight: bold;
-}
-
 /** Events */
 
 .scrollable {
