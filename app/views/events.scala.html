@@ -16,7 +16,7 @@
     <div class="articles scrollable" data-bind='foreach: articles.articles'>
         <div class="article" draggable="true" data-bind="makeDraggable: true">
             <a class="article-title" target="_blank"
-                data-bind="html: webTitle, attr: {href: _mDot}"></a>
+                data-bind="html: webTitle, attr: {href: _nDot}"></a>
             <div class="meta"  data-bind="text: _humanDate"></div>
         </div>
     </div>
@@ -59,7 +59,7 @@
             edited by 
             <span class="author" data-bind="text: _lastModifiedEmail"></span>
             <span data-bind="text: _lastModifiedDatePretty"></span>.
-            <span data-bind="text: '/stories/' + id()"></span>
+            <a target="_blank" data-bind="attr: { href: 'http://m.guardian.co.uk/stories/' + id() }">Visit this story</a>
         </div>
     </div>
 </script>
@@ -74,8 +74,7 @@
                 ">&laquo; Back to Stories</button>
         </p>
 
-        <p class="muted">Name for
-            <span class="meta" data-bind="text: '/stories/' + id()"></span>
+        <p><span class="muted">Name</span>
         </p>
         <p>
             <div data-bind="visible: !_editing_title()">
@@ -83,7 +82,9 @@
                     text: title() ? title : '[no title]',
                     click: _edit
                     "></span>
-                <span class="cta"> | <a data-bind="event: {click: $root.stories.deleteSelected}">delete Story</a>
+                <span class="cta"> | <a data-bind="event: {click: $root.stories.deleteSelected}">delete Story</a> | 
+                        <a target="_blank" data-bind="attr: { href: 'http://m.guardian.co.uk/stories/' + id() }">visit Story</a>
+                        </span>
             </div>
             <input type="text" placeholder="Story Title" class="story-title" data-bind="
                 visible: _editing_title,
