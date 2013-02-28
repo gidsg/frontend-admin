@@ -49,13 +49,13 @@
 <script type="text/html" id="story_closed_template">
     <div class="story-wrap">
         <span class="story-title-closed hoverable" data-bind="
-            text: title().length > 0 ? title : '(Un-titled story)',
+            text: title() ? title : '[Un-titled story]',
             event: {click: $root.stories.setSelected}
             "></span>
-        <span class="count" data-bind="
+        <span class="meta count" data-bind="
             text: (events().length ? events().length : 'no') + ' chapter'+(events().length===1?'':'s')
             "></span>
-        <div class="meta" data-bind="if: lastModifiedDatePretty">
+        <div class="meta" data-bind="if: _lastModifiedDatePretty">
             edited by 
             <span class="author" data-bind="text: lastModifiedEmail"></span>
             <span data-bind="text: lastModifiedDatePretty"></span>
@@ -74,11 +74,13 @@
                 ">&laquo; Back to Stories</button>
         </p>
 
-        <p class="muted">Name</p>
+        <p class="muted" data-bind="visible: id">Name for
+            <span class="meta" data-bind="text: '/stories/' + id()"></span>
+        </p>
         <p>
             <div data-bind="visible: !_editing_title()">
                 <span class="story-title" data-edit="title" data-bind="
-                    text: title() ? title : '(no title)',
+                    text: title() ? title : '[no title]',
                     click: _edit
                 "></span>
                 <span class="cta">
@@ -96,7 +98,7 @@
         <p>
             <p class="muted">
                 Chapters (latest first)
-                <span class="cta" data-bind="visible: !_selected()">
+                <span class="cta">
                     | <a data-bind="
                         event: {click: createEvent},
                         text: events().length === 0 ? 'Add the first chapter' : 'add a chapter'
@@ -117,7 +119,7 @@
             <span class="story-hero" data-edit="hero" data-bind="
                 visible: !_editing_hero() && !hero(),
                 click: _edit
-                ">(none)</span>
+                ">[none]</span>
             <input type="text" class="story-hero" placeholder="http://... image url" data-bind="
                 visible: _editing_hero,
                 value: hero,
@@ -130,7 +132,7 @@
             <p>
                 <div class="synopsis" data-edit="explainer" data-bind="
                     visible: !_editing_explainer(),
-                    html: explainer() ? explainer : '(no explainer)',
+                    html: explainer() ? explainer : '[no explainer]',
                     click: _edit
                     "></div>
                 <textarea data-bind="
@@ -156,14 +158,14 @@
         <!-- An UNselected event: -->
         <!-- ko if: $parent._selected() !== $data -->
             <span class="event-title" data-bind="
-                text: title().length > 0 ? title : '(no title)',
+                text: title() ? title : '[no title]',
                 event: {click: $parent.setSelected}
                 "></span>
-            <span class="count" data-bind="
+            <span class="meta count" data-bind="
                 visible: content().length > 0,
                 text: content().length + ' article' + (content().length !== 1 ? 's' : '')
                 "></span>
-            <span class="count" data-bind="
+            <span class="meta count" data-bind="
                 visible: agents().length > 0,
                 text: agents().length + ' agent' + (agents().length !== 1 ? 's' : '')
                 "></span>
@@ -174,12 +176,12 @@
         <!-- ko if: $parent._selected() === $data -->
 
             <span data-bind="visible: !_editing_title()">
-                <span class="event-title" data-edit="title" data-bind="
-                    text: title() ? title : '(no title)',
-                    click: _edit
+                <span class="event-title" data-bind="
+                    text: title() ? title : '[no title]',
+                    click: $parent.clearSelected
                     "></span>
                 <span class="cta">
-                    | <a data-bind="click: $parent.clearSelected">collapse</a>
+                    | <a data-bind="click: _edit" data-edit="title">edit Chapter name</a>
                     | <a data-bind="click: $parent.deleteEvent">delete Chapter</a>
                 </span>
             </span>
@@ -205,7 +207,7 @@
                     <p class="muted">Chapter Synopsis</p>
                     <div class="synopsis" data-edit="explainer" data-bind="
                         visible: !_editing_explainer(),
-                        html: explainer() ? explainer : '(no explainer)',
+                        html: explainer() ? explainer : '[none]',
                         click: _edit
                         "></div>
                     <textarea class="synopsis" data-bind="
@@ -227,7 +229,7 @@
                     template: {name: 'event_agent_template', foreach: agents}
                     "></div>
                 <!-- ko if: agents().length === 0 -->
-                    <p class="event-agents">(none)</p>
+                    <p class="event-agents">[none]</p>
                 <!-- /ko -->
                 
                 <p>
@@ -269,40 +271,82 @@
             }
             "></div>
         <a class="article-title" target="_blank" data-bind="
-            text: webTitle() ? webTitle : id, 
+            html: webTitle() ? webTitle : id, 
             attr: {href: _mDot}
             "></a>
-        <span class="cta"> 
-            | <a data-bind='click: $parent.removeArticle'>delete Article</a></span>
+        <span class="cta">
+            | 
+            <a data-bind='visible: !quote(), click: addQuote'>add Quote</a> 
+            <a data-bind='visible:  quote,   click: deleteQuote'>delete Quote</a> 
+        </span>
+        <span class="cta">
+            | <a data-bind='click: $parent.removeArticle'>delete Article</a>
+        </span>
 
         <div class="meta">
             <span data-bind="text: _humanDate"></span>
-            <span class="article-colour" data-bind="
-                visible: colour,
-                text: _colourAsText
-                "></span>
+            <span class="colour-picker">
+                <span class="cta">| Set tone:</span>
+                <a class="colour" data-bind="click: setColour, css: {picked: colour() === 1}" data-tone="1">Overview</a>
+                <a class="colour" data-bind="click: setColour, css: {picked: colour() === 2}" data-tone="2">Background</a>
+                <a class="colour" data-bind="click: setColour, css: {picked: colour() === 3}" data-tone="3">Analysis</a>
+                <a class="colour" data-bind="click: setColour, css: {picked: colour() === 4}" data-tone="4">Reaction</a>
+                <a class="colour" data-bind="click: setColour, css: {picked: colour() === 5}" data-tone="5">Light</a>
+            </span>
         </div>
 
-        <p class="article-tone-picker">
-            <label data-bind="click: setColour" data-tone="1">
-                <span class="value" data-tone="1">Overview</span>
-            </label>
-            <label data-bind="click: setColour" data-tone="2">
-                <span class="value" data-tone="2">Background</span>
-            </label>
-            <label data-bind="click: setColour" data-tone="3">
-                <span class="value" data-tone="3">Analysis</span>
-            </label>
-            <label data-bind="click: setColour" data-tone="4">
-                <span class="value" data-tone="4">Reaction</span>
-            </label>
-            <label data-bind="click: setColour" data-tone="5">
-                <span class="value" data-tone="5">Light</span>
-            </label>
-            <label data-bind="click: setColour" data-tone="0">
-                <span class="value" data-tone="0">(none)</span>
-            </label>
-        </p>
+        <div data-bind="template: {foreach: quote, name: 'article_quote'}"></div>
+    </div>
+</script>
+
+<script type="text/html" id="article_quote">
+    <div class="quote">  
+        <div>
+            <div class="quote-text" data-edit="text" data-bind="
+                visible: !_editing_text(),
+                text: text() ? text : '[quoted text]',
+                click: _edit
+                "></div>
+            <textarea type="text" placeholder="text " data-bind="
+                visible: _editing_text,
+                value: text,
+                hasfocus: _editing_text
+                "></textarea>
+        </div>
+
+        <span class="quote-by" data-edit="by" data-bind="
+            visible: !_editing_by(),
+            text: by() ? by : '[quoted by]',
+            click: _edit
+            "></span>
+        <input type="text" placeholder="quoter's name, if not article author" data-bind="
+            visible: _editing_by,
+            value: by,
+            hasfocus: _editing_by
+            "/>
+
+        on
+        <span class="quote-subject" data-edit="subject" data-bind="
+            visible: !_editing_subject(),
+            text: subject() ? subject : '[subject]',
+            click: _edit
+            "></span>
+        <input type="text" placeholder="topic" data-bind="
+            visible: _editing_subject,
+            value: subject,
+            hasfocus: _editing_subject
+            "/>
+
+        <span class="quote-url" data-edit="url" data-bind="
+            visible: !_editing_url(),
+            text: url() ? url : '[link to...]',
+            click: _edit
+            "></span>
+        <input type="text" placeholder="http://... url, if not this article's url" data-bind="
+            visible: _editing_url,
+            value: url,
+            hasfocus: _editing_url
+            "/>
     </div>
 </script>
 
@@ -338,7 +382,7 @@
                 }
                 "></i>
             <span class="agent-name" data-edit="name" data-bind="
-                text: name() ? name : '(Name)',
+                text: name() ? name : '[Name]',
                 click: _edit
                 "></span>
             <span class="cta">
@@ -370,7 +414,7 @@
         <!-- Agent role -->
         <div class="agent-role" data-edit="role" data-bind="
             visible: !_editing_role(),
-            text: role() ? role : '(Role)',
+            text: role() ? role : '[Role]',
             click: _edit
             "></div>
         <input type="text" placeholder="role" data-bind="
@@ -382,7 +426,7 @@
         <!-- Agent explainer -->
         <div class="agent-explainer" data-edit="explainer" data-bind="
             visible: !_editing_explainer(),
-            text: explainer() ? explainer : '(Explainer)',
+            text: explainer() ? explainer : '[Explainer]',
             click: _edit
             "></div>
         <textarea type="text" placeholder="Explainer" data-bind="

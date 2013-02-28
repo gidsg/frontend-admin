@@ -1,4 +1,4 @@
-define(['models/editable', 'Knockout', 'Common'], function (Editable, ko, Common) {
+define(['models/editable', 'models/quote', 'Knockout', 'Common'], function (Editable, Quote, ko, Common) {
 
     var mDotHost = 'http://m.guardian.co.uk/';
 
@@ -12,10 +12,12 @@ define(['models/editable', 'Knockout', 'Common'], function (Editable, ko, Common
         this.webPublicationDate = ko.observable(opts.webPublicationDate);
         this.importance = ko.observable(opts.importance || 50);
         this.colour     = ko.observable(opts.colour);
-        
+
         if (opts.fields) {
             this.trailText  = ko.observable(opts.fields.trailText || '');
         }
+
+        this.quote  = ko.observable(opts.quote ? new Quote(opts.quote) : '');
 
         // Temp vars
         this._mDot      = ko.observable(mDotHost + opts.id || '');    
@@ -43,7 +45,17 @@ define(['models/editable', 'Knockout', 'Common'], function (Editable, ko, Common
 
     Article.prototype.setColour = function(item, e) {
         var colour = parseInt($(e.target).data('tone') || 0, 10);
-        item.colour(colour === item.colour() ? 0 : colour);
+        this.colour(colour === item.colour() ? 0 : colour);
+    };
+
+    Article.prototype.addQuote = function() {
+        this.quote(new Quote());
+    };
+
+    Article.prototype.deleteQuote = function() {
+        if (!window.confirm("Are you sure you want to DELETE the quote?")) return;
+        this.quote(undefined);
+        Common.mediator.emitEvent('models:story:haschanges');
     };
 
     return Article;

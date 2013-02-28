@@ -1,4 +1,4 @@
-define(['models/story', 'Knockout', 'Common', 'Reqwest'], function (Story, ko, Common, Reqwest) {
+define(['models/story', 'Config', 'Knockout', 'Common', 'Reqwest'], function (Story, Config, ko, Common, Reqwest) {
 
     var Stories = function(opts) {
         var endpoint = '/story',
@@ -19,6 +19,17 @@ define(['models/story', 'Knockout', 'Common', 'Reqwest'], function (Story, ko, C
             o.articleCache = opts.articleCache;
             story = new Story(o);
             self.stories.unshift(story);
+            return story; 
+        };
+
+        this.loadSelectedStory = function(o) {
+            var story;
+            this.stories.remove(this.selected());
+            o = o || {};
+            o.articleCache = opts.articleCache;
+            story = new Story(o);
+            self.stories.unshift(story);
+            this.selected(story);
             return story; 
         };
 
@@ -57,17 +68,19 @@ define(['models/story', 'Knockout', 'Common', 'Reqwest'], function (Story, ko, C
             }
         }
 
-        // Grab stories
-        Reqwest({
-            url: '/story',
-            type: 'json',
-            success: function(resp) {
-                resp.map(function(s){
-                    self.loadStory(s);
-                });
-            },
-            error: function() {}
-        });
+        this.loadStories = function() {
+            Reqwest({
+                url: '/story',
+                type: 'json',
+                success: function(resp) {
+                    self.stories.removeAll();
+                    resp.map(function(s){
+                        self.loadStory(s);
+                    });
+                },
+                error: function() {}
+            });
+        };
     };
 
     return Stories;
