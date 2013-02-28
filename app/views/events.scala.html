@@ -59,6 +59,7 @@
             edited by 
             <span class="author" data-bind="text: lastModifiedEmail"></span>
             <span data-bind="text: lastModifiedDatePretty"></span>
+            - <a target="_blank" data-bind="attr: { href: 'http://m.guardian.co.uk/stories/' + id() }" class="muted">Visit</a>
         </div>
     </div>
 </script>
@@ -79,8 +80,11 @@
                 <span class="story-title" data-edit="title" data-bind="
                     text: title() ? title : '(no title)',
                     click: _edit
-                    "></span>
-                <span class="cta"> | <a data-bind="event: {click: $root.stories.deleteSelected}">delete Story</a>
+                "></span>
+                <span class="cta">
+                        | <a data-bind="event: {click: $root.stories.deleteSelected}">delete Story</a>
+                        | <a target="_blank" data-bind="attr: { href: 'http://m.guardian.co.uk/stories/' + id() }">visit Story</a>
+                </span>
             </div>
             <input type="text" placeholder="Story Title" class="story-title" data-bind="
                 visible: _editing_title,
