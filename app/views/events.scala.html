@@ -57,8 +57,8 @@
             "></span>
         <div class="meta" data-bind="if: _lastModifiedDatePretty">
             edited by 
-            <span class="author" data-bind="text: lastModifiedEmail"></span>
-            <span data-bind="text: lastModifiedDatePretty"></span>
+            <span class="author" data-bind="text: _lastModifiedEmail"></span>
+            <span data-bind="text: _lastModifiedDatePretty"></span>
             - <a target="_blank" data-bind="attr: { href: 'http://m.guardian.co.uk/stories/' + id() }" class="muted">Visit</a>
         </div>
     </div>
