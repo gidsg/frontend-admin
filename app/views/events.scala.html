@@ -6,11 +6,11 @@
   <div class="storify-articles span4">
     <form class="form-inline muted" onsubmit="return false">
         <h3>Articles</h3>
+        <p class="meta">Drag articles into story chapters from the list below, from the 
+        <a target="_blank" href="http://www.guardian.co.uk">Guardian</a> website, or from <a target="_blank" href="http://www.google.co.uk/search?q=site%3Awww.guardian.co.uk">Google</a> search results.</p> 
         <input type="text" placeholder="Search" 
             data-bind='event: {keyup: articles.search, mousedown: articles.articleSearch, afterpaste: articles.articleSearch}, value:
             articles.term, valueUpdate: ["afterkeydown", "afterpaste"]'/>
-            <label class="checkbox">
-        </label>
     </form>
 
     <div class="articles scrollable" data-bind='foreach: articles.articles'>
@@ -49,7 +49,7 @@
 <script type="text/html" id="story_closed_template">
     <div class="story-wrap">
         <span class="story-title-closed hoverable" data-bind="
-            text: title() ? title : '[Un-titled story]',
+            text: title() ? title : '[un-titled story]',
             event: {click: $root.stories.setSelected}
             "></span>
         <span class="meta count" data-bind="
@@ -132,7 +132,7 @@
             <p>
                 <div class="synopsis" data-edit="explainer" data-bind="
                     visible: !_editing_explainer(),
-                    html: explainer() ? explainer : '[no explainer]',
+                    html: explainer() ? explainer : '[none]',
                     click: _edit
                     "></div>
                 <textarea data-bind="
@@ -243,7 +243,7 @@
                     template: {name: 'event_place_template', foreach: places}
                     "></div>
                 <!-- ko if: places().length === 0 -->
-                    <p class="event-places">(none)</p>
+                    <p class="event-places">[none]</p>
                 <!-- /ko -->
 
                 <p>
@@ -251,9 +251,31 @@
                 </p>
                 
                 <p class="synopsis">
-                    <input type="date" class="input-medium" data-bind='value: _prettyDate, valueUpdate: "afterkeydown"'/>
+
+                    <span data-edit="_prettyDate" data-bind="
+                        visible: !_editing__prettyDate(),
+                        text: _prettyDate,
+                        click: _edit
+                        "></span>
+                    <input type="date" placeholder="DD/MM/YYYY" data-bind="
+                        visible: _editing__prettyDate,
+                        value: _prettyDate,
+                        hasfocus: _editing__prettyDate
+                        "/>
+
                     <span class="muted">at</span>
-                    <input type="time" class="input-medium" data-bind='value: _prettyTime, valueUpdate: "afterkeydown"'/>
+
+                    <span data-edit="_prettyTime" data-bind="
+                        visible: !_editing__prettyTime(),
+                        text: _prettyTime,
+                        click: _edit
+                        "></span>
+                    <input type="time" placeholder="HH:MM" data-bind="
+                        visible: _editing__prettyTime,
+                        value: _prettyTime,
+                        hasfocus: _editing__prettyTime
+                        "/>
+
                 </p>
             </div>
         <!-- /ko -->
@@ -354,7 +376,7 @@
     <div class="place">
         <div data-bind="visible: !_editing_name()">
             <span class="place-name" data-edit="name" data-bind="
-                text: name() ? name : '(Name)',
+                text: name() ? name : '[name]',
                 click: _edit
                 "></span>
             <span class="cta">
@@ -382,7 +404,7 @@
                 }
                 "></i>
             <span class="agent-name" data-edit="name" data-bind="
-                text: name() ? name : '[Name]',
+                text: name() ? name : '[name]',
                 click: _edit
                 "></span>
             <span class="cta">
@@ -399,7 +421,7 @@
         <div data-edit="picture" data-bind="
             visible: !_editing_picture() && !picture(),
             click: _edit
-            ">(Picture)</div>
+            ">[picture]</div>
         <img class="agent-picture" data-edit="picture" data-bind="
             visible: !_editing_picture() && picture(),
             attr: {src: picture},
@@ -414,7 +436,7 @@
         <!-- Agent role -->
         <div class="agent-role" data-edit="role" data-bind="
             visible: !_editing_role(),
-            text: role() ? role : '[Role]',
+            text: role() ? role : '[role]',
             click: _edit
             "></div>
         <input type="text" placeholder="role" data-bind="
@@ -426,7 +448,7 @@
         <!-- Agent explainer -->
         <div class="agent-explainer" data-edit="explainer" data-bind="
             visible: !_editing_explainer(),
-            text: explainer() ? explainer : '[Explainer]',
+            text: explainer() ? explainer : '[explainer]',
             click: _edit
             "></div>
         <textarea type="text" placeholder="Explainer" data-bind="

@@ -13,7 +13,8 @@ curl([
     Config,
     Common
 ) {
-    var viewModel = {};
+    var maxContentPerStory = 50,
+        viewModel = {};
 
     if(!Common.hasVh()) {
         //this fixes the article and event lists to the height of the viewport
@@ -57,7 +58,11 @@ curl([
         var id = event.dataTransfer.getData('Text');
         var el = event.currentTarget;
         var target = ko.dataFor(el);
-        target.addArticle(id)
+        if (viewModel.stories.selected()._contentsCount() < maxContentPerStory) {
+            target.addArticle(id)
+        } else {
+            window.alert("Oops! You've reached the maximum of " + maxContentPerStory + " articles per story.");
+        }
         $(el).removeClass('onDragOver');
         $(el).addClass('onDrop');
         setTimeout(function(){
@@ -114,7 +119,7 @@ curl([
                     }
                 },
                 error: function() {
-                    window.alert("Oops! This story has been deleted by someone.");
+                    window.alert("Oops! There was a problem saving this story.");
                     window.location.reload();
                 }
             });

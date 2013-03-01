@@ -9,7 +9,7 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
         opts = opts || {};
 
         this.title = ko.observable(opts.title || '');
-        this.explainer = ko.observable(opts.explainer || '(No synopsis)');
+        this.explainer = ko.observable(opts.explainer || '');
         this.hero = ko.observable(opts.hero || '');
         this.id = ko.observable(opts.id);
         this.events = ko.observableArray();
@@ -33,6 +33,12 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
             write: function(value) {this.explainer(value.replace(/(\r\n|\n|\r)/gm, '<br />'))},
             owner: this
         });
+
+        this._contentsCount = ko.computed(function(){
+            return _.reduce(this.events(), function(cc, event) {
+                return cc + event.content().length;
+            }, 0);
+        }, this);
 
         this.loadEvent = function(o) {
             var event;
