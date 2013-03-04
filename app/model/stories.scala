@@ -16,6 +16,8 @@ case class SContent(
   id: String, 
   importance: Int = 50, 
   colour: Int = 0,
+  sharedCount: Int = 0,
+  sharedCountTime: Option[String] = None,
   quote: Option[SQuote] = None
 )
 

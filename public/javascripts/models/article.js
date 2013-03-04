@@ -13,6 +13,9 @@ define(['models/editable', 'models/quote', 'Knockout', 'Common'], function (Edit
         this.importance = ko.observable(opts.importance || 50);
         this.colour     = ko.observable(opts.colour);
 
+        this.sharedCount     = opts.sharedCount || 0;
+        this.sharedCountTime = opts.sharedCountTime || 0;
+
         if (opts.fields) {
             this.trailText  = ko.observable(opts.fields.trailText || '');
         }
