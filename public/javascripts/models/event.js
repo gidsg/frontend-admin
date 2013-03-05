@@ -147,9 +147,13 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
                                         return a.id() === ra.id;
                                     });
                                     if (c) {
+                                        opts.articleCache[ra.id] = ra;
                                         c.webTitle(ra.webTitle);
                                         c.webPublicationDate(ra.webPublicationDate);
-                                        opts.articleCache[ra.id] = ra;
+                                        if (ra.fields && ra.fields.shortUrl) {
+                                            c.shortId(ra.fields.shortUrl.match(/[^\/]+$/)[0]);
+                                            console.log(c.shortId());
+                                        }
                                     }
                                 }
                             });
