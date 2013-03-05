@@ -23,8 +23,8 @@ define(['models/story', 'Config', 'Knockout', 'Common', 'Reqwest'], function (St
                         var t = i;
                         var then = article.sharedCountTime ? new Date(article.sharedCountTime) : false;
                         // TODO: filter out old articles by webPublicatiobDate
-                        if(!then || (now.getTime() - then.getTime()) > 5000) {
-                            setTimeout(function(){ self.addShareCount(article); }, t*1000);
+                        if(!then || (now.getTime() - then.getTime()) > 0) { // 300000 ms === 5 minutes
+                            setTimeout(function(){ self.addShareCount(article); }, t*100);
                             i += 1;                        
                         }
                     });
@@ -34,26 +34,24 @@ define(['models/story', 'Config', 'Knockout', 'Common', 'Reqwest'], function (St
 
         this.addShareCount = function(article) {
             var url = 'http://www.guardian.co.uk/' + article.id();
-            console.log("Request sharedCount for: " + url);
             Reqwest({
                 url: 'http://api.sharedcount.com/?url=' + encodeURIComponent(url),
                 type: 'jsonp',
                 success: function(resp) {
-                    article.sharedCount = self.sumNumericProps(resp);
-                    article.sharedCountTime = new Date();
+                    console.log("Received sharedCount for: " + url);
+                    article.sharedCountValue(self.sumNumericProps(resp));
+                    article.sharedCountTakenAt(new Date());
                     Common.mediator.emitEvent('models:story:haschanges');
                 }
             });            
         };
 
         this.sumNumericProps = function(obj) {
-            return _.reduce(obj, function(memo, p){
+            return _.reduce(obj, function(sum, p){
                 if (typeof p === 'object' && p) {
-                    return memo + self.sumNumericProps(p);
-                } else if (typeof p === 'number') {
-                    return memo + p;
+                    return sum + self.sumNumericProps(p);
                 } else {
-                    return 0;
+                    return sum + (typeof p === 'number' ? p : 0);
                 }
             }, 0);
         }

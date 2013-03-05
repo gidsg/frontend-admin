@@ -13,14 +13,34 @@ define(['models/editable', 'models/quote', 'Knockout', 'Common'], function (Edit
         this.importance = ko.observable(opts.importance || 50);
         this.colour     = ko.observable(opts.colour);
 
-        this.sharedCount     = opts.sharedCount || 0;
-        this.sharedCountTime = opts.sharedCountTime || 0;
-
         if (opts.fields) {
             this.trailText  = ko.observable(opts.fields.trailText || '');
         }
 
         this.quote  = ko.observable(opts.quote ? new Quote(opts.quote) : '');
+
+        // Performance stats
+        this.sharedCountValue   = ko.observable();
+        this.sharedCountTakenAt = ko.observable();
+
+        if (opts.performance) {
+            opts.performance.map(function(p){
+                if(p.name && p.name === 'shared-count') {
+                    this.sharedCountValue   = ko.observable(p.value);
+                    this.sharedCountTakenAt = ko.observable(p.takenAt);
+                }
+            });        
+        }
+    
+        this.performance = ko.computed(function(){
+            return [
+                {
+                    name: 'shared-count',
+                    value: this.sharedCountValue(),
+                    takenAt: this.sharedCountTakenAt() 
+                }
+            ];
+        }, this);
 
         // Temp vars
         this._mDot      = ko.observable(mDotHost + opts.id || '');    
