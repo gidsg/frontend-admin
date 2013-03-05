@@ -1,4 +1,17 @@
-define(['models/editable', 'models/quote', 'Knockout', 'Common'], function (Editable, Quote, ko, Common) {
+define([
+    'models/editable',
+    'models/quote',
+    'Knockout',
+    'Common',
+    'Reqwest'
+], 
+function (
+    Editable,
+    Quote,
+    ko,
+    Common,
+    Reqwest
+){
 
     var mDotHost = 'http://m.guardian.co.uk/';
 
@@ -20,24 +33,22 @@ define(['models/editable', 'models/quote', 'Knockout', 'Common'], function (Edit
         this.quote  = ko.observable(opts.quote ? new Quote(opts.quote) : '');
 
         // Performance stats
-        this.sharedCountValue   = ko.observable();
-        this.sharedCountTakenAt = ko.observable();
-
+        this._sharedCountValue   = ko.observable(0);
+        this._sharedCountTakenAt = ko.observable(0);
         if (opts.performance) {
             opts.performance.map(function(p){
                 if(p.name && p.name === 'shared-count') {
-                    this.sharedCountValue   = ko.observable(p.value);
-                    this.sharedCountTakenAt = ko.observable(p.takenAt);
+                    self._sharedCountValue(p.value);
+                    self._sharedCountTakenAt(p.takenAt);
                 }
             });        
         }
-    
         this.performance = ko.computed(function(){
             return [
                 {
                     name: 'shared-count',
-                    value: this.sharedCountValue(),
-                    takenAt: this.sharedCountTakenAt() 
+                    value: this._sharedCountValue(),
+                    takenAt: this._sharedCountTakenAt() 
                 }
             ];
         }, this);
@@ -65,6 +76,32 @@ define(['models/editable', 'models/quote', 'Knockout', 'Common'], function (Edit
     };
 
     Article.prototype = new Editable();
+
+    Article.prototype.addSharedCount = function() {
+        var url = 'http://www.guardian.co.uk/' + this.id(),
+            self = this;
+        Reqwest({
+            url: 'http://api.sharedcount.com/?url=' + encodeURIComponent(url),
+            type: 'jsonp',
+            success: function(resp) {
+                self._sharedCountValue(self.sumNumericProps(resp));
+                self._sharedCountTakenAt(new Date());
+                Common.mediator.emitEvent('models:article:sharecount:received');
+                Common.mediator.emitEvent('models:story:haschanges');
+            }
+        });            
+    };
+
+    Article.prototype.sumNumericProps = function sumNumericProps(obj) {
+        var self = this;
+        return _.reduce(obj, function(sum, p){
+            if (typeof p === 'object' && p) {
+                return sum + self.sumNumericProps(p);
+            } else {
+                return sum + (typeof p === 'number' ? p : 0);
+            }
+        }, 0);
+    };
 
     Article.prototype.setColour = function(item, e) {
         var colour = parseInt($(e.target).data('tone') || 0, 10);

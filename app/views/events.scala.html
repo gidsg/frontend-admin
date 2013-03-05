@@ -84,8 +84,11 @@
                     click: _edit
                 "></span>
                 <span class="cta">
-                        | <a data-bind="event: {click: $root.stories.deleteSelected}">delete Story</a>
-                        | <a target="_blank" data-bind="attr: { href: 'http://m.guardian.co.uk/stories/' + id() }">visit Story</a>
+                    | <a data-bind="event: {click: $root.stories.deleteSelected}">delete Story</a>
+                    | <a target="_blank" data-bind="attr: { href: 'http://m.guardian.co.uk/stories/' + id() }">visit Story</a>
+                    | <a data-bind="event: {click: updatePerformance}">update social stats</a>
+                    <span class="meta count" data-bind="
+                        text: _performanceCount, visible: _performanceCount"></span>
                 </span>
             </div>
             <input type="text" placeholder="Story Title" class="story-title" data-bind="
@@ -296,6 +299,7 @@
             html: webTitle() ? webTitle : id, 
             attr: {href: _mDot}
             "></a>
+        <span class="performance" data-bind="text: _sharedCountValue() + ' share' + (_sharedCountValue() !== 1 ? 's' : '')"></span>
         <span class="cta">
             | 
             <a data-bind='visible: !quote(), click: addQuote'>add Quote</a> 
