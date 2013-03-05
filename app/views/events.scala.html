@@ -31,6 +31,8 @@
         event: {click: stories.createStory},
         visible: !stories.selected()
         ">Start a Story</button>
+    <a data-bind="text: 'Get updates by ' + updatedBy(), visible: updatedBy"></a>
+
     <!-- ko if: !$root.stories.selected() -->
         <dl class="stories" data-bind="
             template: {name: 'story_closed_template', foreach: stories.stories}
