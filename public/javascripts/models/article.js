@@ -96,10 +96,10 @@ function (
     Article.prototype = new Editable();
 
     Article.prototype.addSharedCount = function() {
-        var url = 'http://www.guardian.co.uk/' + this.id(),
+        var url = encodeURIComponent('http://api.sharedcount.com/?url=http://www.guardian.co.uk/' + this.id()),
             self = this;
         Reqwest({
-            url: 'http://api.sharedcount.com/?url=' + encodeURIComponent(url),
+            url: '/jsonp/proxy/' + url,
             type: 'jsonp',
             success: function(resp) {
                 self._sharedCountValue(self.sumNumericProps(resp));
@@ -124,8 +124,7 @@ function (
                     Common.mediator.emitEvent('models:story:haschanges');
                 }
             });            
-        }
-    
+        }    
     };
 
     Article.prototype.sumNumericProps = function sumNumericProps(obj) {

@@ -27,7 +27,7 @@ POST    /admin/feature-trailblock        controllers.FeatureTrailblockController
 GET     /api/proxy/*path                 controllers.Api.proxy(path, callback)
 GET     /api/tag                         controllers.Api.tag(q, callback)
 GET     /api/item/*path                  controllers.Api.item(path, callback)
-
+GET     /jsonp/proxy/*absUrl             controllers.Api.jsonp(absUrl, callback)
 
 #Development endpoints
 GET     /dev/switchboard                 controllers.SwitchboardController.render()
