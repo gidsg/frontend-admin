@@ -250,7 +250,7 @@
                 <!-- /ko -->
 
                 <p>
-                    <span class="muted">Takes place on DD/MM/YYYY at HH:MM</span>
+                    <span class="muted">Date &amp Time, YYYY-MM-DD at HH:MM</span>
                 </p>
                 
                 <p class="synopsis">
@@ -260,7 +260,7 @@
                         text: _prettyDate,
                         click: _edit
                         "></span>
-                    <input type="date" placeholder="DD/MM/YYYY" data-bind="
+                    <input type="text" placeholder="DD/MM/YYYY" data-bind="
                         visible: _editing__prettyDate,
                         value: _prettyDate,
                         hasfocus: _editing__prettyDate
@@ -273,7 +273,7 @@
                         text: _prettyTime,
                         click: _edit
                         "></span>
-                    <input type="time" placeholder="HH:MM" data-bind="
+                    <input type="text" placeholder="HH:MM" data-bind="
                         visible: _editing__prettyTime,
                         value: _prettyTime,
                         hasfocus: _editing__prettyTime
