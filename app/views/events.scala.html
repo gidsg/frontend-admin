@@ -29,9 +29,14 @@
     </p>
     <button class="btn btn-mini btn-success" data-bind="
         event: {click: stories.createStory},
-        visible: !stories.selected()
+        visible: !stories.selected() && !updatedBy()
         ">Start a Story</button>
-    <a data-bind="text: 'Get updates by ' + updatedBy(), visible: updatedBy"></a>
+    <button class="btn btn-mini btn-alert" data-bind="
+        event: {click: stories.createStory},
+        text: 'Get updates by ' + updatedBy(),
+        visible: updatedBy
+        ">Start a Story</button>
+
 
     <!-- ko if: !$root.stories.selected() -->
         <dl class="stories" data-bind="

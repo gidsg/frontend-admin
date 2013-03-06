@@ -117,7 +117,7 @@ curl([
                         //if(!window.confirm("This story has been updated by " + resp.lastModified.email + ". Show their changes?")) return;
                         viewModel.updatedBy(resp.lastModified.email)
                         // Re-construct Story from response
-                        viewModel.stories.loadSelectedStory(resp);
+                        //viewModel.stories.loadSelectedStory(resp);
                     } else {
                         viewModel.updatedBy(undefined)
                     }
