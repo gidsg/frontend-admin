@@ -28,7 +28,6 @@ curl([
     viewModel.stories  = new Stories({articleCache: viewModel.articles.cache});
     viewModel.pendingSave = ko.observable(false);
     viewModel.failedSave  = ko.observable(false);
-    viewModel.updatedBy   = ko.observable(false);
 
     viewModel.stories.loadStories();
 
@@ -113,13 +112,9 @@ curl([
                 type: 'json',
                 success: function(resp) {
                     if (resp.lastModified.date !== story._lastModifiedDate() && !viewModel.pendingSave()) {
-                        //story._lastModifiedDate(resp.lastModified.date);
-                        //if(!window.confirm("This story has been updated by " + resp.lastModified.email + ". Show their changes?")) return;
-                        viewModel.updatedBy(resp.lastModified.email)
-                        // Re-construct Story from response
-                        //viewModel.stories.loadSelectedStory(resp);
-                    } else {
-                        viewModel.updatedBy(undefined)
+                        story._lastModifiedDate(resp.lastModified.date);
+                        viewModel.stories.loadSelectedStory(resp);
+                        viewModel.stories.selected()._updatedBy(resp.lastModified.email)
                     }
                 },
                 error: function() {

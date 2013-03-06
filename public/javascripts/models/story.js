@@ -24,8 +24,9 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
         this._makeEditable(['title', 'explainer', 'hero']);
 
         // Temporary
-        this._selected = ko.observable(); // The selected event
+        this._selected  = ko.observable(); // The selected event
         this._tentative = ko.observable(opts._tentative); // No id means it's a new un-persisted event,
+        this._updatedBy = ko.observable(); // Who else just updated this story
 
         // Explainer - for textarea, replace <br/> with \n 
         this._explainerBreaks = ko.computed({
@@ -118,6 +119,7 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
                     self._lastModifiedDate(resp.lastModified.date);
                     // Mark event as real
                     self._tentative(false);
+                    self._updatedBy(false);
                     Common.mediator.emitEvent('models:story:save:success');
                 },
                 error: function() {
