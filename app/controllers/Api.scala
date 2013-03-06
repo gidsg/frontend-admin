@@ -69,18 +69,13 @@ object Api extends Controller with Logging with AuthLogging {
     }
   }
 
-  def jsonp(absUrl: String, callback: String) = AuthAction { request =>
-    val url = "%s&callback=%s".format(
-      absUrl,
-      callback.javascriptEscaped.urlEncoded
-    )
-    println(url)
+  def json(url: String) = AuthAction { request =>
 
-    log("Proxying jsonp request to: %s" format url, request)
+    log("Proxying json request to: %s" format url, request)
 
     Async {
       WS.url(url).get().map { response =>
-        Ok(response.body).as("application/javascript")
+        Ok(response.body).as("application/json")
       }
     }
   }

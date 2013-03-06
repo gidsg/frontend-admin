@@ -299,7 +299,12 @@
             html: webTitle() ? webTitle : id, 
             attr: {href: _mDot}
             "></a>
-        <span class="performance" data-bind="text: _sharedCountValue() + ' share' + (_sharedCountValue() !== 1 ? 's' : '')"></span>
+        <span class="performance" data-bind="
+            visible: _sharedCountValue,
+            text:    _sharedCountValue() + ' shares'"></span>
+        <span class="performance" data-bind="
+            visible: _commentCountValue,
+            text:    _commentCountValue() + ' comments'"></span>
         <span class="cta">
             | 
             <a data-bind='visible: !quote(), click: addQuote'>add Quote</a> 

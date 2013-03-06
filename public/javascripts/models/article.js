@@ -95,35 +95,56 @@ function (
 
     Article.prototype = new Editable();
 
+    Article.prototype.addPerformanceCounts = function() {
+        this.addSharedCount();
+        this.addCommentCount();
+    }
+
+    Article.prototype.isStale = function(date) {
+        var age = new Date().getTime() - new Date(date).getTime();
+        return age > 60000; 
+    }
+
     Article.prototype.addSharedCount = function() {
         var url = encodeURIComponent('http://api.sharedcount.com/?url=http://www.guardian.co.uk/' + this.id()),
             self = this;
-        Reqwest({
-            url: '/jsonp/proxy/' + url,
-            type: 'jsonp',
-            success: function(resp) {
-                self._sharedCountValue(self.sumNumericProps(resp));
-                self._sharedCountTakenAt(new Date());
-                Common.mediator.emitEvent('models:article:sharecount:received');
-                Common.mediator.emitEvent('models:story:haschanges');
-            }
-        });            
-    };
-
-    Article.prototype.addCommentCount = function() {
-        var url,
-            self = this;
-        if(this.shortId()){
+        if (this.isStale(this._sharedCountTakenAt())) {
             Reqwest({
-                url: 'http://discussion.guardianapis.com/discussion-api/discussion/p/' + this.shortId() + '/comments/count',
-                type: 'jsonp',
+                url: '/json/proxy/' + url,
+                type: 'json',
                 success: function(resp) {
                     self._sharedCountValue(self.sumNumericProps(resp));
                     self._sharedCountTakenAt(new Date());
-                    Common.mediator.emitEvent('models:article:sharecount:received');
                     Common.mediator.emitEvent('models:story:haschanges');
+                },
+                complete: function() {
+                    Common.mediator.emitEvent('models:article:performance:done');                
+                }
+            });
+        } else {
+            Common.mediator.emitEvent('models:article:performance:done');                
+        }    
+    };
+
+    Article.prototype.addCommentCount = function() {
+        var url = encodeURIComponent('http://discussion.guardianapis.com/discussion-api/discussion/p/' + 
+            this.shortId() + '/comments/count'),
+            self = this;
+        if(this.shortId() && this.isStale(this._commentCountTakenAt())) {
+            Reqwest({
+                url: '/json/proxy/' + url,
+                type: 'json',
+                success: function(resp) {
+                    self._commentCountValue(resp.numberOfComments);
+                    self._commentCountTakenAt(new Date());
+                    Common.mediator.emitEvent('models:story:haschanges');
+                },
+                complete: function() {
+                    Common.mediator.emitEvent('models:article:performance:done');                
                 }
             });            
+        } else {
+            Common.mediator.emitEvent('models:article:performance:done');                
         }    
     };
 

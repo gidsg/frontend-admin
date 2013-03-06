@@ -22,6 +22,7 @@ case class SMeasurement(
 case class SContent(
   id: String, 
   shortId: Option[String] = None, 
+  webPublicationDate: Option[String] = None,
   importance: Int = 50, 
   colour: Int = 0,
   performance: Seq[SMeasurement] = Nil,
