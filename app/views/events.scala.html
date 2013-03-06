@@ -59,7 +59,7 @@
             edited by 
             <span class="author" data-bind="text: _lastModifiedEmail"></span>
             <span data-bind="text: _lastModifiedDatePretty"></span>
-            - <a target="_blank" data-bind="attr: { href: 'http://m.guardian.co.uk/stories/' + id() }" class="muted">Visit</a>
+            - <a target="_blank" data-bind="attr: { href: $root.frontUrlBase + id() }" class="muted">Visit</a>
         </div>
     </div>
 </script>
@@ -85,7 +85,7 @@
                 "></span>
                 <span class="cta">
                         | <a data-bind="event: {click: $root.stories.deleteSelected}">delete Story</a>
-                        | <a target="_blank" data-bind="attr: { href: 'http://m.guardian.co.uk/stories/' + id() }">visit Story</a>
+                        | <a target="_blank" data-bind="attr: { href: $root.frontUrlBase + id() }">visit Story</a>
                 </span>
             </div>
             <input type="text" placeholder="Story Title" class="story-title" data-bind="
