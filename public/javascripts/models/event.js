@@ -96,15 +96,18 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
         }
 
         this.addArticle = function(id) {
-            var included;
+            var included,
+                article;
             id = self.urlPath(id);
             if (id) {
                 included = _.some(self.content(), function(item){
                     return item.id() === id;
                 });
                 if (!included) {
-                    self.content.unshift(new Article({id: id}));
+                    article = new Article({id: id});
+                    self.content.unshift(article);
                     self.decorateContent();
+                    article.addSharedCount();
                     Common.mediator.emitEvent('models:story:haschanges');
                 }
             } else {
