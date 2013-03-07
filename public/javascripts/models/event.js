@@ -107,7 +107,6 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
                     article = new Article({id: id});
                     self.content.unshift(article);
                     self.decorateContent();
-                    article.addSharedCount();
                     Common.mediator.emitEvent('models:story:haschanges');
                 }
             } else {
@@ -147,9 +146,14 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
                                         return a.id() === ra.id;
                                     });
                                     if (c) {
+                                        opts.articleCache[ra.id] = ra;
                                         c.webTitle(ra.webTitle);
                                         c.webPublicationDate(ra.webPublicationDate);
-                                        opts.articleCache[ra.id] = ra;
+                                        if (ra.fields && ra.fields.shortUrl) {
+                                            c.shortId(ra.fields.shortUrl.match(/[^\/]+$/)[0]);
+                                        }
+                                        c.addPerformanceCounts();
+                                        Common.mediator.emitEvent('models:story:haschanges');
                                     }
                                 }
                             });

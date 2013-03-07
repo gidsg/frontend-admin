@@ -2,7 +2,7 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
 
     var Story = function(opts) {
         var endpoint = '/story',
-            saveInterval = 1000, // milliseconds
+            saveInterval = 3000, // milliseconds
             deBounced,
             self = this;
 
@@ -93,15 +93,15 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
                 event.content().map(function(article){
                     var t = i;
                     setTimeout(function(){
-                        article.addSharedCount();
-                    }, t*100);
+                        article.addPerformanceCounts();
+                    }, t*250);
                     i += 1;                        
                 });
             });
-            self._performanceCount(i);
+            self._performanceCount(i*2); // 2 because article.addPerformanceCounts currently fires two requests per article
         };
 
-        Common.mediator.addListener('models:article:sharecount:received', function(){
+        Common.mediator.addListener('models:article:performance:done', function(){
             self._performanceCount(Math.max(self._performanceCount() - 1, 0));
         });
 

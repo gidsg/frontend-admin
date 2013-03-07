@@ -68,4 +68,15 @@ object Api extends Controller with Logging with AuthLogging {
       }
     }
   }
+
+  def json(url: String) = AuthAction { request =>
+
+    log("Proxying json request to: %s" format url, request)
+
+    Async {
+      WS.url(url).get().map { response =>
+        Ok(response.body).as("application/json")
+      }
+    }
+  }
 }
