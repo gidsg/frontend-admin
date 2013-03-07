@@ -85,9 +85,7 @@ define(['models/story', 'Config', 'Knockout', 'Common', 'Reqwest'], function (St
         // Decorate articles for the selected story 
         this.selected.subscribe(function(story) {
             if (story) {
-                story.events().map(function(event){
-                    event.decorateContent();
-                });
+                story.decorateContents();
             }
         });
     };

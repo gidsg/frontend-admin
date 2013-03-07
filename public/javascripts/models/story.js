@@ -1,4 +1,18 @@
-define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], function (Editable, Event, ko, Common, Reqwest) {
+define([
+    'models/editable',
+    'models/event',
+    'Config',
+    'Knockout',
+    'Common',
+    'Reqwest'],
+function (
+    Editable,
+    Event,
+    Config,
+    ko,
+    Common,
+    Reqwest
+) {
 
     var Story = function(opts) {
         var endpoint = '/story',
@@ -55,7 +69,6 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
         });
 
         this.setSelected = function(current) {
-            current.decorateContent();
             self._selected(current);
         };
 
@@ -88,18 +101,10 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
             }
         }
 
-        this.updatePerformance = function(){
-            var i = 0;
+        this.decorateContents = function() {
             this.events().map(function(event){
-                event.content().map(function(article){
-                    var t = i;
-                    setTimeout(function(){
-                        article.addPerformanceCounts();
-                    }, t*250);
-                    i += 1;                        
-                });
+                event.decorateContent();
             });
-            self._performanceCount(i*2); // 2 because article.addPerformanceCounts currently fires two requests per article
         };
 
         Common.mediator.addListener('models:article:performance:done', function(){

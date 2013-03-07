@@ -106,6 +106,7 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
                 if (!included) {
                     article = new Article({id: id});
                     self.content.unshift(article);
+                    // Sort articles by date, descending.
                     self.decorateContent();
                     Common.mediator.emitEvent('models:story:haschanges');
                 }
@@ -114,17 +115,10 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
             }                
         };
 
-        this.removeArticle = function(article) {
-            var result = window.confirm("Are you sure you want to DELETE this article?");
-            if (!result) return;
-            self.content.remove(article);
-            Common.mediator.emitEvent('models:story:haschanges');
-        };
-
         this.decorateContent = function() {
             var apiUrl = "/api/proxy/search";
             // Find articles that aren't yet decorated with API data..
-            var areRaw = _.filter(self.content(), function(a){
+            var areRaw = _.filter(this.content(), function(a){
                 return ! a.webTitle();
             });
             // and grab them from the API
@@ -157,7 +151,6 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
                                     }
                                 }
                             });
-                            // Sort articles by date, descending.
                             self.content.sort(function (left, right) {
                                 var ld = left.webPublicationDate(),
                                     rd = right.webPublicationDate();
@@ -169,6 +162,14 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
                 });
             }
         };
+
+        this.removeArticle = function(article) {
+            var result = window.confirm("Are you sure you want to DELETE this article?");
+            if (!result) return;
+            self.content.remove(article);
+            Common.mediator.emitEvent('models:story:haschanges');
+        };
+
 
         this.addAgentPerson = function(article) {
             self.agents.unshift(new Agent({rdfType: 'http://schema.org/Person'}));
