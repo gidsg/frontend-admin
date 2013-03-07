@@ -31,6 +31,7 @@
         event: {click: stories.createStory},
         visible: !stories.selected()
         ">Start a Story</button>
+
     <!-- ko if: !$root.stories.selected() -->
         <dl class="stories" data-bind="
             template: {name: 'story_closed_template', foreach: stories.stories}
@@ -72,6 +73,10 @@
                 event: {click: $root.stories.clearSelected},
                 disable: $root.pendingSave()
                 ">&laquo; Back to Stories</button>
+            <span class="text-error" data-bind="
+                text: 'This story has been updated by ' + _updatedBy(),
+                visible: _updatedBy
+                "></span>
         </p>
 
         <p class="muted" data-bind="visible: id">Name for
