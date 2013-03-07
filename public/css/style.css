@@ -183,6 +183,16 @@ textarea.event-explainer {
     display: inline;
 }
 
+.article .performance {
+    font-size: 11px;
+    color: #08c;
+    margin: 0 0 0 4px;
+}
+
+.article:hover .performance {
+    display: none;
+}
+
 /** scaffolding */
 .storify * {
     font-family: 'Merriweather', serif;

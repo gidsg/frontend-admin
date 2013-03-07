@@ -2,7 +2,7 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
 
     var Story = function(opts) {
         var endpoint = '/story',
-            saveInterval = 1000, // milliseconds
+            saveInterval = 3000, // milliseconds
             deBounced,
             self = this;
 
@@ -27,6 +27,7 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
         this._selected  = ko.observable(); // The selected event
         this._tentative = ko.observable(opts._tentative); // No id means it's a new un-persisted event,
         this._updatedBy = ko.observable(); // Who else just updated this story
+        this._performanceCount = ko.observable(0); // To show progress when gathering performance stats
 
         // Explainer - for textarea, replace <br/> with \n 
         this._explainerBreaks = ko.computed({
@@ -86,6 +87,24 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
                 self.events.remove(event);
             }
         }
+
+        this.updatePerformance = function(){
+            var i = 0;
+            this.events().map(function(event){
+                event.content().map(function(article){
+                    var t = i;
+                    setTimeout(function(){
+                        article.addPerformanceCounts();
+                    }, t*250);
+                    i += 1;                        
+                });
+            });
+            self._performanceCount(i*2); // 2 because article.addPerformanceCounts currently fires two requests per article
+        };
+
+        Common.mediator.addListener('models:article:performance:done', function(){
+            self._performanceCount(Math.max(self._performanceCount() - 1, 0));
+        });
 
         this.save =  function() {
             var url = endpoint;

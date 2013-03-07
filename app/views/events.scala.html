@@ -89,8 +89,11 @@
                     click: _edit
                 "></span>
                 <span class="cta">
-                        | <a data-bind="event: {click: $root.stories.deleteSelected}">delete Story</a>
-                        | <a target="_blank" data-bind="attr: { href: 'http://m.guardian.co.uk/stories/' + id() }">visit Story</a>
+                    | <a data-bind="event: {click: $root.stories.deleteSelected}">delete Story</a>
+                    | <a target="_blank" data-bind="attr: { href: 'http://m.guardian.co.uk/stories/' + id() }">visit Story</a>
+                    | <a data-bind="event: {click: updatePerformance}">update social stats</a>
+                    <span class="meta count" data-bind="
+                        text: _performanceCount, visible: _performanceCount"></span>
                 </span>
             </div>
             <input type="text" placeholder="Story Title" class="story-title" data-bind="
@@ -252,7 +255,7 @@
                 <!-- /ko -->
 
                 <p>
-                    <span class="muted">Takes place on DD/MM/YYYY at HH:MM</span>
+                    <span class="muted">Date &amp Time, YYYY-MM-DD at HH:MM</span>
                 </p>
                 
                 <p class="synopsis">
@@ -262,7 +265,7 @@
                         text: _prettyDate,
                         click: _edit
                         "></span>
-                    <input type="date" placeholder="DD/MM/YYYY" data-bind="
+                    <input type="text" placeholder="DD/MM/YYYY" data-bind="
                         visible: _editing__prettyDate,
                         value: _prettyDate,
                         hasfocus: _editing__prettyDate
@@ -275,7 +278,7 @@
                         text: _prettyTime,
                         click: _edit
                         "></span>
-                    <input type="time" placeholder="HH:MM" data-bind="
+                    <input type="text" placeholder="HH:MM" data-bind="
                         visible: _editing__prettyTime,
                         value: _prettyTime,
                         hasfocus: _editing__prettyTime
@@ -301,6 +304,12 @@
             html: webTitle() ? webTitle : id, 
             attr: {href: _mDot}
             "></a>
+        <span class="performance" data-bind="
+            visible: _sharedCountValue,
+            text:    _sharedCountValue() + ' shares'"></span>
+        <span class="performance" data-bind="
+            visible: _commentCountValue,
+            text:    _commentCountValue() + ' comments'"></span>
         <span class="cta">
             | 
             <a data-bind='visible: !quote(), click: addQuote'>add Quote</a> 
