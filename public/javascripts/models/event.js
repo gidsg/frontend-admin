@@ -96,14 +96,16 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
         }
 
         this.addArticle = function(id) {
-            var included;
+            var included,
+                article;
             id = self.urlPath(id);
             if (id) {
                 included = _.some(self.content(), function(item){
                     return item.id() === id;
                 });
                 if (!included) {
-                    self.content.unshift(new Article({id: id}));
+                    article = new Article({id: id});
+                    self.content.unshift(article);
                     self.decorateContent();
                     Common.mediator.emitEvent('models:story:haschanges');
                 }
@@ -144,9 +146,14 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
                                         return a.id() === ra.id;
                                     });
                                     if (c) {
+                                        opts.articleCache[ra.id] = ra;
                                         c.webTitle(ra.webTitle);
                                         c.webPublicationDate(ra.webPublicationDate);
-                                        opts.articleCache[ra.id] = ra;
+                                        if (ra.fields && ra.fields.shortUrl) {
+                                            c.shortId(ra.fields.shortUrl.match(/[^\/]+$/)[0]);
+                                        }
+                                        c.addPerformanceCounts();
+                                        Common.mediator.emitEvent('models:story:haschanges');
                                     }
                                 }
                             });

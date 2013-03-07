@@ -7,7 +7,7 @@ define(['models/story', 'Config', 'Knockout', 'Common', 'Reqwest'], function (St
         this.stories = ko.observableArray();
 
         // Temporary
-        this.selected = ko.observable();
+        this.selected = ko.observable(); // The selected story
 
         this.length = ko.computed(function(){
             return this.stories().length;
@@ -81,6 +81,15 @@ define(['models/story', 'Config', 'Knockout', 'Common', 'Reqwest'], function (St
                 error: function() {}
             });
         };
+
+        // Decorate articles for the selected story 
+        this.selected.subscribe(function(story) {
+            if (story) {
+                story.events().map(function(event){
+                    event.decorateContent();
+                });
+            }
+        });
     };
 
     return Stories;
