@@ -12,8 +12,6 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
 
         var reqwest = opts.reqwest || Reqwest;
         
-        this.cache = {};
-
         this.isTermAnItem = function() {
             return self.term().match(/\//);
         }
@@ -47,7 +45,6 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
                         self.articles.removeAll();
                         rawArticles.map(function(a){
                             self.articles.push(new Article(a));
-                            self.cache[a.id] = a;
                         })
                     },
                     error: function() {}
@@ -56,7 +53,6 @@ define(['models/article', 'Knockout', 'Common', 'Reqwest'], function (Article, k
             
             return true; // ensure default click happens on all the bindings
         };
-
     };
 });
 

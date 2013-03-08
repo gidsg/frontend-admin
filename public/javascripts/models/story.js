@@ -59,7 +59,6 @@ function (
         this.loadEvent = function(o) {
             var event;
             o = o || {};
-            o.articleCache = opts.articleCache;
             event = new Event(o);
             self.events.push(event);
         };
@@ -77,10 +76,7 @@ function (
         };
 
         this.createEvent = function() {
-            var event = new Event({
-                articleCache: opts.articleCache,
-                _tentative: true
-            });
+            var event = new Event({_tentative: true});
             self.events.unshift(event);
             self._selected(event);
         };
@@ -103,7 +99,7 @@ function (
 
         this.decorateContents = function() {
             this.events().map(function(event){
-                event.decorateContent();
+                self._performanceCount(self._performanceCount() + event.decorateContent());
             });
         };
 

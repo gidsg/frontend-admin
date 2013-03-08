@@ -70,8 +70,7 @@ function (
 
     Article.prototype.isStale = function(date) {
         if (date) {
-            var age = new Date().getTime() - new Date(date).getTime();
-            return age > 60000; 
+            return (new Date().getTime() - new Date(date).getTime()) > 60000; 
         } else {
             return true;
         }

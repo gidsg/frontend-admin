@@ -25,7 +25,7 @@ curl([
     }
 
     viewModel.articles = new Articles();
-    viewModel.stories  = new Stories({articleCache: viewModel.articles.cache});
+    viewModel.stories  = new Stories();
     viewModel.pendingSave = ko.observable(false);
     viewModel.failedSave  = ko.observable(false);
     viewModel.frontUrlBase = 'http://m.' + (window.location.hostname === 'frontend.gutools.co.uk' ? 'guardian' : 'gucode') + '.co.uk/stories/',

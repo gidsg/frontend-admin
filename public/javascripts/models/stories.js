@@ -16,7 +16,6 @@ define(['models/story', 'Config', 'Knockout', 'Common', 'Reqwest'], function (St
         this.loadStory = function(o) {
             var story;
             o = o || {_tentative: true};
-            o.articleCache = opts.articleCache;
             story = new Story(o);
             self.stories.unshift(story);
             return story; 
