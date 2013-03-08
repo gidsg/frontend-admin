@@ -91,7 +91,7 @@
                 <span class="cta">
                     | <a data-bind="event: {click: $root.stories.deleteSelected}">delete Story</a>
                     | <a target="_blank" data-bind="attr: { href: $root.frontUrlBase + id() }">visit Story</a>
-                    | <a data-bind="event: {click: updatePerformance}">update social stats</a>
+                    | <a data-bind="event: {click: decorateContents}">update article stats</a>
                     <span class="meta count" data-bind="
                         text: _performanceCount, visible: _performanceCount"></span>
                 </span>
@@ -305,11 +305,11 @@
             attr: {href: _mDot}
             "></a>
         <span class="performance" data-bind="
-            visible: _sharedCountValue,
-            text:    _sharedCountValue() + ' shares'"></span>
+            visible: shares,
+            text:    shares() + ' shares'"></span>
         <span class="performance" data-bind="
-            visible: _commentCountValue,
-            text:    _commentCountValue() + ' comments'"></span>
+            visible: comments,
+            text:    comments() + ' comments'"></span>
         <span class="cta">
             | 
             <a data-bind='visible: !quote(), click: addQuote'>add Quote</a> 

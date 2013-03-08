@@ -1,4 +1,18 @@
-define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], function (Editable, Event, ko, Common, Reqwest) {
+define([
+    'models/editable',
+    'models/event',
+    'Config',
+    'Knockout',
+    'Common',
+    'Reqwest'],
+function (
+    Editable,
+    Event,
+    Config,
+    ko,
+    Common,
+    Reqwest
+) {
 
     var Story = function(opts) {
         var endpoint = '/story',
@@ -45,7 +59,6 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
         this.loadEvent = function(o) {
             var event;
             o = o || {};
-            o.articleCache = opts.articleCache;
             event = new Event(o);
             self.events.push(event);
         };
@@ -55,7 +68,6 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
         });
 
         this.setSelected = function(current) {
-            current.decorateContent();
             self._selected(current);
         };
 
@@ -64,10 +76,7 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
         };
 
         this.createEvent = function() {
-            var event = new Event({
-                articleCache: opts.articleCache,
-                _tentative: true
-            });
+            var event = new Event({_tentative: true});
             self.events.unshift(event);
             self._selected(event);
         };
@@ -88,18 +97,10 @@ define(['models/editable', 'models/event', 'Knockout', 'Common', 'Reqwest'], fun
             }
         }
 
-        this.updatePerformance = function(){
-            var i = 0;
+        this.decorateContents = function() {
             this.events().map(function(event){
-                event.content().map(function(article){
-                    var t = i;
-                    setTimeout(function(){
-                        article.addPerformanceCounts();
-                    }, t*250);
-                    i += 1;                        
-                });
+                self._performanceCount(self._performanceCount() + event.decorateContent());
             });
-            self._performanceCount(i*2); // 2 because article.addPerformanceCounts currently fires two requests per article
         };
 
         Common.mediator.addListener('models:article:performance:done', function(){

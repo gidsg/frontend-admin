@@ -16,7 +16,6 @@ define(['models/story', 'Config', 'Knockout', 'Common', 'Reqwest'], function (St
         this.loadStory = function(o) {
             var story;
             o = o || {_tentative: true};
-            o.articleCache = opts.articleCache;
             story = new Story(o);
             self.stories.unshift(story);
             return story; 
@@ -85,9 +84,7 @@ define(['models/story', 'Config', 'Knockout', 'Common', 'Reqwest'], function (St
         // Decorate articles for the selected story 
         this.selected.subscribe(function(story) {
             if (story) {
-                story.events().map(function(event){
-                    event.decorateContent();
-                });
+                story.decorateContents();
             }
         });
     };
