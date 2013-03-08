@@ -22,9 +22,9 @@ case class SMeasurement(
 case class SContent(
   id: String, 
   shares: Option[Int] = None,
-  sharesTakenAt: Option[String] = None,
+  sharesTakenAt: Option[DateTime] = None,
   comments: Option[Int] = None,
-  commentsTakenAt: Option[String] = None,
+  commentsTakenAt: Option[DateTime] = None,
   importance: Int = 50, 
   colour: Int = 0,
   performance: Seq[SMeasurement] = Nil,

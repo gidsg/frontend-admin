@@ -28,9 +28,14 @@ define(['Knockout', 'Common'], function (ko, Common) {
             prop;
         // Strip temp vars starting '_'
         for (prop in copy) {
-            if (0 === prop.indexOf('_')) {
+            if (prop.indexOf('_') === 0) {
                 delete copy[prop];
             }
+            /*
+            if (prop === 'shares' || prop === 'sharesTakenAt' || prop === 'comments' || prop === 'commentsTakenAt') {
+                delete copy[prop];
+            }
+            */
         }
         return copy;
     };
