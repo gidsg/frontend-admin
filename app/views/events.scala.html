@@ -60,9 +60,24 @@
             edited by 
             <span class="author" data-bind="text: _lastModifiedEmail"></span>
             <span data-bind="text: _lastModifiedDatePretty"></span>
-            - <a target="_blank" data-bind="attr: { href: $root.frontUrlBase + id() }" class="muted">Visit</a>
+            - <a target="_blank" data-bind="attr: { href: $root.frontUrlBase + id() }" class="muted">visit</a>
         </div>
     </div>
+</script>
+
+<!-- template: list of stories -->
+<script type="text/html" id="story_list_template">
+    
+    <!-- ko if: $root.stories.selected().id() !== id() -->
+        <li class="notableAssocition">
+            <span class="muted" data-bind="
+                    text: title() ? title : '...',
+                    css: { hasAssociation: $root.stories.hasNotableAssociationWith(id()) },
+                    event: { click: $root.stories.toggleNotableAssociation }
+                "></span>
+        </li>
+    <!-- /ko -->
+
 </script>
 
 <!-- template: story in open state -->
@@ -149,7 +164,17 @@
                     hasfocus: _editing_explainer
                     "/></textarea>
             </p>
-        </p>
+            </p>
+
+            <p>
+                <p class="muted">
+                    Notable associations
+                    </p>
+                <ul class="stories" data-bind="
+                    template: {name: 'story_list_template', foreach: $root.stories.stories}
+                    "></ul>
+            </p>
+           
     </div>
 </script>
 

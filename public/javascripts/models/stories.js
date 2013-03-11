@@ -20,6 +20,15 @@ define(['models/story', 'Config', 'Knockout', 'Common', 'Reqwest'], function (St
             self.stories.unshift(story);
             return story; 
         };
+        
+        this.toggleNotableAssociation = function(s) {
+            self.selected().toggleNotableAssociation(s.id());
+        };
+        
+        this.hasNotableAssociationWith = function(id) {
+            return (self.selected().notableAssociations().indexOf(id) > -1)
+        };
+        
 
         this.loadSelectedStory = function(o) {
             var story;

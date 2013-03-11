@@ -398,3 +398,8 @@ a.cta, .cta a {
     background: #CEE8C3;
 }
 
+.hasAssociation, .notableAssocition .muted:hover { 
+    color: #E0AF1B;
+    cursor: pointer;
+}
+
