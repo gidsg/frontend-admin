@@ -27,6 +27,7 @@ function (
         this.hero = ko.observable(opts.hero || '');
         this.id = ko.observable(opts.id);
         this.events = ko.observableArray();
+        this.notableAssociations = ko.observableArray(opts.notableAssociations || []);
 
         this._lastModifiedEmail = ko.observable(opts.lastModified ? opts.lastModified.email : '');
         this._lastModifiedDate  = ko.observable(opts.lastModified ? opts.lastModified.date  : '');
@@ -74,6 +75,15 @@ function (
         this.clearSelected = function(current) {
             self._selected(undefined);
         };
+        
+        this.toggleNotableAssociation = function(id) {
+            if ( self.notableAssociations().indexOf(id) >= 0 ) {
+                self.notableAssociations.remove(id);
+            } else {
+                self.notableAssociations.unshift(id);
+            }
+            Common.mediator.emitEvent('models:story:haschanges');
+        };
 
         this.createEvent = function() {
             var event = new Event({_tentative: true});
@@ -88,7 +98,7 @@ function (
             self._selected(false);
             Common.mediator.emitEvent('models:story:haschanges');
         };
-
+        
         this.cancelEditing = function(event) {
             event._editing(false);
             if (event._tentative()) {
