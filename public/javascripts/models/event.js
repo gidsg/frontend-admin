@@ -28,12 +28,6 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
         // Content
         this.content = ko.observableArray();
         (opts.content || []).map(function(a){
-            var cached = opts.articleCache ? opts.articleCache[a.id] : undefined;
-            if (cached) {
-                cached.importance = a.importance; // updating the cached article with incoming update
-                cached.colour = a.colour;
-                a = cached;
-            }
             self.content.push(new Article(a));
         });
 
@@ -106,6 +100,7 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
                 if (!included) {
                     article = new Article({id: id});
                     self.content.unshift(article);
+                    // Sort articles by date, descending.
                     self.decorateContent();
                     Common.mediator.emitEvent('models:story:haschanges');
                 }
@@ -114,23 +109,12 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
             }                
         };
 
-        this.removeArticle = function(article) {
-            var result = window.confirm("Are you sure you want to DELETE this article?");
-            if (!result) return;
-            self.content.remove(article);
-            Common.mediator.emitEvent('models:story:haschanges');
-        };
-
         this.decorateContent = function() {
             var apiUrl = "/api/proxy/search";
-            // Find articles that aren't yet decorated with API data..
-            var areRaw = _.filter(self.content(), function(a){
-                return ! a.webTitle();
-            });
             // and grab them from the API
-            if(areRaw.length) {
+            if(this.content().length) {
                 apiUrl += "?page-size=50&format=json&show-fields=all&show-tags=all&api-key=" + Config.apiKey;
-                apiUrl += "&ids=" + areRaw.map(function(article){
+                apiUrl += "&ids=" + this.content().map(function(article){
                     return encodeURIComponent(article.id());
                 }).join(',');
 
@@ -142,11 +126,10 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
                             resp = resp.response.results;
                             resp.map(function(ra){
                                 if (ra.id && ra.webTitle) {
-                                    var c = _.find(areRaw,function(a){
+                                    var c = _.find(self.content(),function(a){
                                         return a.id() === ra.id;
                                     });
                                     if (c) {
-                                        opts.articleCache[ra.id] = ra;
                                         c.webTitle(ra.webTitle);
                                         c.webPublicationDate(ra.webPublicationDate);
                                         if (ra.fields && ra.fields.shortUrl) {
@@ -157,7 +140,6 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
                                     }
                                 }
                             });
-                            // Sort articles by date, descending.
                             self.content.sort(function (left, right) {
                                 var ld = left.webPublicationDate(),
                                     rd = right.webPublicationDate();
@@ -168,7 +150,16 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
                     error: function() {}
                 });
             }
+            return this.content().length;
         };
+
+        this.removeArticle = function(article) {
+            var result = window.confirm("Are you sure you want to DELETE this article?");
+            if (!result) return;
+            self.content.remove(article);
+            Common.mediator.emitEvent('models:story:haschanges');
+        };
+
 
         this.addAgentPerson = function(article) {
             self.agents.unshift(new Agent({rdfType: 'http://schema.org/Person'}));

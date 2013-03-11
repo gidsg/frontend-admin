@@ -34,42 +34,8 @@ function (
         this.quote  = ko.observable(opts.quote ? new Quote(opts.quote) : '');
 
         // Performance stats
-        this._commentCountValue   = ko.observable(0);
-        this._commentCountTakenAt = ko.observable(0);
-        this._sharedCountValue   = ko.observable(0);
-        this._sharedCountTakenAt = ko.observable(0);
-        if (opts.performance) {
-            opts.performance.map(function(p){
-                switch(p.name) {
-                    case 'shared-count':
-                        self._sharedCountValue(p.value);
-                        self._sharedCountTakenAt(p.takenAt);
-                        break;
-                    case 'comment-count':
-                        self._commentCountValue(p.value);
-                        self._commentCountTakenAt(p.takenAt);
-                        break;
-                }
-            });        
-        }
-        this.performance = ko.computed(function(){
-            var perf = [];
-            if (this._sharedCountTakenAt()) {
-                perf.push({
-                    name: 'shared-count',
-                    value: this._sharedCountValue(),
-                    takenAt: this._sharedCountTakenAt() 
-                });                
-            }
-            if (this._commentCountTakenAt()) {
-                perf.push({
-                    name: 'comment-count',
-                    value: this._commentCountValue(),
-                    takenAt: this._commentCountTakenAt() 
-                });                
-            }
-            return perf;
-        }, this);
+        this.shares          = ko.observable(opts.shares);
+        this.comments        = ko.observable(opts.comments);
 
         // Temp vars
         this._mDot      = ko.observable(mDotHost + opts.id || '');    
@@ -100,43 +66,32 @@ function (
         this.addCommentCount();
     }
 
-    Article.prototype.isStale = function(date) {
-        var age = new Date().getTime() - new Date(date).getTime();
-        return age > 60000; 
-    }
-
     Article.prototype.addSharedCount = function() {
         var url = encodeURIComponent('http://api.sharedcount.com/?url=http://www.guardian.co.uk/' + this.id()),
             self = this;
-        if (this.isStale(this._sharedCountTakenAt())) {
-            Reqwest({
-                url: '/json/proxy/' + url,
-                type: 'json',
-                success: function(resp) {
-                    self._sharedCountValue(self.sumNumericProps(resp));
-                    self._sharedCountTakenAt(new Date());
-                    Common.mediator.emitEvent('models:story:haschanges');
-                },
-                complete: function() {
-                    Common.mediator.emitEvent('models:article:performance:done');                
-                }
-            });
-        } else {
-            Common.mediator.emitEvent('models:article:performance:done');                
-        }    
+        Reqwest({
+            url: '/json/proxy/' + url,
+            type: 'json',
+            success: function(resp) {
+                self.shares(self.sumNumericProps(resp));
+                Common.mediator.emitEvent('models:story:haschanges');
+            },
+            complete: function() {
+                Common.mediator.emitEvent('models:article:performance:done');                
+            }
+        });
     };
 
     Article.prototype.addCommentCount = function() {
         var url = encodeURIComponent('http://discussion.guardianapis.com/discussion-api/discussion/p/' + 
             this.shortId() + '/comments/count'),
             self = this;
-        if(this.shortId() && this.isStale(this._commentCountTakenAt())) {
+        if(this.shortId()) {
             Reqwest({
                 url: '/json/proxy/' + url,
                 type: 'json',
                 success: function(resp) {
-                    self._commentCountValue(resp.numberOfComments);
-                    self._commentCountTakenAt(new Date());
+                    self.comments(resp.numberOfComments);
                     Common.mediator.emitEvent('models:story:haschanges');
                 },
                 complete: function() {

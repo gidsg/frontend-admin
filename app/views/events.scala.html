@@ -31,6 +31,7 @@
         event: {click: stories.createStory},
         visible: !stories.selected()
         ">Start a Story</button>
+
     <!-- ko if: !$root.stories.selected() -->
         <dl class="stories" data-bind="
             template: {name: 'story_closed_template', foreach: stories.stories}
@@ -59,7 +60,7 @@
             edited by 
             <span class="author" data-bind="text: _lastModifiedEmail"></span>
             <span data-bind="text: _lastModifiedDatePretty"></span>
-            - <a target="_blank" data-bind="attr: { href: 'http://m.guardian.co.uk/stories/' + id() }" class="muted">Visit</a>
+            - <a target="_blank" data-bind="attr: { href: $root.frontUrlBase + id() }" class="muted">Visit</a>
         </div>
     </div>
 </script>
@@ -72,6 +73,10 @@
                 event: {click: $root.stories.clearSelected},
                 disable: $root.pendingSave()
                 ">&laquo; Back to Stories</button>
+            <span class="text-error" data-bind="
+                text: 'This story has been updated by ' + _updatedBy(),
+                visible: _updatedBy
+                "></span>
         </p>
 
         <p class="muted" data-bind="visible: id">Name for
@@ -85,8 +90,8 @@
                 "></span>
                 <span class="cta">
                     | <a data-bind="event: {click: $root.stories.deleteSelected}">delete Story</a>
-                    | <a target="_blank" data-bind="attr: { href: 'http://m.guardian.co.uk/stories/' + id() }">visit Story</a>
-                    | <a data-bind="event: {click: updatePerformance}">update social stats</a>
+                    | <a target="_blank" data-bind="attr: { href: $root.frontUrlBase + id() }">visit Story</a>
+                    | <a data-bind="event: {click: decorateContents}">update article stats</a>
                     <span class="meta count" data-bind="
                         text: _performanceCount, visible: _performanceCount"></span>
                 </span>
@@ -250,7 +255,7 @@
                 <!-- /ko -->
 
                 <p>
-                    <span class="muted">Date &amp Time, YYYY-MM-DD at HH:MM</span>
+                    <span class="muted">Date &amp; time, YYYY-MM-DD at HH:MM</span>
                 </p>
                 
                 <p class="synopsis">
@@ -300,11 +305,11 @@
             attr: {href: _mDot}
             "></a>
         <span class="performance" data-bind="
-            visible: _sharedCountValue,
-            text:    _sharedCountValue() + ' shares'"></span>
+            visible: shares,
+            text:    shares() + ' shares'"></span>
         <span class="performance" data-bind="
-            visible: _commentCountValue,
-            text:    _commentCountValue() + ' comments'"></span>
+            visible: comments,
+            text:    comments() + ' comments'"></span>
         <span class="cta">
             | 
             <a data-bind='visible: !quote(), click: addQuote'>add Quote</a> 
