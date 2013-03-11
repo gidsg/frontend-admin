@@ -11,23 +11,13 @@ import com.mongodb
 
 case class Modified(email: String, date: DateTime)
 
-// Eg, ophan-views = 41000, fb-likes = 642
-case class SMeasurement(
-    name: String,
-    value: Int = 0,
-    takenAt: Option[String] = None // DateTime
-)
-
 //TODO rename the SContent (and other classes) after we have deleted copies in Event
 case class SContent(
   id: String, 
   shares: Option[Int] = None,
-  sharesTakenAt: Option[String] = None,
   comments: Option[Int] = None,
-  commentsTakenAt: Option[String] = None,
   importance: Int = 50, 
   colour: Int = 0,
-  performance: Seq[SMeasurement] = Nil,
   quote: Option[SQuote] = None
 )
 

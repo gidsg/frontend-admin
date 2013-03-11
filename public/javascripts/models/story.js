@@ -16,7 +16,7 @@ function (
 
     var Story = function(opts) {
         var endpoint = '/story',
-            saveInterval = 3000, // milliseconds
+            saveInterval = 1000, // milliseconds
             deBounced,
             self = this;
 

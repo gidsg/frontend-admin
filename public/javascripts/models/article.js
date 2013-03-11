@@ -35,9 +35,7 @@ function (
 
         // Performance stats
         this.shares          = ko.observable(opts.shares);
-        this.sharesTakenAt   = ko.observable(opts.sharesTakenAt);
         this.comments        = ko.observable(opts.comments);
-        this.commentsTakenAt = ko.observable(opts.commentsTakenAt);
 
         // Temp vars
         this._mDot      = ko.observable(mDotHost + opts.id || '');    
@@ -68,46 +66,32 @@ function (
         this.addCommentCount();
     }
 
-    Article.prototype.isStale = function(date) {
-        if (date) {
-            return (new Date().getTime() - new Date(date).getTime()) > 60000; 
-        } else {
-            return true;
-        }
-    }
-
     Article.prototype.addSharedCount = function() {
         var url = encodeURIComponent('http://api.sharedcount.com/?url=http://www.guardian.co.uk/' + this.id()),
             self = this;
-        if (this.isStale(this.sharesTakenAt())) {
-            Reqwest({
-                url: '/json/proxy/' + url,
-                type: 'json',
-                success: function(resp) {
-                    self.shares(self.sumNumericProps(resp));
-                    self.sharesTakenAt(new Date());
-                    Common.mediator.emitEvent('models:story:haschanges');
-                },
-                complete: function() {
-                    Common.mediator.emitEvent('models:article:performance:done');                
-                }
-            });
-        } else {
-            Common.mediator.emitEvent('models:article:performance:done');                
-        }    
+        Reqwest({
+            url: '/json/proxy/' + url,
+            type: 'json',
+            success: function(resp) {
+                self.shares(self.sumNumericProps(resp));
+                Common.mediator.emitEvent('models:story:haschanges');
+            },
+            complete: function() {
+                Common.mediator.emitEvent('models:article:performance:done');                
+            }
+        });
     };
 
     Article.prototype.addCommentCount = function() {
         var url = encodeURIComponent('http://discussion.guardianapis.com/discussion-api/discussion/p/' + 
             this.shortId() + '/comments/count'),
             self = this;
-        if(this.shortId() && this.isStale(this.commentsTakenAt())) {
+        if(this.shortId()) {
             Reqwest({
                 url: '/json/proxy/' + url,
                 type: 'json',
                 success: function(resp) {
                     self.comments(resp.numberOfComments);
-                    self.commentsTakenAt(new Date());
                     Common.mediator.emitEvent('models:story:haschanges');
                 },
                 complete: function() {
