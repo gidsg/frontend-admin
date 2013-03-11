@@ -100,7 +100,7 @@ function (
         };
         
         this.cancelEditing = function(event) {
-            event._editing(se);
+            event._editing(false);
             if (event._tentative()) {
                 self._selected(false);
                 self.events.remove(event);
@@ -109,7 +109,7 @@ function (
 
         this.decorateContents = function() {
             this.events().map(function(event){
-                //self._performanceCount(self._performanceCount() + event.decorateContent());
+                self._performanceCount(self._performanceCount() + event.decorateContent());
             });
         };
 
