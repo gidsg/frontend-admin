@@ -28,7 +28,8 @@ object SwitchboardController extends Controller with AuthLogging with Logging {
     Switch("experiment-story-module-01", false, "Enable version 1 of the article story module."),
     Switch("experiment-story-module-02", false, "Enable version 2 of the article story module."),
     Switch("social-icons", false, "Enable the social media share icons (facebook, twitter etc.)"),
-    Switch("integration-test-switch", true, "Switch that is only used while running tests. You never need to change this switch")
+    Switch("integration-test-switch", true, "Switch that is only used while running tests. You never need to change this switch"),
+    Switch("story-version-b", false, "Switch to enable version B of story page.")
   )
 
   def render() = AuthAction{ request =>
