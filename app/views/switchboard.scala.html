@@ -4,7 +4,7 @@
 <div class="row">
     <h4>Switchboard</h4>
     <form id="switchboard" action="/dev/switchboard" method="POST">
-        @switches.map { switch =>
+        @switches.sortBy(switch => switch.name).map { switch =>
             <div class="row">
                 <fieldset>
                 <legend>@switch.name</legend>
