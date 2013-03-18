@@ -4,12 +4,14 @@
 <div class="row">
     <h4>Switchboard</h4>
     <form id="switchboard" action="/dev/switchboard" method="POST">
-        @switches.map { switch =>
+        @switches.sortBy(switch => switch.name).map { switch =>
             <div class="row">
                 <fieldset>
-                <legend>@switch.name</legend>
-                    <input class="status" name="@switch.name" type="checkbox" @if(switch.isOn) { checked="checked" }/>
-                <small>@switch.description</small>
+                    <legend>
+                        <input class="status" id="switch-@switch.name" name="@switch.name" type="checkbox" @if(switch.isOn) { checked="checked" }/>
+                        <label for="switch-@switch.name">@switch.name</label>
+                        <small>- @switch.description</small>
+                    </legend>
                 </fieldset>
             </div>
         }

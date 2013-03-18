@@ -60,6 +60,17 @@ input[type=checkbox].status {
     margin-right: 10px;
 }
 
+#switchboard label {
+    display: inline;
+    font-size: 20px; 
+}
+
+#switchboard label:hover {
+    color: #699;
+    cursor: pointer;
+}
+
+
 /** Events Editor */
 
 .storify {
