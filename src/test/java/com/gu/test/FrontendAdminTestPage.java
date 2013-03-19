@@ -3,7 +3,7 @@ package com.gu.test;
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
-import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -136,7 +136,7 @@ public class FrontendAdminTestPage {
 		WebElement form = getDriver().findElement(By.id("network-front-tool"));
 		// check each input element is empty
 		for (WebElement textInput : form.findElements(By.cssSelector("input[type='text']"))) {
-			Assert.assertEquals("", textInput.getText());
+			assertEquals("", textInput.getText());
 		}
 
 	}

@@ -1,12 +1,12 @@
 package com.gu.test;
 
 import org.openqa.selenium.By;
-import cucumber.annotation.After;
-import cucumber.annotation.en.Given;
-import cucumber.annotation.en.Then;
-import cucumber.annotation.en.When;
+import cucumber.api.java.After;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import cucumber.runtime.PendingException;
-import junit.framework.Assert;
+import static org.junit.Assert.*;
 
 public class FrontendAdminTestSteps {
 
@@ -27,7 +27,7 @@ public class FrontendAdminTestSteps {
 	@Then("^I should be prompted to log in$")
 	public void I_should_be_prompted_to_log_in() throws Throwable {
 		// confirm there is a login button
-		Assert.assertTrue("Login button does not exist", fendadmin.isElementPresent(By.id("login-button")));
+		assertTrue("Login button does not exist", fendadmin.isElementPresent(By.id("login-button")));
 	}
 
 	@Given("^I am logged in$")
@@ -49,7 +49,7 @@ public class FrontendAdminTestSteps {
 			
 			// confirm there are no error messages			
 			if (fendadmin.isElementPresent((By.className("errormsg")))) {
-				Assert.fail("Unable to log in - ");
+				fail("Unable to log in - ");
 			}
 		}
 	}
@@ -80,7 +80,7 @@ public class FrontendAdminTestSteps {
 		
 		// confirm data is empty, look at json in source
 		if (fendadmin.getPageSource("var frontConfig = {\"uk\":{\"blocks\":[]},\"us\":{\"blocks\":[]}};") == -1) {
-			Assert.fail("Unable to clear data");
+			fail("Unable to clear data");
 		}
 	}
 
@@ -152,7 +152,7 @@ public class FrontendAdminTestSteps {
 		
 		// confirm data is empty, look at json in source		
 		if (fendadmin.getPageSource("var frontConfig = {\"uk\":{\"blocks\":[]},\"us\":{\"blocks\":[]}};") == -1) {
-			Assert.fail("Unable to clear data");
+			fail("Unable to clear data");
 		}
 	}
 

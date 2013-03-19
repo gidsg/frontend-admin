@@ -29,7 +29,7 @@ public class JasmineTest {
 		driver.get("file:///" + dir1.getCanonicalPath() + "/public/javascripts/spec/SpecRunner.html");	
 		
 		//check if are on the right page	
-		Assert.assertTrue("Error in opening Jasmine runner", driver.getTitle().contains("Jasmine"));
+		assertTrue("Error in opening Jasmine runner", driver.getTitle().contains("Jasmine"));
 	}
 
 	@Test
