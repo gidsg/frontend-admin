@@ -32,6 +32,7 @@ object SwitchboardController extends Controller with AuthLogging with Logging {
     Switch("quantcast", false, "Enable the Quantcast audience segment tracking."),
     Switch("integration-test-switch", true, "Switch that is only used while running tests. You never need to change this switch"),
     Switch("story-version-b", false, "Switch to enable version B of story page.")
+    Switch("homescreen", false, "If this switch is enabled the add-to-homescreen popup will plague iOS users.")
   )
 
   def render() = AuthAction{ request =>
