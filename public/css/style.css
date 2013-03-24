@@ -427,12 +427,12 @@ a.cta, .cta a {
     margin: 0 auto;
 }
 
-.status h2 {
+.status h2, .status #last-refresh {
     font-family: Helvetica, sans-serif; 
+    font-size: 12px;
 }
 
 .status h2 {
-    font-size: 15px;
     clear: both;
     line-height: 20px;
     font-weight: normal;
@@ -440,11 +440,14 @@ a.cta, .cta a {
 }
 
 .status #last-refresh {
-    background-color: #ffd;
+    background-color: #ffe;
     padding: 0.1em 0.5em;          
     display: inline;
     margin-left: -0.5em;
+    color: #999;
 }
+
+.status .flush { margin-left: 0px; }
 
 .status svg {
     display: block;

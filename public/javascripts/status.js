@@ -3,6 +3,10 @@ curl(['graphite'])
 
         var lastRefresh = new Date();
 
+        var refreshDate = function() {
+            document.querySelector('#last-refresh').innerHTML = Math.floor((new Date() - lastRefresh) / 1000) + ' seconds ago.'
+        };
+
         // convert Graphite datapoints to something Rickshaw understands  
         var graphiteJsonToRickshaw = function(d) {
             return d.map( function(i) {
@@ -199,6 +203,8 @@ curl(['graphite'])
 
         // polling
 
+        refreshDate();
+
         window.setInterval(function() {
 
             // refresh graph data 
@@ -208,7 +214,14 @@ curl(['graphite'])
             ophanViews.request();
             ophanPerf.request();
             
+            // 
+            lastRefresh = new Date();
+            
         }, 15000);
+
+        window.setInterval(function() {
+            refreshDate();
+        }, 1000);
 
     }, function() { 
         console.error('curl.js failed to load')

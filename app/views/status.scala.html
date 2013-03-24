@@ -5,7 +5,6 @@
     <script src="@routes.Assets.at("javascripts/vendor/zepto.min.js")"></script>
     <script src="@routes.Assets.at("javascripts/vendor/d3.v3.min.js")"></script>
     <script src="@routes.Assets.at("javascripts/vendor/rickshaw.min.js")"></script>
-    <script src="@routes.Assets.at("javascripts/vendor/humanized_time_span.js")"></script>
 
     <div class="alert alert-info">
         <strong>Note!</strong> This application will only work if you are on the guardian internal network and signed in to <a
@@ -14,6 +13,9 @@
     
     <div class="row-fluid status">
       <div class="span12">
+          <span id="last-refresh"></span>
+      </div>
+      <div class="span12 flush">
         <div class="row-fluid">
           <div class="span6">
             <div class="row-fluid">
