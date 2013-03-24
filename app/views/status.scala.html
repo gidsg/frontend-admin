@@ -5,6 +5,7 @@
     <script src="@routes.Assets.at("javascripts/vendor/zepto.min.js")"></script>
     <script src="@routes.Assets.at("javascripts/vendor/d3.v3.min.js")"></script>
     <script src="@routes.Assets.at("javascripts/vendor/rickshaw.min.js")"></script>
+    <script src="@routes.Assets.at("javascripts/vendor/humanized_time_span.js")"></script>
 
     <div class="alert alert-info">
         <strong>Note!</strong> This application will only work if you are on the guardian internal network and signed in to <a
@@ -24,10 +25,10 @@
                 <h2>Combined client-side errors</h2>
                 <div id="client-errors"></div>
 
-                <h2>Performance</h2>
+                <h2>Client-side performance</h2>
                 <div id="ophan-perf"></div>
 
-                <h2>Page views - <span class="badge" id="ophan-views-val"></span></h2> 
+                <h2>Page views - <span class="badge badge-info" id="ophan-views-val"></span> requests p/sec</h2> 
                 <div id="ophan-views"></div>
 
             </div>

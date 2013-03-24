@@ -422,6 +422,11 @@ a.cta, .cta a {
 }
 
 /* dev/status */ 
+.status {
+    width: 90%;
+    margin: 0 auto;
+}
+
 .status h2 {
     font-family: Helvetica, sans-serif; 
 }
@@ -475,3 +480,5 @@ a.cta, .cta a {
         margin-left: 0px;
     } 
 }
+
+

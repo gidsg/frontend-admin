@@ -17,8 +17,7 @@ curl(['graphite'])
         Rickshaw.Graph.JSONP.Static = Rickshaw.Class.create( Rickshaw.Graph.JSONP, {
 
             request: function() {
-                $.ajax( {
-                    url: this.dataURL,
+                $.ajax( { url: this.dataURL,
                     success: this.success.bind(this),
                     error: this.error.bind(this),
                     dataType: 'jsonp',
@@ -51,7 +50,7 @@ curl(['graphite'])
 
             element: document.getElementById("request-duration"),
             width: window.getComputedStyle(document.getElementById('col1'),null).getPropertyValue("width") * 0.9,
-            height: 75 * 4, 
+            height: 85 * 4, 
             renderer: 'line',
             dataURL: g.toUrl(),
             onData: graphiteJsonToRickshaw,
@@ -148,7 +147,7 @@ curl(['graphite'])
             onData: function(d) {
                         var today = d.filter(
                             function(i) { return i.name === "Today" })
-                        document.getElementById('ophan-views-val').innerHTML = today[0].data[0].y + ' requests p/min'
+                        document.getElementById('ophan-views-val').innerHTML = ((today[0].data[0].y) / 60).toFixed()
                         return today;
                     },
             series: [
@@ -209,7 +208,7 @@ curl(['graphite'])
             ophanViews.request();
             ophanPerf.request();
             
-        }, 30000);
+        }, 15000);
 
     }, function() { 
         console.error('curl.js failed to load')
