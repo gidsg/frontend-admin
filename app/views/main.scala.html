@@ -14,7 +14,6 @@
             var curl = {
                 paths: {
                     EventEmitter: '@routes.Assets.at("javascripts/vendor/EventEmitter")',
-                    graphite: '@routes.Assets.at("javascripts/vendor/graphite")',
                     Common: '@routes.Assets.at("javascripts/common")',
                     Reqwest: '@routes.Assets.at("javascripts/vendor/reqwest")',
                     TagSearch: '@routes.Assets.at("javascripts/modules/TagSearch")',
@@ -59,6 +58,11 @@
     </div>
     
     @content
+
+    <script src="@routes.Assets.at("javascripts/vendor/jquery-ui-1.8.23.custom/js/jquery-1.7.2.min.js")"></script>
+    <script src="@routes.Assets.at("bootstrap/js/bootstrap.js")"></script>
+    <link href='//fonts.googleapis.com/css?family=Merriweather' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:800' rel='stylesheet' type='text/css'>
 
     </body>
 </html>
