@@ -34,7 +34,7 @@ object SwitchboardController extends Controller with AuthLogging with Logging {
     Switch("story-version-b", false, "Switch to enable version B of story page."),
     Switch("homescreen", false, "If this switch is enabled the add-to-homescreen popup will plague iOS users."),
     Switch("optimizely", false, "If this switch is on Optimizely will be enabled."),
-    Switch("adverts", true, "If this switch is on then OAS adverts will be loaded with JavaScript")
+    Switch("adverts", true, "If this switch is off then all advertising functionality (Quantcast, Audience Science, OAS) will cease.")
   )
 
   def render() = AuthAction{ request =>
