@@ -434,7 +434,7 @@ a.cta, .cta a {
 
 .status h2 {
     clear: both;
-    line-height: 20px;
+    line-height: 30px;
     font-weight: normal;
     margin-top: 20px;
 }
@@ -456,19 +456,27 @@ a.cta, .cta a {
 
 .status svg path {
     stroke-width: 1;
+    stroke-opacity: 0.6;
 }
 
 .status #buildStatus {
     width: 100%;
     overflow: auto;
+    margin-left: 0;
+}
+
+.status #buildStatus div:hover { 
+    cursor: pointer;
 }
 
 .status #buildStatus div { 
-    width: 5.544%;
-    min-height: 30px;
+    width: 5%;
     float: left;
     overflow: hidden;
+    border-left: 2px solid white;
     white-space: nowrap;
+    max-height: 10px;
+    font-size: 0px;
 }
 
 .failure {
@@ -477,7 +485,6 @@ a.cta, .cta a {
 
 .success {
     background-color: #d0dab4;
-    font-size: 0px;
 }
 
 @media (max-width: 600px){

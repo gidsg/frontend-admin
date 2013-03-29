@@ -1,38 +1,71 @@
 curl(['graphite'])
     .then(function(graphite) {
 
-        var lastRefresh = new Date();
+        var qs = {};
+
+        window.location.search.substring(1).split('&').forEach(function(q){
+                        var p = q.split('=')
+                        qs[p[0]] = p[1]
+                    })
+       
+        console.log(qs);
+
+        var lastRefresh = new Date(),
+            build_p35 = $('#buildStatus.p35'),
+            build_p41 = $('#buildStatus.p41'),
+            teamCityBuilds = []
+            from = qs.from || '-3hours';
 
         var getBuildStatus = function(id) {
             $.ajax( { url: '/teamcity/proxy/app/rest/buildTypes/'+id+'/builds',
                     success: function(d) {
                         var lastBuild = d.build[0];
-                        $('#' + id).addClass(lastBuild.status.toLowerCase())
+                        (function(url){
+                            $('#' + id)
+                                .removeClass()
+                                .addClass(lastBuild.status.toLowerCase())
+                                .click(function() {
+                                        window.open(url, "_blank");
+                                })
+                        })(lastBuild.webUrl)
                     },
                     timeout: 5000
             })
         }
 
-        $.ajax( { url: '/teamcity/proxy/app/rest/projects/id:project35',
-                  success: function(d) {
-                    
-                    var teamCityBuilds = d.buildTypes.buildType.map(function(bt){
-                        return { id: bt.id, name: bt.name } 
-                    });
-                   
-                    var buildView = $('#buildStatus')
+        var getBuilds = function(id, dom) {
+            $.ajax( { url: '/teamcity/proxy/app/rest/projects/id:' + id,
+                      success: function(d) {
+                        
+                        var teamCityBuilds = d.buildTypes.buildType.map(function(bt){
+                            return { id: bt.id, name: bt.name } 
+                        });
 
-                    teamCityBuilds.forEach(function(build){
-                        $('<div/>').attr('id', build.id).text(build.name).appendTo(buildView)
-                        getBuildStatus(build.id)
-                    })
-                },
-                timeout: 5000
-            })
+                        // create status markers
+                        teamCityBuilds.forEach(function(build){
+                            getBuildStatus(build.id)
+                            $('<div/>').attr('id', build.id).text(build.name).appendTo(dom)
+                        })
+        
+                        window.setInterval(function() {
+                            console.log('refreshing build statuses ' + id)
+                            teamCityBuilds.forEach(function(build){
+                                getBuildStatus(build.id)
+                            })
+                            refreshDate();
+                        }, 30000);
+                       
+                    },
+                    timeout: 5000
+                })
+        }
 
         var refreshDate = function() {
-            document.querySelector('#last-refresh').innerHTML = Math.floor((new Date() - lastRefresh) / 1000) + ' seconds ago.'
+            document.querySelector('#last-refresh').innerHTML = Math.floor((new Date() - lastRefresh) / 1000) + ' seconds ago'
         };
+
+        getBuilds('project35', build_p35)
+        getBuilds('project41', build_p41)
 
         // convert Graphite datapoints to something Rickshaw understands  
         var graphiteJsonToRickshaw = function(d) {
@@ -59,7 +92,7 @@ curl(['graphite'])
          });
 
         // ** request duration 
-        var g = new graphite.client({ host: 'http://graphite.guprod.gnl/render', from: '-1hours' });
+        var g = new graphite.client({ host: 'http://graphite.guprod.gnl/render', from: from });
         g.targets = [
                 'ganglia.GU-PROD-Frontend.frontend-article_*.*.gu_request_duration_performance_time-frontend-article.sum',
                 'ganglia.GU-PROD-Frontend.frontend-front_*.*.gu_request_duration_performance_time-frontend-front.sum',
@@ -72,6 +105,7 @@ curl(['graphite'])
                 return new graphite.target(tag)
                              .exclude('__SummaryInfo__')
                              .averageSeries()
+                             .movingAverage(30)
                              .alias(/frontend-([^_]+)/.exec(tag)[1])
                              .toQueryString()
             })
@@ -88,31 +122,31 @@ curl(['graphite'])
             series: [
                 {
                     name: 'article',
-                    color: '#666',
+                    color: '#FFCC00',
                 }, {
                     name: 'front',
-                    color: '#888',
+                    color: '#FF9933',
                 }, {
                     name: 'section',
-                    color: '#aaa'
+                    color: '#FF9999'
                 }, {
                     name: 'tag',
-                    color: '#bbb'
+                    color: '#FF99FF'
                 }, {
                     name: 'gallery',
-                    color: '#ccc'
+                    color: '#FF3399'
                 }, {
                     name: 'football',
-                    color: '#999'
+                    color: '#FF33FF'
                 }, {
                     name: 'video',
-                    color: '#555'
+                    color: '#FFCCFF'
                 }
             ]
         } );
         
         // ** server errors 
-        var e = new graphite.client({ host: 'http://graphite.guprod.gnl/render' });
+        var e = new graphite.client({ host: 'http://graphite.guprod.gnl/render', from: from });
         e.targets = [
             'ganglia.GU-PROD-Frontend.frontend-*_*.*.gu_50x_error_request_status_rate-frontend-*.sum'
             ].map(function(tag){
@@ -122,6 +156,15 @@ curl(['graphite'])
                              .alias(/gu_([^_]+)/.exec(tag)[1])
                              .toQueryString()
             })
+          
+        e.targets.push(
+                  new graphite.target('ganglia.GU-PROD-Frontend.frontend-*_*.*.gu_50x_error_request_status_rate-frontend-*.sum')
+                             .exclude('__SummaryInfo__')
+                             .movingAverage(50)
+                             .averageSeries()
+                             .alias('moving')
+                             .toQueryString()
+            )
 
          var jsonpServerErrorsGraph = new Rickshaw.Graph.JSONP.Static( {
 
@@ -135,21 +178,35 @@ curl(['graphite'])
                 {
                     name: '50x',
                     color: '#cf171f'
+                },
+                {
+                    name: 'moving',
+                    color: '#999'
                 }
+
             ]
         } );
         
         // ** client errors 
-        var e = new graphite.client({ host: 'http://graphite.guprod.gnl/render' });
+        var e = new graphite.client({ host: 'http://graphite.guprod.gnl/render', from: from });
         e.targets = [
-            'ganglia.GU-PROD-Frontend.frontend-diagnostics_*.*.gu_px_gif_diagnostics_rate-frontend-diagnostics.sum',
+            'ganglia.GU-PROD-Frontend.frontend-diagnostics_*.*.gu_js_diagnostics_rate-frontend-diagnostics.sum',
             ].map(function(tag){
                 return new graphite.target(tag)
                              .exclude('__SummaryInfo__')
                              .averageSeries()
-                             .alias(/gu_px_gif_([^_]+)/.exec(tag)[1])
+                             .alias(/gu_([^_]+)/.exec(tag)[1])
                              .toQueryString()
             })
+        
+          e.targets.push(
+                  new graphite.target('ganglia.GU-PROD-Frontend.frontend-diagnostics_*.*.gu_js_diagnostics_rate-frontend-diagnostics.sum')
+                             .exclude('__SummaryInfo__')
+                             .movingAverage(50)
+                             .averageSeries()
+                             .alias('moving')
+                             .toQueryString()
+            )
 
          var jsonpClientErrorsGraph = new Rickshaw.Graph.JSONP.Static( {
 
@@ -161,8 +218,12 @@ curl(['graphite'])
             onData: graphiteJsonToRickshaw,
             series: [
                 {
-                    name: 'diagnostics',
+                    name: 'js',
                     color: '#cf171f'
+                },
+                {
+                    name: 'moving',
+                    color: '#999'
                 }
             ]
         } );
@@ -174,7 +235,7 @@ curl(['graphite'])
             width: window.getComputedStyle(document.getElementById('col2'),null).getPropertyValue("width") * 0.9,
             height: 50,
             renderer: 'line',
-            dataURL: 'http://dashboard.ophan.co.uk/perf/pageviews/data?host=m.guardian.co.uk&host=m.guardiannews.com&hours=1&callback=?',
+            dataURL: 'http://dashboard.ophan.co.uk/perf/pageviews/data?host=m.guardian.co.uk&host=m.guardiannews.com&hours='+ -(parseInt(from)) +'&callback=?',
             onData: function(d) {
                         var today = d.filter(
                             function(i) { return i.name === "Today" })
@@ -196,7 +257,7 @@ curl(['graphite'])
             width: window.getComputedStyle(document.getElementById('col2'),null).getPropertyValue("width") * 0.9,
             height: 50,
             renderer: 'line',
-            dataURL: 'http://dashboard.ophan.co.uk/perf/timings/data?hours=1&host=m.guardian.co.uk&host=m.guardiannews.com&callback=?', 
+            dataURL: 'http://dashboard.ophan.co.uk/perf/timings/data?hours='+ -(parseInt(from)) +'&host=m.guardian.co.uk&host=m.guardiannews.com&callback=?', 
             onData: function(d) {
                         return d.filter(
                             function(i) { return i.name !== "Load Event" })

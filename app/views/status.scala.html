@@ -13,10 +13,23 @@
 
     <div class="row-fluid status">
       <div class="span12">
-          <span id="last-refresh"></span>
+        <div class="row-fluid">
+          <div class="span6">
+            <span id="last-refresh"></span>
+          </div>
+          <div class="span6">
+              <a href="?from=-1hours">1 hours</a> | 
+              <a href="?from=-3hours">3 hours</a> |
+              <a href="?from=-8hours">8 hours</a> |
+              <a href="?from=-24hours">1 day</a>
+          </div>
+        </div>
       </div>
-      <div class="span12" id="buildStatus">
-         
+      <div class="span12 p35" id="buildStatus">
+        <h2>Applications</h2>
+      </div>
+      <div class="span12 p41" id="buildStatus">
+        <h2>Integration tests</h2>
       </div>
       <div class="span12 flush">
         <div class="row-fluid">
@@ -24,10 +37,10 @@
             <div class="row-fluid">
               <div class="span10" id="col2">
   
-                <h2>Combined server-side errors</h2>
+                <h2>Combined server-side errors w/ moving average</h2>
                 <div id="server-errors"></div>
 
-                <h2>Combined client-side errors</h2>
+                <h2>Javascript errors w/ moving average</h2>
                 <div id="client-errors"></div>
 
                 <h2>Client-side performance</h2>

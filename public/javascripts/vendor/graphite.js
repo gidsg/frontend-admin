@@ -43,7 +43,7 @@ define(function (require, exports, module) {
                         + '(' 
                         +   this.toQueryString(n-1) 
                         +   this.callChain[n].args.map( function(a){
-                                return ',"' + a + '"'
+                                return (isNaN(a)) ? ',"' + a + '"' : ',' + a;
                             }).join('')
                         + ')'
             }
