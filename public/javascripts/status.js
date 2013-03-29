@@ -3,6 +3,33 @@ curl(['graphite'])
 
         var lastRefresh = new Date();
 
+        var getBuildStatus = function(id) {
+            $.ajax( { url: '/teamcity/proxy/app/rest/buildTypes/'+id+'/builds',
+                    success: function(d) {
+                        var lastBuild = d.build[0];
+                        $('#' + id).addClass(lastBuild.status.toLowerCase())
+                    },
+                    timeout: 5000
+            })
+        }
+
+        $.ajax( { url: '/teamcity/proxy/app/rest/projects/id:project35',
+                  success: function(d) {
+                    
+                    var teamCityBuilds = d.buildTypes.buildType.map(function(bt){
+                        return { id: bt.id, name: bt.name } 
+                    });
+                   
+                    var buildView = $('#buildStatus')
+
+                    teamCityBuilds.forEach(function(build){
+                        $('<div/>').attr('id', build.id).text(build.name).appendTo(buildView)
+                        getBuildStatus(build.id)
+                    })
+                },
+                timeout: 5000
+            })
+
         var refreshDate = function() {
             document.querySelector('#last-refresh').innerHTML = Math.floor((new Date() - lastRefresh) / 1000) + ' seconds ago.'
         };
