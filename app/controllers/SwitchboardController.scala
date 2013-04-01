@@ -35,7 +35,7 @@ object SwitchboardController extends Controller with AuthLogging with Logging {
     Switch("homescreen", false, "If this switch is enabled the add-to-homescreen popup will plague iOS users."),
     Switch("optimizely", false, "If this switch is on Optimizely will be enabled."),
     Switch("adverts", true, "If this switch is on then OAS adverts will be loaded with JavaScript"),
-    Switch("schedule-watch", true, "If this switch is enabled then 'watched' schedules will cause the healthcheck to fail if they become stale.")
+    Switch("schedule-watch", false, "If this switch is enabled then 'watched' schedules will cause the healthcheck to fail if they become stale.")
   )
 
   def render() = AuthAction{ request =>
