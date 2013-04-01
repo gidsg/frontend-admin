@@ -19,5 +19,3 @@ Testing
 e.g.
 
     $ mvn clean test -Dhost=http://host.co.uk -Dproxyname=proxy.co.uk -Dproxyport=1234 -Dgoogle.username=google.user@gmail.com -Dgoogle.password=password1234
-    
-    
