@@ -436,7 +436,23 @@ a.cta, .cta a {
     clear: both;
     line-height: 30px;
     font-weight: normal;
-    margin-top: 20px;
+    margin: 20px 0;
+}
+
+#col1 h2 {
+    line-height: 50px;
+    display: inline-block;
+    width: 60px;
+    float: left;
+    margin: 0;
+}
+
+#col1 { padding-top: 20px; }
+
+#col1 svg {
+    margin-bottom: 20px;
+    border-left: 1px solid #ddd;
+    padding-left: 2px;
 }
 
 .status #last-refresh {
@@ -451,7 +467,7 @@ a.cta, .cta a {
 
 .status svg {
     display: block;
-    margin: 5px;
+    margin: 2px;
 }
 
 .status svg path {

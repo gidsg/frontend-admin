@@ -7,8 +7,6 @@ curl(['graphite'])
                         var p = q.split('=')
                         qs[p[0]] = p[1]
                     })
-       
-        console.log(qs);
 
         var lastRefresh = new Date(),
             build_p35 = $('#buildStatus.p35'),
@@ -76,7 +74,7 @@ curl(['graphite'])
                 }
             })
         };
- 
+        
         // factory for Richshaw ajax requests
         Rickshaw.Graph.JSONP.Static = Rickshaw.Class.create( Rickshaw.Graph.JSONP, {
 
@@ -91,60 +89,51 @@ curl(['graphite'])
             }
          });
 
-        // ** request duration 
-        var g = new graphite.client({ host: 'http://graphite.guprod.gnl/render', from: from });
-        g.targets = [
-                'ganglia.GU-PROD-Frontend.frontend-article_*.*.gu_request_duration_performance_time-frontend-article.sum',
-                'ganglia.GU-PROD-Frontend.frontend-front_*.*.gu_request_duration_performance_time-frontend-front.sum',
-                'ganglia.GU-PROD-Frontend.frontend-section_*.*.gu_request_duration_performance_time-frontend-section.sum',
-                'ganglia.GU-PROD-Frontend.frontend-tag_*.*.gu_request_duration_performance_time-frontend-tag.sum',
-                'ganglia.GU-PROD-Frontend.frontend-gallery_*.*.gu_request_duration_performance_time-frontend-gallery.sum',
-                'ganglia.GU-PROD-Frontend.frontend-football_*.*.gu_request_duration_performance_time-frontend-football.sum',
-                'ganglia.GU-PROD-Frontend.frontend-video_*.*.gu_request_duration_performance_time-frontend-video.sum'
-            ].map(function(tag){
-                return new graphite.target(tag)
-                             .exclude('__SummaryInfo__')
-                             .averageSeries()
-                             .movingAverage(30)
-                             .alias(/frontend-([^_]+)/.exec(tag)[1])
-                             .toQueryString()
-            })
+        // ** request durations 
+        ['article', 'front', 'section', 'tag', 'gallery', 'football', 'video'].forEach(function(server){
+            
+            var g = new graphite.client({ host: 'http://graphite.guprod.gnl/render', from: from })
+              , tag = 'ganglia.GU-PROD-Frontend.frontend-'+server+'_*.*.gu_request_duration_performance_time-frontend-'+server+'.sum';
+            
+            g.targets.push(new graphite.target(tag)
+                                 .exclude('__SummaryInfo__')
+                                 .averageSeries()
+                                 .alias('duration')
+                                 .toQueryString()
+                                 )
 
-        // draw a graph 
-        var jsonpGraph = new Rickshaw.Graph.JSONP.Static( {
+            g.targets.push(new graphite.target(tag)
+                                 .exclude('__SummaryInfo__')
+                                 .averageSeries()
+                                 .movingAverage(50)
+                                 .alias('moving')
+                                 .toQueryString()
+                                 )
 
-            element: document.getElementById("request-duration"),
-            width: window.getComputedStyle(document.getElementById('col1'),null).getPropertyValue("width") * 0.9,
-            height: 85 * 4, 
-            renderer: 'line',
-            dataURL: g.toUrl(),
-            onData: graphiteJsonToRickshaw,
-            series: [
-                {
-                    name: 'article',
-                    color: '#FFCC00',
-                }, {
-                    name: 'front',
-                    color: '#FF9933',
-                }, {
-                    name: 'section',
-                    color: '#FF9999'
-                }, {
-                    name: 'tag',
-                    color: '#FF99FF'
-                }, {
-                    name: 'gallery',
-                    color: '#FF3399'
-                }, {
-                    name: 'football',
-                    color: '#FF33FF'
-                }, {
-                    name: 'video',
-                    color: '#FFCCFF'
-                }
-            ]
-        } );
+
+            var jsonpGraph = new Rickshaw.Graph.JSONP.Static( {
+                element: document.getElementById('request-duration-'+server),
+                width: 320, 
+                height: 50, 
+                renderer: 'line',
+                dataURL: g.toUrl(),
+                onData: graphiteJsonToRickshaw,
+                series: [ { 
+                        name: 'duration',
+                        color: '#1E90FF'
+                    }, {
+                        name: 'moving',
+                        color: '#999'
+                    }]  
+                });
         
+            (function(g) {
+                window.setInterval(function() {
+                    g.request()
+                }, 15000)})(jsonpGraph);
+
+        });
+
         // ** server errors 
         var e = new graphite.client({ host: 'http://graphite.guprod.gnl/render', from: from });
         e.targets = [
@@ -178,8 +167,7 @@ curl(['graphite'])
                 {
                     name: '50x',
                     color: '#cf171f'
-                },
-                {
+                }, {
                     name: 'moving',
                     color: '#999'
                 }
@@ -228,67 +216,6 @@ curl(['graphite'])
             ]
         } );
 
-        /** views */
-        var ophanViews = new Rickshaw.Graph.JSONP.Static( {
-
-            element: document.getElementById("ophan-views"),
-            width: window.getComputedStyle(document.getElementById('col2'),null).getPropertyValue("width") * 0.9,
-            height: 50,
-            renderer: 'line',
-            dataURL: 'http://dashboard.ophan.co.uk/perf/pageviews/data?host=m.guardian.co.uk&host=m.guardiannews.com&hours='+ -(parseInt(from)) +'&callback=?',
-            onData: function(d) {
-                        var today = d.filter(
-                            function(i) { return i.name === "Today" })
-                        document.getElementById('ophan-views-val').innerHTML = ((today[0].data[0].y) / 60).toFixed()
-                        return today;
-                    },
-            series: [
-                {
-                    name: 'Today',
-                    color: 'green'
-                }
-            ]
-        } );
-        
-        /** perf */
-        var ophanPerf = new Rickshaw.Graph.JSONP.Static( {
-
-            element: document.getElementById("ophan-perf"),
-            width: window.getComputedStyle(document.getElementById('col2'),null).getPropertyValue("width") * 0.9,
-            height: 50,
-            renderer: 'line',
-            dataURL: 'http://dashboard.ophan.co.uk/perf/timings/data?hours='+ -(parseInt(from)) +'&host=m.guardian.co.uk&host=m.guardiannews.com&callback=?', 
-            onData: function(d) {
-                        return d.filter(
-                            function(i) { return i.name !== "Load Event" })
-                    },
-            series: [
-                {
-                    name: 'DNS',
-                    color: '#a2d00b'
-                },
-                {
-                    name: 'First Byte',
-                    color: '#b5e80c'
-                },
-                {
-                    name: 'DomContentReady Event',
-                    color: '#7c9f08'
-                }
-            ]
-        } );
-
-        // TODO https://dev.riffraff.gudev.gnl/api/history?project=frontend&stage=PROD&key=oFsACDUt5L2HfLgfdSW2Xf1nbOKHLN5A
-        /*
-           stage: "PROD",
-               projectName: "frontend::router",
-               build: "331",
-               deployer: "Patrick Hamann",
-               status: "Completed",
-            taskType: "Deploy",
-            time: 1363971152706
-        */
-
         // polling
 
         refreshDate();
@@ -296,11 +223,8 @@ curl(['graphite'])
         window.setInterval(function() {
 
             // refresh graph data 
-            jsonpGraph.request();
             jsonpServerErrorsGraph.request();
             jsonpClientErrorsGraph.request();
-            ophanViews.request();
-            ophanPerf.request();
             
             // 
             lastRefresh = new Date();
