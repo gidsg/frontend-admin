@@ -66,7 +66,8 @@ case class Story(
   lastModified: Option[Modified],
   explainer: Option[String] = None,
   hero: Option[String] = None,
-  notableAssociations: Seq[String] = Nil // basically 'related stories' (Nb. there's no predicates beyond being related in some way)
+  notableAssociations: Seq[String] = Nil, // basically 'related stories' (Nb. there's no predicates beyond being related in some way)
+  labels: Map[String, String] = Map()
 )
 
 object Story {

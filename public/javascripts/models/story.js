@@ -28,6 +28,7 @@ function (
         this.id = ko.observable(opts.id);
         this.events = ko.observableArray();
         this.notableAssociations = ko.observableArray(opts.notableAssociations || []);
+        this.labels = opts.labels || {}; // not editable in the UI yet
 
         this._lastModifiedEmail = ko.observable(opts.lastModified ? opts.lastModified.email : '');
         this._lastModifiedDate  = ko.observable(opts.lastModified ? opts.lastModified.date  : '');
