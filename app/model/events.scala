@@ -20,7 +20,8 @@ case class Agent(
     name: Option[String] = None,  // Eg. 'Jeremy Hunt'
     explainer: Option[String] = None, // Their role in the story
     role: Option[String] = None, // Eg. 'Secretary of State for Health'
-    picture: Option[String] = None, 
+    picture: Option[String] = None,
+    url: Option[String] = None,
     rdfType: String // Ie. 'http://schema.org/Person' or 'http://schema.org/Organization'
     )
 

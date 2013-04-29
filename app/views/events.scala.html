@@ -496,6 +496,18 @@
             hasfocus: _editing_explainer
             "/></textarea>
 
+        <!-- Agent url -->
+        <div class="agent-url" data-edit="url" data-bind="
+                visible: !_editing_url(),
+                text: url() ? url : '[url]',
+                click: _edit
+                "></div>
+        <input type="text" placeholder="url" data-bind="
+                visible: _editing_url,
+                value: url,
+                hasfocus: _editing_url
+                "/>
+
     </div>
 </script>
 

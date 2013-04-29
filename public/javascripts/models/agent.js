@@ -13,10 +13,11 @@ define(['models/editable', 'Knockout', 'Common'], function (Editable,  ko, Commo
         this.importance = ko.observable(opts.importance);
         this.role       = ko.observable(opts.role); // Eg, 'Barrister, and inquiry Chairman'
         this.picture    = ko.observable(opts.picture);
+        this.url        = ko.observable(opts.url);
         this.rdfType    = opts.rdfType || 'http://schema.org/Person';
 
         // Track for editability / saving
-        this._makeEditable(['name', 'explainer', 'importance', 'role', 'picture']);
+        this._makeEditable(['name', 'explainer', 'importance', 'role', 'picture', 'url']);
 
         this.bump = function() {
             self.importance(self.importance() === importanceBumped ? importanceDefault : importanceBumped);

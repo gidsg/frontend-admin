@@ -40,6 +40,7 @@ case class SAgent(
   importance: Int = 0,
   role: Option[String] = None,
   picture: Option[String] = None,
+  url: Option[String] = None,
   rdfType: Option[String] = None // Eg, http://schema.org/Person
 )
 
