@@ -2,6 +2,7 @@ curl([
     'models/stories',
     'models/articles',
     'Knockout',
+    'KnockoutSortable',
     'Reqwest',
     'Config',
     'Common'
@@ -9,6 +10,7 @@ curl([
     Stories,
     Articles,
     ko,
+    Sortable,
     Reqwest,
     Config,
     Common
@@ -127,6 +129,11 @@ curl([
             viewModel.stories.loadStories();
         }
     }, 5000);
+
+    //Init bing for sortable agent events
+    ko.bindingHandlers.sortable.afterMove = function() {
+        Common.mediator.emitEvent('models:story:haschanges');
+    };
 
     // Render
     ko.applyBindings(viewModel);
