@@ -14,7 +14,7 @@ body {
 }
 
 .row, .dropdown-menu {
-    margin-left: 20px;
+    margin-left: 20px;                                                           1
 }
 
 .row {
@@ -240,6 +240,29 @@ textarea.event-explainer {
     clear: both;
 }
 
+.agent {
+    background-color: #F2F2E2;
+}
+
+.agent__handle {
+    display: block;
+    height: 100%;
+    width: 2%;
+    float:left;
+    padding: 5px;
+}
+
+.agent__handle i {
+    margin: 0 auto;
+}
+
+.agent__content {
+    width: 94%;
+    margin-left: 1px;
+    float: right;
+    background-color: #F4F4EE;
+}
+
 .agent, .place {
     clear: both;
     overflow: auto;
@@ -255,8 +278,7 @@ img.agent-picture {
     margin: 0 10px 10px 0;
 }
 
-.event-agents div { margin-left: 16px; }
-.event-agents div:first-child { margin-left: 0px; }
+.event-agents div { margin-left: 0px; }
 
 /* Articles */
 

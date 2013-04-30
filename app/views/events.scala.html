@@ -258,9 +258,7 @@
                     </span>
                 </p>
                 
-                <div class="event-agents" data-bind="
-                    template: {name: 'event_agent_template', foreach: agents}
-                    "></div>
+                <div class="event-agents" data-bind="sortable: { template: 'event_agent_template', data: agents }"></div>
                 <!-- ko if: agents().length === 0 -->
                     <p class="event-agents">[none]</p>
                 <!-- /ko -->
@@ -433,81 +431,79 @@
 <script type="text/html" id="event_agent_template">
     <div class="agent">
 
-        <!-- Agent Name -->
-        <div data-bind="visible: !_editing_name()">
-            <i data-bind="
-                click: bump,
-                css: {
-                    'icon-star-empty': importance() <= 50,
-                    'icon-star': importance() > 50
-                }
-                "></i>
-            <span class="agent-name" data-edit="name" data-bind="
-                text: name() ? name : '[name]',
-                click: _edit
-                "></span>
-            <span class="cta">
-                | <a data-bind="event: {click: $parent.removeAgent}">delete</a>
-                </span>
+        <div class="agent__handle">
+            <i class="icon-move"></i>
         </div>
-        <input type="text" placeholder="Name" data-bind="
-            visible: _editing_name,
-            value: name,
-            hasfocus: _editing_name
-            "/>
 
-        <!-- Agent picture -->
-        <div data-edit="picture" data-bind="
-            visible: !_editing_picture() && !picture(),
-            click: _edit
-            ">[picture]</div>
-        <img class="agent-picture" data-edit="picture" data-bind="
-            visible: !_editing_picture() && picture(),
-            attr: {src: picture},
-            click: _edit
-            "/>
-        <input type="text" placeholder="http://...image url" data-bind="
-            visible: _editing_picture,
-            value: picture,
-            hasfocus: _editing_picture
-            "/>
-
-        <!-- Agent role -->
-        <div class="agent-role" data-edit="role" data-bind="
-            visible: !_editing_role(),
-            text: role() ? role : '[role]',
-            click: _edit
-            "></div>
-        <input type="text" placeholder="role" data-bind="
-            visible: _editing_role,
-            value: role,
-            hasfocus: _editing_role
-            "/>
-
-        <!-- Agent explainer -->
-        <div class="agent-explainer" data-edit="explainer" data-bind="
-            visible: !_editing_explainer(),
-            text: explainer() ? explainer : '[explainer]',
-            click: _edit
-            "></div>
-        <textarea type="text" placeholder="Explainer" data-bind="
-            visible: _editing_explainer,
-            value: explainer,
-            hasfocus: _editing_explainer
-            "/></textarea>
-
-        <!-- Agent url -->
-        <div class="agent-url" data-edit="url" data-bind="
-                visible: !_editing_url(),
-                text: url() ? url : '[url]',
-                click: _edit
-                "></div>
-        <input type="text" placeholder="url" data-bind="
-                visible: _editing_url,
-                value: url,
-                hasfocus: _editing_url
+        <div class="agent__content">
+            <!-- Agent Name -->
+            <div data-bind="visible: !_editing_name()">
+                <span class="agent-name" data-edit="name" data-bind="
+                    text: name() ? name : '[name]',
+                    click: _edit
+                    "></span>
+                <span class="cta">
+                    | <a data-bind="event: {click: $parent.removeAgent}">delete</a>
+                    </span>
+            </div>
+            <input type="text" placeholder="Name" data-bind="
+                visible: _editing_name,
+                value: name,
+                hasfocus: _editing_name
                 "/>
 
+            <!-- Agent picture -->
+            <div data-edit="picture" data-bind="
+                visible: !_editing_picture() && !picture(),
+                click: _edit
+                ">[picture]</div>
+            <img class="agent-picture" data-edit="picture" data-bind="
+                visible: !_editing_picture() && picture(),
+                attr: {src: picture},
+                click: _edit
+                "/>
+            <input type="text" placeholder="http://...image url" data-bind="
+                visible: _editing_picture,
+                value: picture,
+                hasfocus: _editing_picture
+                "/>
+
+            <!-- Agent role -->
+            <div class="agent-role" data-edit="role" data-bind="
+                visible: !_editing_role(),
+                text: role() ? role : '[role]',
+                click: _edit
+                "></div>
+            <input type="text" placeholder="role" data-bind="
+                visible: _editing_role,
+                value: role,
+                hasfocus: _editing_role
+                "/>
+
+            <!-- Agent explainer -->
+            <div class="agent-explainer" data-edit="explainer" data-bind="
+                visible: !_editing_explainer(),
+                text: explainer() ? explainer : '[explainer]',
+                click: _edit
+                "></div>
+            <textarea type="text" placeholder="Explainer" data-bind="
+                visible: _editing_explainer,
+                value: explainer,
+                hasfocus: _editing_explainer
+                "/></textarea>
+
+            <!-- Agent url -->
+            <div class="agent-url" data-edit="url" data-bind="
+                    visible: !_editing_url(),
+                    text: url() ? url : '[url]',
+                    click: _edit
+                    "></div>
+            <input type="text" placeholder="url" data-bind="
+                    visible: _editing_url,
+                    value: url,
+                    hasfocus: _editing_url
+                    "/>
+        </div><!--end agent__content -->
     </div>
 </script>
 
