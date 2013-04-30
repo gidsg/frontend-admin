@@ -18,7 +18,8 @@ case class SContent(
   comments: Option[Int] = None,
   importance: Int = 50, 
   colour: Int = 0,
-  quote: Option[SQuote] = None
+  quote: Option[SQuote] = None,
+  headlineOverride: Option[String] = None
 )
 
 case class SQuote(
