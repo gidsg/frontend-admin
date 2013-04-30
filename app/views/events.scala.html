@@ -327,7 +327,7 @@ String            <span class="author" data-bind="text: _lastModifiedEmail"></sp
             "></div>
         <span
             class="article-title" target="_blank" data-bind="
-                html: headline() ? headline() : ((webTitle() ? webTitle() : id())), 
+                html: headlineOverride() ? headlineOverride() : ((webTitle() ? webTitle() : id())), 
                 attr: {href: _mDot}
                 "></span>
 
@@ -339,8 +339,8 @@ String            <span class="author" data-bind="text: _lastModifiedEmail"></sp
             text:    comments() + ' comments'"></span>
         <span class="cta">
             | 
-            <a data-bind='visible: !headline(), click: addHeadline'>change Headline</a> 
-            <a data-bind='visible:  headline,   click: deleteHeadline'>revert Headline</a> 
+            <a data-bind='visible: !headlineOverride(), click: addHeadlineOverride'>change Headline</a> 
+            <a data-bind='visible:  headlineOverride,   click: deleteHeadlineOverride'>revert Headline</a> 
         </span>
         <span class="cta">
             | 

@@ -26,7 +26,7 @@ function (
         this.webPublicationDate = ko.observable(opts.webPublicationDate);
         this.importance = ko.observable(opts.importance || 50);
         this.colour     = ko.observable(opts.colour);
-        this.headline   = ko.observable(opts.headline);
+        this.headlineOverride   = ko.observable(opts.headline);
 
         if (opts.fields) {
             this.trailText  = ko.observable(opts.fields.trailText || '');
@@ -57,7 +57,7 @@ function (
         }, this);
 
         // Track for editability / saving
-        this._makeEditable(['importance', 'colour', 'headline']);
+        this._makeEditable(['importance', 'colour', 'headlineOverride']);
     };
 
     Article.prototype = new Editable();
@@ -130,14 +130,14 @@ function (
         Common.mediator.emitEvent('models:story:haschanges');
     };
 
-    Article.prototype.addHeadline = function() {
+    Article.prototype.addHeadlineOverride = function() {
         var h = window.prompt("Enter the headline:");
-        this.headline(h);
+        this.headlineOverride(h);
     };
     
-    Article.prototype.deleteHeadline = function() {
+    Article.prototype.deleteHeadlineOverride = function() {
         if (!window.confirm("Are you sure you want to DELETE the headline?")) return;
-        this.headline(undefined);
+        this.headlineOverride(undefined);
         Common.mediator.emitEvent('models:story:haschanges');
     };
 

@@ -19,7 +19,7 @@ case class SContent(
   importance: Int = 50, 
   colour: Int = 0,
   quote: Option[SQuote] = None,
-  headline: Option[String] = None
+  headlineOverride: Option[String] = None
 )
 
 case class SQuote(
