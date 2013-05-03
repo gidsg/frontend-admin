@@ -39,7 +39,7 @@ object SwitchboardController extends Controller with AuthLogging with Logging {
     Switch("video-adverts", false, "If this switch is on then OAS video adverts will be loaded with JavaScript"),
     Switch("ab-related-content-v2", false, "If this switch is on related content AB test will be enabled."),
     Switch("ab-local-election-story-v2", false, "If this switch is on local election story AB test will be enabled."),
-    Switch("css-lazy-load", false, "If this switch is on then use a slimmed down, lazy-loaded css setup (css in head with server sepcific files)")
+    Switch("australia-front", false, "If this switch is on the australia front will be available. Otherwise it will 404.")
   )
 
   def render() = AuthAction{ request =>
