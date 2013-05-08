@@ -340,10 +340,12 @@
                 'icon-star': importance() > 50
             }
             "></div>
-        <a class="article-title" target="_blank" data-bind="
-            html: webTitle() ? webTitle : id, 
-            attr: {href: _mDot}
-            "></a>
+        <span
+            class="article-title" target="_blank" data-bind="
+                html: headlineOverride() ? headlineOverride() : ((webTitle() ? webTitle() : id())), 
+                attr: {href: _mDot}
+                "></span>
+
         <span class="performance" data-bind="
             visible: shares,
             text:    shares() + ' shares'"></span>
@@ -352,8 +354,17 @@
             text:    comments() + ' comments'"></span>
         <span class="cta">
             | 
+            <a data-bind='visible: !headlineOverride(), click: addHeadlineOverride'>change Headline</a> 
+            <a data-bind='visible:  headlineOverride,   click: deleteHeadlineOverride'>revert Headline</a> 
+        </span>
+        <span class="cta">
+            | 
             <a data-bind='visible: !quote(), click: addQuote'>add Quote</a> 
             <a data-bind='visible:  quote,   click: deleteQuote'>delete Quote</a> 
+        </span>
+        <span class="cta">
+            | 
+            <a data-bind='attr: {href: _mDot}' target="_new">view Article</a> 
         </span>
         <span class="cta">
             | <a data-bind='click: $parent.removeArticle'>delete Article</a>
@@ -372,6 +383,23 @@
         </div>
 
         <div data-bind="template: {foreach: quote, name: 'article_quote'}"></div>
+    </div>
+</script>
+
+<script type="text/html" id="article_headline">
+    <div class="headline">  
+        <div>
+            <div class="headline-text" data-edit="text" data-bind="
+                visible: !_editing_text(),
+                text: text() ? text : '...',
+                click: _edit
+                "></div>
+            <textarea type="text" placeholder="text " data-bind="
+                visible: _editing_text,
+                value: text,
+                hasfocus: _editing_text
+                "></textarea>
+        </div>
     </div>
 </script>
 
