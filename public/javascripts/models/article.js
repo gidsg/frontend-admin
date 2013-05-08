@@ -131,8 +131,8 @@ function (
     };
 
     Article.prototype.addHeadlineOverride = function() {
-        var h = window.prompt("Enter the headline:");
-        this.headlineOverride(h);
+        var newHeadline = window.prompt("Enter the headline:", this.webTitle());
+        this.headlineOverride(newHeadline);
     };
     
     Article.prototype.deleteHeadlineOverride = function() {
