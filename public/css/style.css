@@ -369,7 +369,7 @@ a.cta, .cta a {
     cursor: pointer;
 }
 
-.synopsis, .story-title, input.story-title, .story-hero, input.story-hero, .event-agents, .event-places { 
+.timeline, .synopsis, .story-title, input.story-title, .story-hero, input.story-hero, .event-agents, .event-places { 
     margin-left: 22px;
 }
 

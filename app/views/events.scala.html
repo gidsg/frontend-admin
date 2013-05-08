@@ -149,6 +149,21 @@
                 hasfocus: _editing_hero
             "/>
         </p>
+        
+        <p class="muted">Timeline</p>
+            <p>
+                <div class="timeline" data-edit="timeline" data-bind="
+                    visible: !_editing_timeline(),
+                    html: timeline() ? timeline : '[none]',
+                    click: _edit
+                    "></div>
+                <textarea data-bind="
+                    visible: _editing_timeline,
+                    value: _timelineBreaks,
+                    hasfocus: _editing_timeline
+                    "/></textarea>
+            </p>
+        </p>
 
         <p>
             <p class="muted">Story Synopsis</p>

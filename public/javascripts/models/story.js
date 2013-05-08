@@ -29,6 +29,7 @@ function (
         this.events = ko.observableArray();
         this.notableAssociations = ko.observableArray(opts.notableAssociations || []);
         this.labels = opts.labels || {}; // not editable in the UI yet
+        this.timeline = ko.observable(opts.timeline || '');
 
         this._lastModifiedEmail = ko.observable(opts.lastModified ? opts.lastModified.email : '');
         this._lastModifiedDate  = ko.observable(opts.lastModified ? opts.lastModified.date  : '');
@@ -37,7 +38,7 @@ function (
         }, this);
 
         // Track for editability / saving
-        this._makeEditable(['title', 'explainer', 'hero']);
+        this._makeEditable(['title', 'explainer', 'hero', 'timeline']);
 
         // Temporary
         this._selected  = ko.observable(); // The selected event
@@ -49,6 +50,12 @@ function (
         this._explainerBreaks = ko.computed({
             read: function(value) {return this.explainer().replace(/\s*<br\s*\/>\s*/g, '\n')},
             write: function(value) {this.explainer(value.replace(/(\r\n|\n|\r)/gm, '<br />'))},
+            owner: this
+        });
+        
+        this._timelineBreaks = ko.computed({
+            read: function(value) {return this.timeline().replace(/\s*<br\s*\/>\s*/g, '\n')},
+            write: function(value) {this.timeline(value.replace(/(\r\n|\n|\r)/gm, '<br />'))},
             owner: this
         });
 
