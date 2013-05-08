@@ -33,7 +33,6 @@ object SwitchboardController extends Controller with AuthLogging with Logging {
     Switch("integration-test-switch", true, "Switch that is only used while running tests. You never need to change this switch"),
     Switch("story-version-b", false, "Switch to enable version B of story page."),
     Switch("homescreen", false, "If this switch is enabled the add-to-homescreen popup will plague iOS users."),
-    Switch("optimizely", false, "If this switch is on Optimizely will be enabled."),
     Switch("image-server", false, "If this switch is on images will be served off i.guim.co.uk (dynamic image host)"),
     Switch("adverts", true, "If this switch is on then OAS adverts will be loaded with JavaScript"),
     Switch("video-adverts", false, "If this switch is on then OAS video adverts will be loaded with JavaScript"),
