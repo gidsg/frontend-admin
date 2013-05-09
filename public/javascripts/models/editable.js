@@ -14,12 +14,20 @@ define(['Knockout', 'Common'], function (ko, Common) {
             }
         }
     };
+    
+    function ancestorsData(el, dataAttributeName) {
+        var dataAttributeValue = $(el).data(dataAttributeName);
+        return dataAttributeValue !== undefined ? dataAttributeValue : el !== document.body ? ancestorsData(el.parentNode, dataAttributeName) : false;
+    }
 
     // Generic edit sate function; looks for a data-edit attribute
     // indicating which property should have its _editing_* observable set to true  
     Editable.prototype._edit = function(item, e) {
-        var prop = $(e.target).data('edit');
-        this['_editing_' + prop](true);
+        // get the nearest ancestor with a certain data attribute
+        var prop = ancestorsData(e.target, 'edit');
+        if (prop !== false) {
+            this['_editing_' + prop](true);
+        }
     };
 
     // when serialising, strip internal properties starting '_'

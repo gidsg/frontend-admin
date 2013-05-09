@@ -73,8 +73,8 @@ define(['models/editable', 'models/article', 'models/agent', 'models/place', 'Kn
 
         // Explainer - for textarea, replace <br/> with \n 
         this._explainerBreaks = ko.computed({
-            read: function(value) {return this.explainer().replace(/\s*<br\s*\/>\s*/g, '\n')},
-            write: function(value) {this.explainer(value.replace(/(\r\n|\n|\r)/gm, '<br />'))},
+            read: function(value) {return this.explainer().replace(/\s*<\/p><p>\s*/g, '\n').replace(/^<p>(.*)<\/p>$/, '$1')},
+            write: function(value) { this.explainer('<p>' + value.replace(/(\r\n|\n\r)+/gm, '</p><p>') + '</p>')},
             owner: this
         });
 
