@@ -47,8 +47,16 @@ function (
 
         // Explainer - for textarea, replace <br/> with \n 
         this._explainerBreaks = ko.computed({
-            read: function(value) {console.log(this.explainer()); console.log(this.explainer().replace(/\s*<\/p><p>\s*/g, '\n').replace(/^<p>(.*)<\/p>$/, '$1')); return this.explainer().replace(/\s*<\/p><p>\s*/g, '\n').replace(/^<p>(.*)<\/p>$/, '$1')},
-            write: function(value) {this.explainer('<p>' + value.replace(/(\r\n|\n\r)+/gm, '</p><p>') + '</p>')},
+            // replace p's with br's, and unwrap
+            read: function(value) {return this.explainer().replace(/\s*<\/p><p>\s*/g, '\n').replace(/^<p>([\S\s]*)<\/p>$/, '$1')},
+            // replace line breaks with p's, and wrap
+            write: function(value) {
+                var newValue = value.replace(/(\r\n|\n|\r)/gm, '</p><p>');
+                if (newValue) {
+                    newValue = '<p>' + newValue + '</p>';
+                }
+                this.explainer(newValue)
+            },
             owner: this
         });
 
