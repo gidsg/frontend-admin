@@ -20,6 +20,7 @@ object SwitchboardController extends Controller with AuthLogging with Logging {
     Switch("auto-refresh", true, "Enables auto refresh in pages such as live blogs and live scores. Turn off to help handle exceptional load."),
     Switch("double-cache-times", false, "Doubles the cache time of every endpoint. Turn on to help handle exceptional load."),
     Switch("web-fonts", true, "If this is switched on then the custom Guardian web font will load."),
+    Switch("web-fonts-delay", true, "If this is switched on an AB test runs to measure the impact of not showing fallback fonts while fonts download."),
     Switch("related-content", true, "If this switch is turned on then related content will show. Turn off to help handle exceptional load."),
     Switch("omniture-verification", false, "If this switch is turned on then a separate call to Omniture will be made to help verify our tracking."),
     Switch("google-search", false, "If this switch is turned on then Google search is added to the sections nav."),
