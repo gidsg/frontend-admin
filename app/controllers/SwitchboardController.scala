@@ -41,6 +41,7 @@ object SwitchboardController extends Controller with AuthLogging with Logging {
     Switch("ab-related-content-v2", false, "If this switch is on related content AB test will be enabled."),
     Switch("australia-front", false, "If this switch is on the australia front will be available. Otherwise it will 404."),
     Switch("ab-story-front-trail", false, "If this switch is on story front trail AB test will be enabled.")
+    Switch("ab-story-article-swap", false, "If this switch is on, swaps the latest article in a story for the story.")
   )
 
   def render() = AuthAction{ request =>
