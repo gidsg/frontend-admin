@@ -39,7 +39,8 @@ object SwitchboardController extends Controller with AuthLogging with Logging {
     Switch("swipe-nav", false, "If this switch is on then swipe navigation is enabled"),
     Switch("swipe-nav-on-click", false, "If this switch is also on then swipe navigation on clicks is enabled"),
     Switch("australia-front", false, "If this switch is on the australia front will be available. Otherwise it will 404."),
-    Switch("ab-story-article-swap", false, "If this switch is on, swaps the latest article in a story for the story.")
+    Switch("ab-story-article-swap", false, "If this switch is on, swaps the latest article in a story for the story."),
+    Switch("aware", false, "If this switch is on the aware javascript module will log usage data to local storage.")
   )
 
   def render() = AuthAction{ request =>
