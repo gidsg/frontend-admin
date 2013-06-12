@@ -41,7 +41,7 @@ object SwitchboardController extends Controller with AuthLogging with Logging {
     Switch("australia-front", false, "If this switch is on the australia front will be available. Otherwise it will 404."),
     Switch("ab-story-article-swap-v2", false, "If this switch is on, swaps the latest article in a story for the story."),
     Switch("discussion", false, "If this switch is on, comments are displayed on articles."),
-    Switch("short-discussion", false, "If this switch is on, only 10 top level comments are requested from discussion api."),
+    Switch("short-discussion", true, "If this switch is on, only 10 top level comments are requested from discussion api."),
     Switch("story-article-swap", false, "If this switch is on, for the latest story, swaps it in in place of the latest article in that story. Confused?.")
   )
 
